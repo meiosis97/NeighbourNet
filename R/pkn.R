@@ -1,0 +1,51 @@
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Exported
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#' Integrated Weighted Directed Networks for Prior Knowledge in Gene Regulation and Signaling
+#'
+#' Two \code{igraph} objects representing integrated weighted directed networks:
+#' \code{gr.graph} describes transcription factor (TF) and target gene regulatory relationships,
+#' and \code{sig.graph} describes intra-cellular signaling interactions.
+#'
+#' @format Two \code{igraph} objects with directed and weighted edges, containing
+#' the following edge attributes:
+#' \describe{
+#'   \item{\code{weight}}{A numeric value representing the strength of the interaction.}
+#'   \item{\code{consensus_stimulation}}{A logical attribute indicating whether
+#'   the interaction is consistently recorded as stimulating across multiple databases in OmniPath.}
+#'   \item{\code{consensus_inhibition}}{A logical attribute indicating whether
+#'   the interaction is consistently recorded as inhibiting across multiple databases in OmniPath.}
+#' }
+#'
+#' @details
+#' These prior knowledge networks (PKN) are generated using the \pkg{OmniPath} R package and provide
+#' high-confidence regulatory and signaling interactions by integrating data from
+#' multiple databases. They are crucial for gene regulatory network (GRN) inference
+#' and upstream signaling pathway (USP) analysis in NNet.
+#'
+#' @examples
+#' # Summary of the gene regulatory network
+#' summary(gr.graph)
+#'
+#' # Summary of the signaling network
+#' summary(sig.graph)
+#'
+#' # Access edge attributes in gr.graph
+#' edge_attr(gr.graph)
+#'
+#' # Access edge attributes in sig.graph
+#' edge_attr(sig.graph)
+#'
+#' @name gr.graph
+#' @rdname pkn
+#'
+#' @source OmniPath database via the \pkg{OmniPathR} package.
+#'
+"gr.graph"
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Exported
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#' @name sig.graph
+#' @rdname pkn
+"sig.graph"

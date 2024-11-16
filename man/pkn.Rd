@@ -4,7 +4,7 @@
 \name{gr.graph}
 \alias{gr.graph}
 \alias{sig.graph}
-\title{Integrated Weighted Directed Networks for Gene Regulation and Signaling}
+\title{Integrated Weighted Directed Networks for Prior Knowledge in Gene Regulation and Signaling}
 \format{
 Two \code{igraph} objects with directed and weighted edges, containing
 the following edge attributes:
@@ -29,26 +29,13 @@ sig.graph
 \description{
 Two \code{igraph} objects representing integrated weighted directed networks:
 \code{gr.graph} describes transcription factor (TF) and target gene regulatory relationships,
-and \code{sig.graph} describes intra-cellular signaling interactions. Both networks
-are constructed using data from the OmniPath database and follow the NicheNet
-integration approach.
+and \code{sig.graph} describes intra-cellular signaling interactions.
 }
 \details{
-These graphs are generated using the \pkg{OmniPath} R package and provide
+These prior knowledge networks (PKN) are generated using the \pkg{OmniPath} R package and provide
 high-confidence regulatory and signaling interactions by integrating data from
-multiple databases:
-
-- \code{gr.graph}: Represents gene regulatory relationships between transcription
-  factors (TFs) and their target genes. This network is essential for studying
-  gene regulatory networks (GRNs) and upstream regulatory dynamics.
-
-- \code{sig.graph}: Represents intra-cellular signaling interactions, capturing
-  how signaling molecules (e.g., ligands, receptors) influence downstream signaling
-  pathways within the cell.
-
-The edge attributes \code{consensus_stimulation} and \code{consensus_inhibition}
-help users evaluate the consensus regulatory or signaling effect of interactions across
-different databases.
+multiple databases. They are crucial for gene regulatory network (GRN) inference
+and upstream signaling pathway (USP) analysis in NNet.
 }
 \examples{
 # Summary of the gene regulatory network
@@ -62,10 +49,6 @@ edge_attr(gr.graph)
 
 # Access edge attributes in sig.graph
 edge_attr(sig.graph)
-
-# Visualize the networks (requires igraph plotting functions)
-plot(gr.graph, edge.width = E(gr.graph)$weight, main = "Gene Regulatory Network")
-plot(sig.graph, edge.width = E(sig.graph)$weight, main = "Signaling Network")
 
 }
 \keyword{datasets}

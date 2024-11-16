@@ -23,3 +23,5 @@
 # 1. load data
 # 2. usethis::use_data(my_data)
 # 3. write documentation https://r-pkgs.org/data.html
+
+# Gitignore does not ignore existing file in the repository.

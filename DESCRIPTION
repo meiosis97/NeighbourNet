@@ -11,6 +11,10 @@ LazyData: true
 RoxygenNote: 7.2.3
 Imports: 
     Matrix,
-    RANN
+    RANN,
+    igraph
 Depends: 
     R (>= 2.10)
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

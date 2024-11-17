@@ -16,7 +16,7 @@ the following edge attributes:
   the interaction is consistently recorded as inhibiting across multiple databases in OmniPath.}
 }
 
-An object of class \code{igraph} of length 10.
+An object of class \code{igraph} of length 9867.
 }
 \source{
 OmniPath database via the \pkg{OmniPathR} package.

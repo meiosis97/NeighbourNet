@@ -25,3 +25,9 @@
 # 3. write documentation https://r-pkgs.org/data.html
 
 # Gitignore does not ignore existing file in the repository.
+
+#' @import Matrix
+NULL
+
+#' @import Seurat
+NULL

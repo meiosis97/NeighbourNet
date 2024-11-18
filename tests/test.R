@@ -7,5 +7,7 @@ get.gr.adj()
 
 gene.list <- select.gene(obj)
 
-obj <-   prepare.seurat(obj, genes = gene.list$genes)
+obj <- prepare.seurat(obj, genes = gene.list$genes)
+
+obj <- prepare.graph(obj)
 

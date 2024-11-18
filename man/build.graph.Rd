@@ -18,5 +18,11 @@ A list containing:
 \item{nn.w}{Matrix of normalized affinity weights for the nearest neighbors.}
 }
 \description{
-Constructs an affinity graph from principal components using adaptive kernel scaling.
+Constructs an affinity graph from principal components using adaptive kernel scaling approach
+adapted from Uniform Manifold Approximation and Projection (UMAP) (Becht et al. 2019).
+}
+\references{
+Becht, E., McInnes, L., Healy, J., Dutertre, C.-A., Kwok, I. W. H., Ng, L. G., Ginhoux, F., & Newell, E. W. (2019).
+Dimensionality reduction for visualizing single-cell data using UMAP.
+\emph{Nature Biotechnology}, 37(1), 38--44. \doi{10.1038/nbt.4314}
 }

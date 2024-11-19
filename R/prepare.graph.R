@@ -12,8 +12,8 @@
 #' @param truncated A logical value indicating whether to select a subset of important PCs
 #' based on their standard deviation. If \code{TRUE}, only significant PCs are used. Default is \code{TRUE}.
 #'
-#' @return A \code{Seurat} object with the KNN graph and related PC regression settings stored in its metadata.
-#' Refer to \code{\link{prepare.reg}} for the detailed description of the regression settings.
+#' @return A \code{Seurat} object with the KNN graph and related PC regression settings stored in its \codeP{misc} slot,
+#' as a list named \code{NNet.setting}. Refer to \code{\link{prepare.reg}} for the detailed description of the regression settings.
 #'
 #' @details
 #' The function first selects the most informative principal components (PCs) based
@@ -22,8 +22,11 @@
 #' including PCA results and neighborhood indices, are stored in the Seurat object's \code{misc} slot.
 #'
 #' @examples
+#' # Select genes for PC regression
+#' genes <- select.gene(seurat.obj)$genes
+#'
 #' # Scale data and perform PCA
-#' seurat.obj <- prepare.seurat(seurat.obj)
+#' seurat.obj <- prepare.seurat(seurat.obj, genes = genes)
 #'
 #' # Prepare the KNN graph
 #' seurat.obj <- prepare.graph(seurat.obj)
@@ -57,14 +60,14 @@ prepare.graph <- function(seurat.obj, knn = 30, truncated = TRUE) {
   setting <- list(
     pcs = pcs,
     loadings = loadings,
-    predictors = NULL,
-    responses = NULL,
-    cells = NULL,
     p = graph.result$p,
     nn.idx = graph.result$nn.idx,
     nn.w = graph.result$nn.w,
+    cells = NULL,
+    predictors = NULL,
+    responses = NULL,
+    genes = NULL,
     lra = NULL,
-    scale.gene = NULL,
     nn.scale.gene = NULL,
     nn.scale.pc = NULL,
     n.eff = NULL

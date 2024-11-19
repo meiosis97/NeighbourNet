@@ -22,33 +22,6 @@
 #' @export
 build.graph <- function(pcs, knn = 30){
 
-  # Helper function to find the optimal sigma for adaptive kernel scaling
-  # dk: distance vector to nearest neighbors
-  # a: scaling factor
-  # knn: number of nearest neighbors
-  FindSigma <- function(dk, a, knn) {
-    lower <- 0
-    upper <- Inf
-    cur <- dk[knn]  # Initial guess for sigma based on the kth nearest neighbor distance
-    while (TRUE) {
-      psum <- sum(exp(-dk / cur))  # Compute sum of exponentiated distances
-      if (psum > a) {
-        upper <- cur
-        cur <- (lower + cur) / 2  # Narrow the range
-      } else if (psum < a) {
-        if (is.infinite(upper)) {
-          lower <- cur
-          cur <- 2 * cur  # Expand the range if upper bound is infinite
-        } else {
-          lower <- cur
-          cur <- (upper + cur) / 2  # Narrow the range
-        }
-      }
-      if (abs(psum - a) < 1e-5) break  # Stop when the sum is close enough to target
-    }
-    cur  # Return optimal sigma
-  }
-
   n <- nrow(pcs)  # Number of cells
   nn2.result <- RANN::nn2(pcs, k = knn)  # Find k-nearest neighbors
   a <- 2 * log2(knn)  # Scaling parameter for sigma
@@ -88,3 +61,31 @@ build.graph <- function(pcs, knn = 30){
   # Return the results
   return(list(p = p, nn.idx = nn.idx, nn.w = nn.w))
 }
+
+# Helper function to find the optimal sigma for adaptive kernel scaling
+# dk: distance vector to nearest neighbors
+# a: scaling factor
+# knn: number of nearest neighbors
+FindSigma <- function(dk, a, knn) {
+  lower <- 0
+  upper <- Inf
+  cur <- dk[knn]  # Initial guess for sigma based on the kth nearest neighbor distance
+  while (TRUE) {
+    psum <- sum(exp(-dk / cur))  # Compute sum of exponentiated distances
+    if (psum > a) {
+      upper <- cur
+      cur <- (lower + cur) / 2  # Narrow the range
+    } else if (psum < a) {
+      if (is.infinite(upper)) {
+        lower <- cur
+        cur <- 2 * cur  # Expand the range if upper bound is infinite
+      } else {
+        lower <- cur
+        cur <- (upper + cur) / 2  # Narrow the range
+      }
+    }
+    if (abs(psum - a) < 1e-5) break  # Stop when the sum is close enough to target
+  }
+  cur  # Return optimal sigma
+}
+

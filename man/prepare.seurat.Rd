@@ -41,7 +41,7 @@ processes by providing additional control parameters through \code{ScaleData.ctr
 and \code{RunPCA.ctrl}. See documentation of \pkg{Seurat} for details.
 }
 \examples{
-# Prepare genes
+# Select genes for PC regression
 genes <- select.gene(seurat.obj)$genes
 
 # Prepare the Seurat object with default settings

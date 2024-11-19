@@ -31,3 +31,7 @@ NULL
 
 #' @import Seurat
 NULL
+
+#' @importFrom magrittr `%>%`
+NULL
+

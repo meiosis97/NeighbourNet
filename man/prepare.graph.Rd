@@ -15,8 +15,8 @@ prepare.graph(seurat.obj, knn = 30, truncated = TRUE)
 based on their standard deviation. If \code{TRUE}, only significant PCs are used. Default is \code{TRUE}.}
 }
 \value{
-A \code{Seurat} object with the KNN graph and related PC regression settings stored in its metadata.
-Refer to \code{\link{prepare.reg}} for the detailed description of the regression settings.
+A \code{Seurat} object with the KNN graph and related PC regression settings stored in its \codeP{misc} slot,
+as a list named \code{NNet.setting}. Refer to \code{\link{prepare.reg}} for the detailed description of the regression settings.
 }
 \description{
 This function builds a k-nearest neighbors (KNN) graph based on selected
@@ -30,8 +30,11 @@ constructed using \code{\link{build.graph}} with these PCs. The PC regression se
 including PCA results and neighborhood indices, are stored in the Seurat object's \code{misc} slot.
 }
 \examples{
+# Select genes for PC regression
+genes <- select.gene(seurat.obj)$genes
+
 # Scale data and perform PCA
-seurat.obj <- prepare.seurat(seurat.obj)
+seurat.obj <- prepare.seurat(seurat.obj, genes = genes)
 
 # Prepare the KNN graph
 seurat.obj <- prepare.graph(seurat.obj)

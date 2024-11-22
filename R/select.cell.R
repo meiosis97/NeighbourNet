@@ -44,8 +44,7 @@ select.cell <- function(seurat.obj, p = 0.1, n = NULL, all = FALSE, ...) {
 
   if (all) {
     # Use all cells if `all` is TRUE
-    cells <- 1:nrow(setting$pcs)
-    names(cells) <- rownames(setting$pcs)
+    setting["cells"] <- list(cells = NULL)
 
   } else {
     # Calculate the number of cells to select if not provided
@@ -67,10 +66,9 @@ select.cell <- function(seurat.obj, p = 0.1, n = NULL, all = FALSE, ...) {
     cells <- unique(cells)
     names(cells) <- rownames(setting$pcs)[cells]
 
+    # Store the selected cell indices
+    setting$cells <- cells
   }
-
-  # Store the selected cell indices
-  setting$cells <- cells
 
   # Update the Seurat object metadata
   suppressWarnings(

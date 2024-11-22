@@ -21,6 +21,7 @@
 #' \item{p}{A sparse symmetric affinity matrix representing the KNN graph of all cells.}
 #' \item{nn.idx}{A matrix where each row contains the indices of the nearest neighbors for the corresponding cell.}
 #' \item{nn.w}{A matrix of weights for the nearest neighbors of each cell, reflecting the strength of their connections.}
+#' \item{sparsity}{Average sparisty of genes used to embed PCs}.
 #' \item{cells}{A named vector of cell indices on which local vairances are calculated.}
 #' \item{predictors}{A character vector of selected predictor gene names used for regression analysis.}
 #' \item{responses}{A character vector of selected responses gene names used for regression analysis.}
@@ -46,6 +47,9 @@
 #'
 #' # Prepare regression setting, use transcriptional factors as responses and targets as predictors
 #' seurat.obj <- prepare.reg(seurat.obj, responses = gene.list$tfs, predictors = gene.list$targets)
+#'
+#' # Check PC regression settings
+#' str(Seurat::Misc(seurat.obj, "NNet.setting"))
 #'
 #' @seealso \code{\link{prepare.graph}}, \code{\link{run.nn.reg}}
 #'

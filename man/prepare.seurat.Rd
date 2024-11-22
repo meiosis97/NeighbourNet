@@ -8,6 +8,7 @@ prepare.seurat(
   seurat.obj,
   genes,
   npcs = 100,
+  nbgs = 10,
   ScaleData.ctrl = list(),
   RunPCA.ctrl = list()
 )

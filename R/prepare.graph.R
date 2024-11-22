@@ -12,7 +12,7 @@
 #' @param truncated A logical value indicating whether to select a subset of important PCs
 #' based on their standard deviation. If \code{TRUE}, only significant PCs are used. Default is \code{TRUE}.
 #'
-#' @return A \code{Seurat} object with the KNN graph and related PC regression settings stored in its \codeP{misc} slot,
+#' @return A \code{Seurat} object with the KNN graph and related PC regression settings stored in its \code{misc} slot,
 #' as a list named \code{NNet.setting}. Refer to \code{\link{prepare.reg}} for the detailed description of the regression settings.
 #'
 #' @details
@@ -32,7 +32,7 @@
 #' seurat.obj <- prepare.graph(seurat.obj)
 #'
 #' # Check PC regression settings
-#' str(Seurat::Misc(seurat.obj, "setting"))
+#' str(Seurat::Misc(seurat.obj, "NNet.setting"))
 #'
 #' @seealso \code{\link{build.graph}}, \code{\link{prepare.reg}}
 #'
@@ -52,6 +52,10 @@ prepare.graph <- function(seurat.obj, knn = 30, truncated = TRUE) {
   pcs <- Seurat::Embeddings(seurat.obj, "pca")[, 1:npcs]
   loadings <- Seurat::Reductions(seurat.obj, "pca")@feature.loadings[, 1:npcs]
 
+  # Calculate sparsity
+  genes <- rownames(loadings)
+  sparsity <- mean(SeuratObject::LayerData(seurat.obj, "counts")[genes,] == 0)
+
   # Build the KNN graph using the selected PCs
   message("Building KNN graph...")
   graph.result <- NeighbourNet::build.graph(pcs, knn = knn)
@@ -63,6 +67,7 @@ prepare.graph <- function(seurat.obj, knn = 30, truncated = TRUE) {
     p = graph.result$p,
     nn.idx = graph.result$nn.idx,
     nn.w = graph.result$nn.w,
+    sparsity = sparsity,
     cells = NULL,
     predictors = NULL,
     responses = NULL,

@@ -15,7 +15,7 @@ prepare.graph(seurat.obj, knn = 30, truncated = TRUE)
 based on their standard deviation. If \code{TRUE}, only significant PCs are used. Default is \code{TRUE}.}
 }
 \value{
-A \code{Seurat} object with the KNN graph and related PC regression settings stored in its \codeP{misc} slot,
+A \code{Seurat} object with the KNN graph and related PC regression settings stored in its \code{misc} slot,
 as a list named \code{NNet.setting}. Refer to \code{\link{prepare.reg}} for the detailed description of the regression settings.
 }
 \description{
@@ -40,7 +40,7 @@ seurat.obj <- prepare.seurat(seurat.obj, genes = genes)
 seurat.obj <- prepare.graph(seurat.obj)
 
 # Check PC regression settings
-str(Seurat::Misc(seurat.obj, "setting"))
+str(Seurat::Misc(seurat.obj, "NNet.setting"))
 
 }
 \seealso{

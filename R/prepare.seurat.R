@@ -39,7 +39,7 @@
 #' @seealso \code{\link[Seurat]{ScaleData}}, \code{\link[Seurat]{RunPCA}}
 #'
 #' @export
-prepare.seurat <- function(seurat.obj, genes, npcs = 100, ScaleData.ctrl = list(), RunPCA.ctrl = list()) {
+prepare.seurat <- function(seurat.obj, genes, npcs = 100, nbgs = 10, ScaleData.ctrl = list(), RunPCA.ctrl = list()) {
 
   # Ensure `genes` is valid and present in `seurat.obj`
   genes <- intersect(genes, rownames(seurat.obj))
@@ -62,6 +62,13 @@ prepare.seurat <- function(seurat.obj, genes, npcs = 100, ScaleData.ctrl = list(
                 names(ScaleData.ctrl), sep = "", collapse = ",")
   args <- paste("Seurat::ScaleData(object = seurat.obj,", args, ")", sep = "")
   seurat.obj <- eval(parse(text = args))
+
+  # Add null gene
+  n.cell <- ncol(seurat.obj)
+  perm.data <- replicate(nbgs, rnorm(n.cell)) %>% t
+  rownames(perm.data) <- paste("BACKGROUND", 1:nbgs)
+  SeuratObject::LayerData(seurat.obj, "scale.data") <-
+    rbind(SeuratObject::LayerData(seurat.obj, "scale.data"), perm.data)
 
   # Configure and run RunPCA
   RunPCA.ctrl$npcs <- npcs

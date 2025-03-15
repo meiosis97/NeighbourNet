@@ -86,7 +86,7 @@ new.obj <- Seurat::RunUMAP(new.obj, dims = 1:ncol(pcs))
 umap <- data.frame(Seurat::Embeddings(new.obj, "umap"))
 
 gene <- null.genes[1]
-new.obj <- special.run.nn.reg(new.obj, responses = gene, return.p.val = T)
+new.obj <- run.nn.reg(new.obj, responses = gene, return.p.val = T)
 predictor <-  genes[1]
 mu <- new.obj@misc$NNet.mod$mus
 sigma <- new.obj@misc$NNet.mod$sigmas

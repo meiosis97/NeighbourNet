@@ -2,47 +2,59 @@
 % Please edit documentation in R/select.cell.R
 \name{select.cell}
 \alias{select.cell}
-\title{Select Cells for Downstream Analysis}
+\title{Select Cells for Downstream PC Regression Analysis}
 \usage{
 select.cell(seurat.obj, p = 0.1, n = NULL, all = FALSE, ...)
 }
 \arguments{
-\item{seurat.obj}{A \code{Seurat} object on which \code{\link{prepare.graph}} has been ran.}
+\item{seurat.obj}{A \code{Seurat} object that has been processed with \code{\link{prepare.graph}}.
+The PC embeddings and graph structure must be stored in the object's \code{NNet.setting}.}
 
-\item{p}{A numeric value between 0 and 1, specifying the proportion of cells to select. Default is 0.1.}
+\item{p}{A numeric value between 0 and 1, specifying the proportion of cells to select.
+If \code{n} is provided, \code{p} is ignored. Default is 0.1.}
 
 \item{n}{An integer specifying the total number of cells to select. If \code{NULL},
-it is calculated based on \code{p}. Default is \code{NULL}.}
+the number is calculated as \code{ceiling(p * total cells)}. Default is \code{NULL}.}
 
 \item{all}{A logical value indicating whether to select all cells. If \code{TRUE},
-no cells are excluded. Default is \code{FALSE}.}
+all cells are used, and no subset selection is performed. Default is \code{FALSE}.}
 
-\item{...}{Passed to \code{\link[stats]{kmeans}}}
+\item{...}{Additional parameters passed to \code{\link[stats]{kmeans}} for clustering.}
 }
 \value{
-A \code{Seurat} object with the selected cells stored in the \code{NNet.setting} in Seurat objects' \code{misc} slot.
+A \code{Seurat} object with updated \code{NNet.setting}, where the selected cells
+  are stored as a vector of indexes named by cell barcodes in the \code{cells} field of the \code{NNet.setting} list in the \code{misc} slot.
 }
 \description{
-This function selects a subset of cells from a Seurat object for PC regression
-based on principal component (PC) embedding.
+This function selects a subset of cells from a \code{Seurat} object for downstream analysis
+based on their principal component (PC) embeddings. The selection ensures that the subset
+represents the distribution of the full dataset while maintaining computational efficiency.
 }
 \details{
-If \code{all = TRUE}, all cells are used for downstream analysis. Otherwise,
-the function uses k-means clustering using \code{\link[stats]{kmeans}} on the PC embedding to identify a subset of cells
-that represent the data distribution. Nearest neighbors are computed to ensure
-a balanced selection of cells.
+This function provides flexibility in selecting cells for downstream PC regression analysis:
+
+- **Subset Selection**: If \code{all = FALSE}, a subset of cells is selected based on k-means clustering
+  in the PC space. This ensures that the selected cells represent the overall distribution of the data.
+- **Balanced Sampling**: The function identifies cluster centers using k-means and selects
+  the nearest neighbors to achieve a balanced representation.
+- **Full Dataset Usage**: If \code{all = TRUE}, no cells are excluded, and the entire dataset is used.
+
+By default, the function selects 10% of the cells (\code{p = 0.1}). For large datasets,
+users can provide \code{n} to select an exact number of cells or use \code{all = TRUE} to include all cells.
 }
 \examples{
 # Assuming `seurat.obj` is a Seurat object containing `NNet.setting` in its `misc` slot.
+
+# Select 10\% of the cells
 seurat.obj <- select.cell(seurat.obj, p = 0.1)
 
-# Select a fixed number of cells:
+# Select a fixed number of cells
 seurat.obj <- select.cell(seurat.obj, n = 500)
 
-# Select all cells:
+# Use all cells for downstream analysis
 seurat.obj <- select.cell(seurat.obj, all = TRUE)
 
 }
 \seealso{
-\code{\link{prepare.graph}}, \code{\link[stats]{kmeans}}
+\code{\link{prepare.seurat}}, \code{\link[stats]{kmeans}}
 }

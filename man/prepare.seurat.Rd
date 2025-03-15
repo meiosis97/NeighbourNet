@@ -2,44 +2,65 @@
 % Please edit documentation in R/prepare.seurat.R
 \name{prepare.seurat}
 \alias{prepare.seurat}
-\title{Prepare a Seurat Object with Selected Genes and PCA.}
+\title{Prepare a Seurat Object with Selected Genes and PCA}
 \usage{
 prepare.seurat(
   seurat.obj,
   genes,
   npcs = 100,
-  nbgs = 10,
+  truncated = TRUE,
   ScaleData.ctrl = list(),
   RunPCA.ctrl = list()
 )
 }
 \arguments{
-\item{seurat.obj}{A \code{Seurat} object containing \code{data} layer.}
+\item{seurat.obj}{A \code{Seurat} object containing a \code{data} layer.}
 
 \item{genes}{A character vector of gene names to use for scaling and PCA.
 Only genes present in \code{seurat.obj} will be used.}
 
-\item{npcs}{An integer specifying the number of principal components to compute. Default is 100.}
+\item{npcs}{An integer specifying the maximum number of principal components to compute. Default is 100.}
+
+\item{truncated}{A logical value indicating whether to select a subset of significant PCs
+based on their standard deviation. If \code{TRUE}, only significant PCs are used. Default is \code{TRUE}.}
 
 \item{ScaleData.ctrl}{A list of additional parameters to pass to \code{\link[Seurat]{ScaleData}}.
-The \code{features} and \code{verbose} arguments will be set automatically.}
+The \code{features} and \code{verbose} arguments are set automatically.}
 
 \item{RunPCA.ctrl}{A list of additional parameters to pass to \code{\link[Seurat]{RunPCA}}.
-The \code{features}, \code{npcs}, and \code{verbose} arguments will be set automatically.}
+The \code{features}, \code{npcs}, and \code{verbose} arguments are set automatically.}
 }
 \value{
-A \code{Seurat} object with scaled data and PCA results added.
+A \code{Seurat} object with PC regression settings stored in its \code{misc} slot
+  as a list named \code{NNet.setting}. The list includes:
+  \item{pcs}{A matrix of PC embeddings for all cells. Rows correspond to cells, and columns correspond to PCs.}
+  \item{loadings}{A matrix of PC loadings. Rows correspond to genes, and columns correspond to PCs.}
+  \item{p}{Placeholder for the KNN affinity matrix.}
+  \item{nn.idx}{Placeholder for the indices of nearest neighbors.}
+  \item{nn.w}{Placeholder for the weights of nearest neighbors.}
+  \item{cells}{Placeholder for selected cells.}
+  \item{predictors}{Placeholder for selected predictor genes.}
+  \item{responses}{Placeholder for selected response genes.}
+  \item{genes}{Placeholder for the set of selected genes.}
+  \item{lra}{Placeholder for the low-rank approximation matrix.}
+  \item{nn.scale.gene}{Placeholder for gene-level variance scaling.}
+  \item{nn.scale.pc}{Placeholder for PC-level variance scaling.}
+  \item{n.eff}{Placeholder for effective neighborhood sizes.}
 }
 \description{
-This function scales and performs PCA on a Seurat object using a specified set of genes
-and number of principal components.
+This function scales the data and performs Principal Component Analysis (PCA) on a \code{Seurat} object
+using a specified set of genes. A placeholder for PC regression settings for co-expression inference
+is created and stored in the Seurat object's \code{misc} slot under \code{NNet.setting}.
 }
 \details{
-The function first filters the provided gene list to include only those present
-in the Seurat object. It then scales the data using \code{\link[Seurat]{ScaleData}} and
-performs PCA using \code{\link[Seurat]{RunPCA}}. Users can customize the scaling and PCA
-processes by providing additional control parameters through \code{ScaleData.ctrl}
-and \code{RunPCA.ctrl}. See documentation of \pkg{Seurat} for details.
+This function prepares a Seurat object for PC regression analysis. It filters the provided gene list
+to include only those present in the Seurat object, scales the data using \code{\link[Seurat]{ScaleData}},
+and performs PCA using \code{\link[Seurat]{RunPCA}}. If \code{truncated = TRUE}, the number of significant PCs
+is determined using their standard deviations. Users can customize the scaling and PCA processes by
+providing additional control parameters via \code{ScaleData.ctrl} and \code{RunPCA.ctrl}.
+
+The prepared Seurat object is stored with placeholders for regression settings to enable downstream
+co-expression analysis using \code{NNet}.
 }
 \examples{
 # Select genes for PC regression
@@ -48,10 +69,9 @@ genes <- select.gene(seurat.obj)$genes
 # Prepare the Seurat object with default settings
 seurat.obj <- prepare.seurat(seurat.obj, genes, npcs = 30)
 
-# Customize the scaling and PCA
+# Customize scaling and PCA parameters
 seurat.obj <- prepare.seurat(seurat.obj, genes, npcs = 50,
                              ScaleData.ctrl = list(do.center = FALSE))
-
 
 }
 \seealso{

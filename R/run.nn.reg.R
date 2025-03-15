@@ -50,7 +50,7 @@
 #' using \code{\link{set.defaults}}.
 #'
 #' @examples
-#' # Assuming `seurat.obj` has been preprocessed with `prepare.graph` and `prepare.reg`:
+#' # Assuming `seurat.obj` has been pre-processed with `prepare.reg`:
 #' responses <- Seurat::Misc(seurat.obj, "NNet.setting")$responses %>%
 #'              head(n =5)
 #'
@@ -71,9 +71,17 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
                        remove.self.loops = T, f = function(x) 2*x^2, assay = c("effect", "p.val"),
                        prune = TRUE, cutoff = 0.5,
                        return.p.val = FALSE, return.smooth = TRUE, return.prune = FALSE) {
-  # Retrieve NNet settings from the Seurat object
+  # Retrieve the stored settings from the Seurat object
   setting <- Seurat::Misc(seurat.obj, "NNet.setting")
-  if (is.null(setting)) stop("Run prepare.graph first, and then prepare.reg.")
+
+  # Ensure that prepare.seurat has been run
+  if (is.null(setting)) stop("Run prepare.seurat first, then prepare.graph and prepare.reg.")
+
+  # Ensure that prepare.graph has been run
+  if (is.null(setting$p)) stop("Run prepare.graph first and then prepare.reg.")
+
+  # Ensure that prepare.reg has been run
+  if (is.null(setting$nn.scale.gene)) stop("Run prepare.reg first.")
 
   # Match the assay argument to valid options
   assay <- match.arg(assay)
@@ -147,6 +155,7 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
   message(ifelse(prune, "Downstream analysis will perform network pruning.", "Downstream analysis will not perform network pruning."))
 
   # Retrieve transcription factors (TFs) and targets for reporting
+  gene.list <- NeighbourNet::gene.list
   tfs.in.responses <- responses[responses %in% gene.list$tfs]
   tfs.in.predictors <- predictors[predictors %in% gene.list$tfs]
   targets.in.responses <- responses[responses %in% gene.list$targets]
@@ -199,7 +208,6 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
 
   for (i in 1:n.response) {
     pb$tick()
-    r <- responses[i]
 
     # Initialize a matrix to store regression coefficients
     b <- matrix(0, nrow = n.cell, ncol = n.pc)
@@ -224,25 +232,28 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
       }
     }
 
+    # Compute noise distribution for pruning
+    rand.loadings <- replicate(100, rnorm(n.pc)) %>% t
+    rand.loadings <- rand.loadings/sqrt(rowSums(rand.loadings^2))
+    noise <- tcrossprod(rand.loadings, b) %>% as.matrix
+    noise <- tcrossprod(noise %*% vd[cells, ], u[cells, ])
+    noise <- log(abs(noise))
+    mus[i] <- mean(noise)
+    sigmas[i] <- sd(noise)
+
     # Transform regression coefficients to effects
     b <- tcrossprod(loadings, b) %>% as.matrix
 
-    # Adjust effects for response variances inflated by low-rank approximation
-    effect <- b * setting$nn.scale.gene[genes, names(cells), drop = F] %>% as.matrix
+    # Calculate effect
+    effect <- (b * setting$nn.scale.gene[genes,names(cells),drop=F]) %>%
+      as.matrix
+
     if (return.smooth | return.p.val) effect.hat <- tcrossprod(effect %*% vd[cells, ], u[cells, ])
 
     # Compute p-values if required
-    if (return.p.val) {
-      sparsity <- setting$sparsity
-      noise <-replicate(100, sample(effect[i, ]) )
-      noise <- u[cells, ] %*% crossprod(vd[cells, ], noise)
-      noise <- log(abs(noise))
-      mus[i] <- mean(noise)
-      sigmas[i] <- sd(noise)
+    if (return.p.val | return.prune) {
       p.val <- pnorm(log(abs(effect.hat)), mus[i], sigmas[i])
-      p.val.tensor[i, , ] <- p.val
-    } else {
-      p.val <- NULL
+      if(return.p.val) p.val.tensor[i, , ] <- p.val
     }
 
     # Store smoothed or raw effects in the tensor
@@ -254,6 +265,7 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
     }
 
   }
+  names(mus) <- names(sigmas) <- responses
 
   mod <- list(
     effect = effect.tensor, p.val = p.val.tensor, meta.network = NULL,

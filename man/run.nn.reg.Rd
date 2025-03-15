@@ -87,7 +87,7 @@ immediately affect the regression analysis performed by this function. These def
 using \code{\link{set.defaults}}.
 }
 \examples{
-# Assuming `seurat.obj` has been preprocessed with `prepare.graph` and `prepare.reg`:
+# Assuming `seurat.obj` has been pre-processed with `prepare.reg`:
 responses <- Seurat::Misc(seurat.obj, "NNet.setting")$responses \%>\%
              head(n =5)
 

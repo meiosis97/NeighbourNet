@@ -2,32 +2,37 @@
 % Please edit documentation in R/prepare.graph.R
 \name{prepare.graph}
 \alias{prepare.graph}
-\title{Build KNN Graph and Store Settings in Seurat Object}
+\title{Build a K-Nearest Neighbors (KNN) Graph and Store in Seurat Object}
 \usage{
-prepare.graph(seurat.obj, knn = 30, truncated = TRUE)
+prepare.graph(seurat.obj, knn = 30)
 }
 \arguments{
-\item{seurat.obj}{A \code{Seurat} object containing PCA results.}
+\item{seurat.obj}{A \code{Seurat} object prepared using \code{\link{prepare.seurat}},
+which includes PCA results in its \code{NNet.setting}.}
 
-\item{knn}{An integer specifying the number of nearest neighbors for the KNN graph. Default is 30.}
-
-\item{truncated}{A logical value indicating whether to select a subset of important PCs
-based on their standard deviation. If \code{TRUE}, only significant PCs are used. Default is \code{TRUE}.}
+\item{knn}{An integer specifying the number of nearest neighbors to use for building the KNN graph. Default is 30.}
 }
 \value{
-A \code{Seurat} object with the KNN graph and related PC regression settings stored in its \code{misc} slot,
-as a list named \code{NNet.setting}. Refer to \code{\link{prepare.reg}} for the detailed description of the regression settings.
+A \code{Seurat} object with its \code{NNet.setting} updated to include:
+\item{p}{A sparse cell-by-cell affinity matrix.}
+\item{nn.idx}{A cell-by-neighbour matrix where each row contains the indices of the nearest neighbors for the corresponding cell.}
+\item{nn.w}{A matrix describing weights of connections between neighbouring cells described by \code{nn.idx}}
 }
 \description{
-This function builds a k-nearest neighbors (KNN) graph based on selected
-principal components (PCs) from a Seurat object and stores the resulting
-graph and related PC regression settings in the object's metadata.
+This function constructs a K-Nearest Neighbors (KNN) graph based on selected
+principal components (PCs) from a \code{Seurat} object. The resulting graph
+and associated settings are stored in the \code{misc} slot of the Seurat object
+under \code{NNet.setting}.
 }
 \details{
-The function first selects the most informative principal components (PCs) based
-on their standard deviations if \code{truncated = TRUE}. A KNN graph is then
-constructed using \code{\link{build.graph}} with these PCs. The PC regression settings,
-including PCA results and neighborhood indices, are stored in the Seurat object's \code{misc} slot.
+The function constructs a KNN graph using the most informative PCs
+learned during the execution of \code{\link{prepare.seurat}}. The graph is built with the
+\code{\link{build.graph}} function, which computes a sparse affinity matrix, nearest neighbor indices,
+and weights for each cell. These results are stored in the Seurat object's \code{NNet.setting},
+which is used for downstream co-expression analysis, including PC regression and network inference.
+
+The KNN graph is a critical structure that captures relationships between cells in the reduced
+PC space, enabling scalable and biologically meaningful analyses.
 }
 \examples{
 # Select genes for PC regression
@@ -36,13 +41,13 @@ genes <- select.gene(seurat.obj)$genes
 # Scale data and perform PCA
 seurat.obj <- prepare.seurat(seurat.obj, genes = genes)
 
-# Prepare the KNN graph
-seurat.obj <- prepare.graph(seurat.obj)
+# Build the KNN graph
+seurat.obj <- prepare.graph(seurat.obj, knn = 30)
 
-# Check PC regression settings
+# Inspect the settings in NNet.setting
 str(Seurat::Misc(seurat.obj, "NNet.setting"))
 
 }
 \seealso{
-\code{\link{build.graph}}, \code{\link{prepare.reg}}
+\code{\link{build.graph}}, \code{\link{prepare.seurat}}, \code{\link{prepare.reg}}
 }

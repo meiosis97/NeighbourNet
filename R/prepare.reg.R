@@ -1,44 +1,46 @@
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Exported
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-#' Prepare PC Regression Settings for a Seurat Object
+#' Prepare a Seurat Object for PC Regression Analysis
 #'
-#' This function prepares the necessary data and settings for principal component (PC) regression analysis
-#' on a Seurat object. It selects responses, predictors, and cells, calculates
-#' local variances that will be used for estimating permutation feature importance as co-expression measure.
+#' This function prepares a \code{Seurat} object for PC regression analysis by selecting response and predictor genes,
+#' as well as the cells to include in the analysis. It calculates local variances for the selected genes and PCs
+#' based on the KNN graph, which will be used for estimating permutation feature importance as co-expression measure.
+#' The results are stored in the \code{NNet.setting} field of  the \code{misc} slot of the Seurat object.
+#'
 #'
 #' @param seurat.obj A \code{Seurat} object on which \code{\link{prepare.graph}} has been ran.
 #' @param responses A character vector of response gene names. Response gene expression will be low-rank approximated.
 #' If \code{NULL}, all genes of PC embedding are used. Default is \code{NULL}.
-#' @param predictors A character vector of predictor gene names. If \code{NULL}, all genes of PC embedding are used. Default is \code{NULL}.
-#' @param cells A vector of cell indices to include. If \code{NULL}, uses pre-selected cells by \code{\link{select.cell}} or all cells. Default is \code{NULL}.
+#' @param predictors A character vector of predictor gene names. Local variance will be calculated on the provided predictors.
+#' If \code{NULL}, all genes of PC embedding are used. Default is \code{NULL}.
+#' @param cells A vector of cell indices to include. If \code{NULL}, uses pre-selected cells by \code{\link{select.cell}} or all cells if no
+#' pre-selection was done. Default is \code{NULL}.
 #' @param check.expressed A logical value indicating whether to prune local variance by if genes are expressed in the selected cells. Default is \code{TRUE}.
 #'
-#' @return A \code{Seurat} object with updated \code{NNet.setting} stored in its \code{misc} slot.
-#' \code{NNet.setting} is a list containing:
-#' \item{pcs}{A matrix of PC embeddings for all cells. Rows correspond to cells, and columns correspond to PCs.}
-#' \item{loadings}{A matrix of PC loadings. Rows correspond to genes, and columns correspond to PCs.}
-#' \item{p}{A sparse symmetric affinity matrix representing the KNN graph of all cells.}
-#' \item{nn.idx}{A matrix where each row contains the indices of the nearest neighbors for the corresponding cell.}
-#' \item{nn.w}{A matrix of weights for the nearest neighbors of each cell, reflecting the strength of their connections.}
-#' \item{sparsity}{Average sparisty of genes used to embed PCs}.
-#' \item{cells}{A named vector of cell indices on which local vairances are calculated.}
-#' \item{predictors}{A character vector of selected predictor gene names used for regression analysis.}
-#' \item{responses}{A character vector of selected responses gene names used for regression analysis.}
-#' \item{genes}{A character vector of selected gene names.}
-#' \item{lra}{A low-rank approximation matrix representing the reconstructed expression of response genes based on PCs.}
-#' \item{nn.scale.gene}{A sparse matrix of local variances for the selected genes (predictors + responses) in each selected cell.}
-#' \item{nn.scale.pc}{A matrix of local variances for the PCs in each selected cell.}
-#' \item{n.eff}{A numeric vector of effective neighborhood sizes for each cell, used for local variance calculation.}
+#' @return A \code{Seurat} object with the updated \code{NNet.setting} stored in the \code{misc} slot.
+#'   The updated settings include:
+#'   \item{responses}{A character vector of selected response genes.}
+#'   \item{predictors}{A character vector of selected predictor genes.}
+#'   \item{genes}{A character vector of all selected genes (responses and predictors).}
+#'   \item{cells}{A vector of selected cell indices, named by cell barcodes.}
+#'   \item{lra}{A low-rank approximation matrix representing the reconstructed expression of response genes based on PCs.}
+#'   \item{nn.scale.gene}{A sparse matrix of local variances for the selected genes in each selected cell.}
+#'   \item{nn.scale.pc}{A matrix of local variances for the PCs in each selected cell.}
+#'   \item{n.eff}{A numeric vector of effective neighborhood sizes for each selected cell.}
 #'
 #' @details
 #' This function sets up the data and settings required for performing PC regression
-#' on a Seurat object with \code{NNet.setting} stored in its \code{misc} slot.
+#' on a Seurat object, with results stored in the \code{NNet.setting} field of the \code{misc} slot.
 #' It supports the analysis of gene co-expression by calculating local variances
 #' for genes and PCs, which are essential for estimating permutation feature importance.
 #'
+#' The function allows users to specify response and predictor genes, as well as subsets of cells, for the analysis.
+#' If no responses or predictors are provided, all genes in the PC loadings are used by default.
+#' Local variances are computed using the KNN graph stored in \code{NNet.setting}, enabling downstream co-expression analysis.
+#'
 #' @examples
-#' # Assuming `seurat.obj` is a Seurat object containing `NNet.setting` in its `misc` slot
+#' # Assuming `seurat.obj` is a Seurat object on which `prepare.graph` has been ran.
 #'
 #' # seurat.obj <- select.cell(seurat.obj) # Optional if the number of cells is large
 #'
@@ -59,8 +61,11 @@ prepare.reg <- function(seurat.obj, responses = NULL, predictors = NULL, cells =
   # Retrieve the stored settings from the Seurat object
   setting <- Seurat::Misc(seurat.obj, "NNet.setting")
 
+  # Ensure that prepare.seurat has been run
+  if (is.null(setting)) stop("Run prepare.seurat first, then prepare.graph and prepare.reg.")
+
   # Ensure that prepare.graph has been run
-  if (is.null(setting)) stop("Run prepare.graph first.")
+  if (is.null(setting$p)) stop("Run prepare.graph first and then prepare.reg.")
 
   # Select response genes
   # If responses are not provided, use all available genes in the PCA loadings.

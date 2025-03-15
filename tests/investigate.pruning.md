@@ -1,41 +1,82 @@
----
-title: "Compare pruning"
-author: "Yidi Deng"
-date: "2025-03-15"
-output: 
-  md_document:
-    variant: markdown_github
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ## Introduction
 
-This vignette demonstrates the usage of the NeighbourNet package along with ggplot2, dplyr, and Matrix for network regression analysis. We load example data, preprocess it, and run both our current and alternative network regression routines.
+This vignette demonstrates the usage of the NeighbourNet package along
+with ggplot2, dplyr, and Matrix for network regression analysis. We load
+example data, preprocess it, and run both our current and alternative
+network regression routines.
 
 ## Loading Libraries and Data
-```{r}
+
+``` r
 require(NeighbourNet)
+```
+
+    ## Loading required package: NeighbourNet
+
+``` r
 require(ggplot2)
+```
+
+    ## Loading required package: ggplot2
+
+``` r
 require(dplyr)
+```
+
+    ## Loading required package: dplyr
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
 require(Matrix)
+```
+
+    ## Loading required package: Matrix
+
+``` r
 require(Seurat)
 ```
 
-```{r}
+    ## Loading required package: Seurat
+
+    ## Loading required package: SeuratObject
+
+    ## Loading required package: sp
+
+    ## 
+    ## Attaching package: 'SeuratObject'
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, t
+
+``` r
 # Load the example data
 load("data/luad.rda")
 ```
 
 ## Preprocessing and Data Preparation
 
-First, we identify variable features from the Seurat object and generate a permuted dataset.
+First, we identify variable features from the Seurat object and generate
+a permuted dataset.
 
-```{r}
+``` r
 # Identify variable features
 obj <- Seurat::FindVariableFeatures(obj)
+```
+
+    ## Finding variable features for layer counts
+
+``` r
 genes <- Seurat::VariableFeatures(obj)
 
 # Create permuted data for null comparison
@@ -57,24 +98,68 @@ null.genes <- rownames(perm.data)
 expand.genes <- rownames(new.obj)
 ```
 
-Next, we prepare the Seurat object for network regression by running the necessary preprocessing steps.
+Next, we prepare the Seurat object for network regression by running the
+necessary preprocessing steps.
 
-```{r}
+``` r
 new.obj <- prepare.seurat(new.obj, genes = expand.genes)
-new.obj <- prepare.graph(new.obj)
-new.obj <- prepare.reg(new.obj)
+```
 
+    ## Running Seurat scaling and PCA...
+
+``` r
+new.obj <- prepare.graph(new.obj)
+```
+
+    ## Building KNN graph...
+
+``` r
+new.obj <- prepare.reg(new.obj)
+```
+
+    ## Calculating local variance.
+
+``` r
 pcs <- Seurat::Misc(new.obj, "NNet.setting")$pcs
 lra <- Seurat::Misc(new.obj, "NNet.setting")$lra
 new.obj <- Seurat::RunUMAP(new.obj, dims = 1:ncol(pcs))
+```
+
+    ## Warning: The default method for RunUMAP has changed from calling Python UMAP via reticulate to the R-native UWOT using the cosine metric
+    ## To use Python UMAP via reticulate, set umap.method to 'umap-learn' and metric to 'correlation'
+    ## This message will be shown once per session
+
+    ## 23:16:46 UMAP embedding parameters a = 0.9922 b = 1.112
+
+    ## 23:16:46 Read 3918 rows and found 56 numeric columns
+
+    ## 23:16:46 Using Annoy for neighbor search, n_neighbors = 30
+
+    ## 23:16:46 Building Annoy index with metric = cosine, n_trees = 50
+
+    ## 0%   10   20   30   40   50   60   70   80   90   100%
+
+    ## [----|----|----|----|----|----|----|----|----|----|
+
+    ## **************************************************|
+    ## 23:16:46 Writing NN index file to temp file C:\Users\yidid\AppData\Local\Temp\Rtmps1ykq2\file7c7851bf6d60
+    ## 23:16:46 Searching Annoy index using 1 thread, search_k = 3000
+    ## 23:16:48 Annoy recall = 100%
+    ## 23:16:48 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
+    ## 23:16:49 Initializing from normalized Laplacian + noise (using RSpectra)
+    ## 23:16:49 Commencing optimization for 500 epochs, with 162078 positive edges
+    ## 23:17:08 Optimization finished
+
+``` r
 umap <- data.frame(Seurat::Embeddings(new.obj, "umap"))
 ```
 
 ## The Old Pruning Stratagy
 
-The following is the definition of the old.run.nn.reg function, which provides an alternative method for network pruning.
+The following is the definition of the old.run.nn.reg function, which
+provides an alternative method for network pruning.
 
-```{r}
+``` r
 old.run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
                            predictors = NULL, t = 3, k = NULL,
                            remove.self.loops = TRUE, f = function(x) 2*x^2, assay = c("effect", "p.val"),
@@ -305,18 +390,34 @@ old.run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
 
   return(seurat.obj)  # Return the updated Seurat object
 }
-
 ```
-
 
 ## Running NNet Regression with the New Pruning Stratagy
 
-In this section we run the NNet Regression using our new prunning Stratagy and visualize the effects.
+In this section we run the NNet Regression using our new prunning
+Stratagy and visualize the effects.
 
-```{r}
+``` r
 i <- 1 # A gene index, can be modified.
 gene <- genes[i]
 new.obj <- run.nn.reg(new.obj, responses = gene, return.p.val = TRUE)
+```
+
+    ## Return smoothed effect, can only generate networks for sampled cells.
+
+    ## Return unpruned effect.
+
+    ## Return p-value.
+
+    ## Downstream analysis will be performed on the effect tensor.
+
+    ## Downstream analysis will perform network pruning.
+
+    ## Build the Laplacian operator.
+
+    ## Now regress.
+
+``` r
 predictor <- genes[i]
 mu <- new.obj@misc$NNet.mod$mus
 sigma <- new.obj@misc$NNet.mod$sigmas
@@ -332,18 +433,45 @@ ggplot() +
   geom_point(aes(x = "predictor", y = mu), color = "darkred", size = 5)
 ```
 
-```{r}
+    ## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    ## ℹ Please use `linewidth` instead.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
+![](investigate.pruning_files/figure-markdown_github/unnamed-chunk-6-1.png)
+
+``` r
 # Summarize false discovery rate
 rowMeans(log(abs(new.obj@misc$NNet.mod$effect)[1, , ]) > mu + 1.96 * sigma) %>% 
   sort(decreasing = TRUE) %>% plot
 ```
 
+![](investigate.pruning_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
 ### Use a Permuted Feature as the Response
 
-```{r}
+``` r
 i <- 1
 gene <- null.genes[i]
 new.obj <- run.nn.reg(new.obj, responses = gene, return.p.val = TRUE)
+```
+
+    ## Return smoothed effect, can only generate networks for sampled cells.
+
+    ## Return unpruned effect.
+
+    ## Return p-value.
+
+    ## Downstream analysis will be performed on the effect tensor.
+
+    ## Downstream analysis will perform network pruning.
+
+    ## Build the Laplacian operator.
+
+    ## Now regress.
+
+``` r
 predictor <- genes[i]
 mu <- new.obj@misc$NNet.mod$mus
 sigma <- new.obj@misc$NNet.mod$sigmas
@@ -359,20 +487,41 @@ ggplot() +
   geom_point(aes(x = "predictor", y = mu), color = "darkred", size = 5)
 ```
 
-```{r}
+![](investigate.pruning_files/figure-markdown_github/unnamed-chunk-8-1.png)
+
+``` r
 # Should have a low false discovery rate
 rowMeans(log(abs(new.obj@misc$NNet.mod$effect)[1, , ]) > mu + 1.96 * sigma) %>% 
   sort(decreasing = TRUE) %>% plot
 ```
+
+![](investigate.pruning_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 ## Running the Old Regression Function
 
 We now run the old regression function to compare results.
 
-```{r}
+``` r
 i <- 1 # A gene index, can be modified.
 gene <- genes[i]
 new.obj <- old.run.nn.reg(new.obj, responses = gene, return.p.val = TRUE)
+```
+
+    ## Return smoothed effect, can only generate networks for sampled cells.
+
+    ## Return unpruned effect.
+
+    ## Return p-value.
+
+    ## Downstream analysis will be performed on the effect tensor.
+
+    ## Downstream analysis will perform network pruning.
+
+    ## Build the Laplacian operator.
+
+    ## Now regress.
+
+``` r
 predictor <- genes[i]
 mu <- new.obj@misc$NNet.mod$mus
 sigma <- new.obj@misc$NNet.mod$sigmas
@@ -388,18 +537,39 @@ ggplot() +
   geom_point(aes(x = "predictor", y = mu), color = "darkred", size = 5)
 ```
 
-```{r}
+![](investigate.pruning_files/figure-markdown_github/unnamed-chunk-10-1.png)
+
+``` r
 # Summarize false discovery rate
 rowMeans(log(abs(new.obj@misc$NNet.mod$effect)[1, , ]) > mu + 1.64 * sigma) %>% 
   sort(decreasing = TRUE) %>% plot
 ```
 
+![](investigate.pruning_files/figure-markdown_github/unnamed-chunk-11-1.png)
+
 ### Use a Permuted Feature as the Response
 
-```{r}
+``` r
 i <- 1
 gene <- null.genes[i]
 new.obj <- old.run.nn.reg(new.obj, responses = gene, return.p.val = TRUE)
+```
+
+    ## Return smoothed effect, can only generate networks for sampled cells.
+
+    ## Return unpruned effect.
+
+    ## Return p-value.
+
+    ## Downstream analysis will be performed on the effect tensor.
+
+    ## Downstream analysis will perform network pruning.
+
+    ## Build the Laplacian operator.
+
+    ## Now regress.
+
+``` r
 predictor <- genes[i]
 mu <- new.obj@misc$NNet.mod$mus
 sigma <- new.obj@misc$NNet.mod$sigmas
@@ -415,17 +585,22 @@ ggplot() +
   geom_point(aes(x = "predictor", y = mu), color = "darkred", size = 5)
 ```
 
-```{r}
+![](investigate.pruning_files/figure-markdown_github/unnamed-chunk-12-1.png)
+
+``` r
 # Should have a low false discovery rate
 rowMeans(log(abs(new.obj@misc$NNet.mod$effect)[1, , ]) > mu + 1.64 * sigma) %>% 
   sort(decreasing = TRUE) %>% plot
 ```
 
+![](investigate.pruning_files/figure-markdown_github/unnamed-chunk-13-1.png)
+
 ## Evaluation of Power and FDR
 
-Finally, we evaluate the NNet regression by computing power and false discovery rate (FDR) metrics.
+Finally, we evaluate the NNet regression by computing power and false
+discovery rate (FDR) metrics.
 
-```{r}
+``` r
 response.list <- tapply(genes, cut(1:length(genes), breaks = 200), list)
 
 # Calculate power and FDR for one set of responses
@@ -453,26 +628,75 @@ one.iter <- function(responses, old = FALSE){
   
   sapply(responses, evaluation)
 }
-
 ```
 
-### Try on One Set of Responses 
+### Try on One Set of Responses
 
 New stratagy
 
-```{r}
+``` r
 one.iter(response.list[[1]], old = FALSE)
 ```
 
+    ## Return smoothed effect, can only generate networks for sampled cells.
+
+    ## Return unpruned effect.
+
+    ## Return p-value.
+
+    ## Downstream analysis will be performed on the effect tensor.
+
+    ## Downstream analysis will perform network pruning.
+
+    ## Build the Laplacian operator.
+
+    ## Now regress.
+
+    ##            S100A9     S100A2       DHRS2       NTS   MIR205HG      CCL20
+    ## power1 0.07155556 0.15142198 0.005315822 0.2371018 0.06339978 0.04349248
+    ## power2 0.32853717 0.56858999 0.586111111 0.5714286 0.67973856 0.73255814
+    ## fdr1   0.00000000 0.00000000 0.000000000 0.0000000 0.00000000 0.00000000
+    ## fdr2   0.00000000 0.01490256 0.000000000 0.0000000 0.00000000 0.00000000
+    ##              CGA       MMP7       MT1E     DEFB4B
+    ## power1 0.1462005 0.08370636 0.02351432 0.06117274
+    ## power2 0.8249453 0.60926366 0.72324256 0.76671035
+    ## fdr1   0.0000000 0.00000000 0.00000000 0.00000000
+    ## fdr2   0.0000000 0.00000000 0.00000000 0.00000000
+
 Old stratagy
 
-```{r}
+``` r
 one.iter(response.list[[1]], old = TRUE)
 ```
 
+    ## Return smoothed effect, can only generate networks for sampled cells.
+
+    ## Return unpruned effect.
+
+    ## Return p-value.
+
+    ## Downstream analysis will be performed on the effect tensor.
+
+    ## Downstream analysis will perform network pruning.
+
+    ## Build the Laplacian operator.
+
+    ## Now regress.
+
+    ##            S100A9     S100A2       DHRS2       NTS   MIR205HG      CCL20
+    ## power1 0.06844444 0.05995388 0.005315822 0.2060897 0.05786268 0.04349248
+    ## power2 0.32434053 0.30913259 0.586111111 0.5013477 0.67647059 0.72906977
+    ## fdr1   0.00000000 0.00000000 0.000000000 0.0000000 0.00000000 0.00000000
+    ## fdr2   0.00000000 0.00000000 0.000000000 0.0000000 0.00000000 0.00000000
+    ##              CGA       MMP7       MT1E     DEFB4B
+    ## power1 0.1456227 0.04968666 0.02351432 0.05419968
+    ## power2 0.8249453 0.48337292 0.72450918 0.75229358
+    ## fdr1   0.0000000 0.00000000 0.00000000 0.00000000
+    ## fdr2   0.0000000 0.00000000 0.00000000 0.00000000
+
 ### Try on all responses (Not run)
 
-```{r, eval = FALSE}
+``` r
 result <- lapply(response.list, one.iter)
 
 # Adjust formatting if necessary
@@ -508,4 +732,3 @@ ggplot(result) +
   ylab("Rate") +
   scale_x_discrete(labels = c("Not expressed", "Expressed", "Not expressed", "Expressed"))
 ```
-

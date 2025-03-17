@@ -2,7 +2,7 @@
 
 The NeighbourNet (NNet) package is currently under development. 
 
-The data and the reproducible R scripts used to generate the figures in the manuscript can be found at [![DOI](https://zenodo.org/badge/889348936.svg)](https://doi.org/10.5281/zenodo.15031987).
+The data and the reproducible R scripts used to generate the figures in the manuscript can be found at [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15031726.svg)](https://doi.org/10.5281/zenodo.15031726).
 
 Note that the functions implemented in the final R package will differ from those used in the analysis presented in our paper.
 

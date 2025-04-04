@@ -436,6 +436,9 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
 
     }
 
+    # Dot product
+    b <- tcrossprod(loadings, b) %>% as.matrix
+
     # Account for response variances inflated by LRA.
     if(!custom.y){
       y.factor <- setting$nn.scale.gene[r,names(cells)]/nn.scale.y[j,]*setting$scale.gene[r]
@@ -443,27 +446,26 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
       y.factor <- 1
     }
 
-    # Generate noise distribution
-    rand.loadings <- replicate(500, rnorm(n.pc)) %>% t
-    rand.loadings <- rand.loadings/sqrt(rowSums(rand.loadings^2))
-    noise <- tcrossprod(rand.loadings, b) %>% as.matrix
-    noise <-  sweep(noise, 2, y.factor , "*")
-    noise <- tcrossprod(noise %*% vd[cells, ], u[cells, ])
-    noise <- log(abs(noise))
-    mus[j] <- mu <- mean(noise)
-    sigmas[j] <- sigma <- sd(noise)
-
-    # Dot product
-    b <- tcrossprod(loadings, b) %>% as.matrix
-
     # Calculate effect
     effect <- b * setting$nn.scale.gene[genes,names(cells),drop=F] %>%
       sweep(2, y.factor , "*") %>% as.matrix
-
-    # Calculate smoothed effect
     if(return.smooth|return.p.val) effect.hat <-  tcrossprod(effect %*% vd[cells,], u[cells,])
 
-    # Compute p-values if required
+    # Calculate p-value
+    if(!custom.y){
+      noise <- effect[j,]
+      noise <- replicate(100, sample(noise))
+    }else{
+      ref <- apply(abs(effect), 1, max) %>% which.max
+      noise <- effect[ref,]
+      noise <- replicate(100, sample(noise))
+    }
+    noise <- u[cells,] %*% crossprod(vd[cells,], noise)
+    noise <- log(abs(noise))
+    mu <- mean(noise)
+    sigma <- sd(noise)
+    mus[j] <- mu
+    sigmas[j]  <- sigma
     p.val <- if(return.p.val) pnorm(log(abs(effect.hat)), mu, sigma) else NULL
 
     if(return.smooth){

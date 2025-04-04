@@ -276,7 +276,7 @@ prepare.reg <- function(seurat.obj, responses = NULL, predictors = NULL, cells =
 run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
                        predictors = NULL, t = 3, k = NULL,
                        remove.self.loops = T, f = function(x) 2*x^2, assay = c("effect", "p.val"),
-                       prune = TRUE, cutoff = 0.5,
+                       prune = TRUE, cutoff = 0.95,
                        return.p.val = FALSE, return.smooth = TRUE, return.prune = FALSE){
   setting <- Seurat::Misc(seurat.obj, "setting")
 
@@ -436,9 +436,6 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
 
     }
 
-    # Dot product
-    b <- tcrossprod(loadings, b) %>% as.matrix
-
     # Account for response variances inflated by LRA.
     if(!custom.y){
       y.factor <- setting$nn.scale.gene[r,names(cells)]/nn.scale.y[j,]*setting$scale.gene[r]
@@ -446,17 +443,27 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
       y.factor <- 1
     }
 
-    # Compute p-values if required
+    # Generate noise distribution
     rand.loadings <- replicate(500, rnorm(n.pc)) %>% t
     rand.loadings <- rand.loadings/sqrt(rowSums(rand.loadings^2))
     noise <- tcrossprod(rand.loadings, b) %>% as.matrix
     noise <-  sweep(noise, 2, y.factor , "*")
     noise <- tcrossprod(noise %*% vd[cells, ], u[cells, ])
     noise <- log(abs(noise))
-    mus[i] <- mu <- mean(noise)
-    sigmas[i] <- sigma <- sd(noise)
+    mus[j] <- mu <- mean(noise)
+    sigmas[j] <- sigma <- sd(noise)
 
+    # Dot product
+    b <- tcrossprod(loadings, b) %>% as.matrix
 
+    # Calculate effect
+    effect <- b * setting$nn.scale.gene[genes,names(cells),drop=F] %>%
+      sweep(2, y.factor , "*") %>% as.matrix
+
+    # Calculate smoothed effect
+    if(return.smooth|return.p.val) effect.hat <-  tcrossprod(effect %*% vd[cells,], u[cells,])
+
+    # Compute p-values if required
     p.val <- if(return.p.val) pnorm(log(abs(effect.hat)), mu, sigma) else NULL
 
     if(return.smooth){

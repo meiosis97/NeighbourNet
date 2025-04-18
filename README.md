@@ -124,4 +124,4 @@ ggplot(Embeddings(obj, "pca"), aes(PC_1, PC_2)) +
 
 You now have a full NeighbourNet analysis in under two minutes of run‑time.  
 Tweak gene lists, increase `responses`, or switch visualisation parameters exactly as in the full vignette.
-```
+

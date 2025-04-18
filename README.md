@@ -31,12 +31,12 @@ invisible(lapply(pkgs, library, character.only = TRUE))
 
 ---
 
-## 2 · Fetch priors & demo dataset
+## 2 · Fetch priors & demo dataset (can be found in the data folder)
 
 ```r
 # local copies?  ->  ../data/*.rda
 lapply(c("gene.list","sig.graph","gr.graph","receptor.ppr"),
-       \(f) load(file.path("../data", paste0(f,".rda"))))
+       \(f) load(file.path("data", paste0(f,".rda"))))
 
 # Seurat object with ~4 k LUAD cells
 load("data/luad.rda")     # loads `obj`
@@ -53,7 +53,7 @@ genes  <- select.gene(obj, min.cells = 10) # QC → TF / target lists
 obj <- obj |>
   prepare.seurat(genes = genes$genes) |>   # scale + PCA
   prepare.graph() |>                       # 30‑NN graph
-  select.cell() |>                         # subsample if n > 5 k
+  select.cell() |>                         # subsample 
   prepare.reg(predictors = genes$tfs,      # local variance scaffolding
               responses  = genes$targets)
 ```
@@ -78,7 +78,15 @@ obj   <- run.nn.reg(obj, responses = top10, return.p.val = TRUE) |>
 
 ---
 
-## 5 · Snapshot plot (meta‑network #1)
+## 5.1 · Snapshot plot (Cell #1)
+
+```r
+visualise.network(obj, 1, 
+                  radius = c(.4,.7,.85,1), pie.radius = .04,
+                  text.size = 5)
+```
+
+## 5.2 · Snapshot plot (meta‑network #1)
 
 ```r
 cut <- mean(apply(obj@misc$mod$meta.network$p.val[,,1], 1, max))

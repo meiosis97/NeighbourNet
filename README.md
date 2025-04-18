@@ -16,8 +16,6 @@ This mini‑walkthrough reproduces the **full vignette** in about 25 lines.
 The full vignette can be found in [here](./tests/vignettes.for.script.md)
 Copy‑paste into an R session and you’ll have cell‑level TF‑target networks and meta‑networks ready for downstream analysis & visualisation.
 
-> **Requires:** R ≥4.2, internet access for downloading demo data.
-
 ---
 
 ## 1 · Install / load core packages

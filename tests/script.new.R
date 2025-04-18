@@ -14,22 +14,18 @@ gg.color.spec <- function(n = 11, background = F) {
     rev(RColorBrewer::brewer.pal(n = n,name = "Spectral"))
   }
 }
-gene.list <- readRDS("/data/gpfs/projects/punim1662/yidi_projects/grn/data/database/gene.list.rds")
-sig.graph <- readRDS("/data/gpfs/projects/punim1662/yidi_projects/grn/data/database/sig.graph.rds")
-gr.graph <- readRDS("/data/gpfs/projects/punim1662/yidi_projects/grn/data/database/gr.graph.rds")
 get.ppr <- function(p = NULL){
-  ppr.obj <- readRDS("/data/gpfs/projects/punim1662/yidi_projects/grn/data/database/receptor.ppr.rds")
-  rt.ppr <- ppr.obj$ppr
-  if(is.null(p)) p <- ppr.obj$ltf
+  rt.ppr <- receptor.ppr$ppr
+  if(is.null(p)) p <- receptor.ppr$ltf
   cutoff <- apply(rt.ppr, 1, quantile, p)
   rt.ppr <- rt.ppr * (rt.ppr > cutoff)
   Matrix::Matrix(rt.ppr)
 }
 get.gr.adj <- function(t = 2){
-  gr.graph <- readRDS("/data/gpfs/projects/punim1662/yidi_projects/grn/data/database/gr.graph.rds")
-  igraph::edge.attributes(gr.graph)$weight <- igraph::edge.attributes(gr.graph)$weight *
-    (igraph::edge.attributes(gr.graph)$consensus_stimulation - igraph::edge.attributes(gr.graph)$consensus_inhibition)
-  adj <- igraph::as_adjacency_matrix(gr.graph, attr = "weight")
+  tmp <- gr.graph
+  igraph::edge.attributes(tmp)$weight <- igraph::edge.attributes(tmp)$weight *
+    (igraph::edge.attributes(tmp)$consensus_stimulation - igraph::edge.attributes(tmp)$consensus_inhibition)
+  adj <- igraph::as_adjacency_matrix(tmp, attr = "weight")
   if(t > 1){
     for(i in 1:(t-1)) adj <- adj %*% adj
   }
@@ -286,6 +282,7 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
 
   # Extract X
   X <- setting$pcs
+  sds <- apply(X,2,sd)
 
   # Extract Cells
   subsampled <- !is.null(setting$cells)
@@ -446,6 +443,7 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
     # Generate noise distribution
     rand.loadings <- replicate(500, rnorm(n.pc)) %>% t
     rand.loadings <- rand.loadings/sqrt(rowSums(rand.loadings^2))
+    rand.loadings <- sweep(rand.loadings, 2, 1/(sds-1), "*")
     noise <- tcrossprod(rand.loadings, b) %>% as.matrix
     noise <-  sweep(noise, 2, y.factor , "*")
     noise <- tcrossprod(noise %*% vd[cells, ], u[cells, ])
@@ -1823,15 +1821,15 @@ visualise.network <- function(seurat.obj, i, meta.network = FALSE,
   # Layout
   if(show.pathways){
     if(swap.layers){
-      l <- rTRM::layout.concentric(graph, concentric = list(names(g4), names(g3), names(g2), names(g1)))
+      l <-  layout.concentric(graph, concentric = list(names(g4), names(g3), names(g2), names(g1)))
     }else{
-      l <- rTRM::layout.concentric(graph, concentric = list(names(g1), names(g2), names(g3), names(g4)), radius = radius)
+      l <-  layout.concentric(graph, concentric = list(names(g1), names(g2), names(g3), names(g4)), radius = radius)
     }
   }else{
     if(swap.layers){
-      l <- rTRM::layout.concentric(graph, concentric = list(names(g2), names(g1)))
+      l <-  layout.concentric(graph, concentric = list(names(g2), names(g1)))
     }else{
-      l <- rTRM::layout.concentric(graph, concentric = list(names(g1), names(g2)))
+      l <-  layout.concentric(graph, concentric = list(names(g1), names(g2)))
     }
   }
   rownames(l) <- names(igraph::V(graph))
@@ -2038,3 +2036,104 @@ plot.receptor.expression <- function(act){
 
 
 }
+
+prepare.tf.activity <- function(seurat.obj, net){
+  tfs <- unique(net$source)
+  targets <- unique(net$target)
+  genes <- select.gene(seurat.obj, tfs = tfs, targets = targets, min.cells = 0)
+
+  responses <- c()
+  for(tf in genes$tfs){
+    targets <- intersect(net[net$source == tf,"target",drop=T],
+                         genes$genes)
+    if(length(targets) > 10 & length(targets)/sum(net$source == tf) > 0.2){
+      responses <- c(responses,tf)
+    }
+  }
+
+  list(responses = responses, genes = genes)
+}
+
+infer.tf.activity <- function(seurat.obj, net){
+  mod <- Seurat::Misc(seurat.obj, "mod")
+  tfs <- mod$gene.sets$responses$genes
+  genes <- mod$gene.sets$genes
+  tfs <- intersect(tfs, net$source)
+  cells <- names(mod$cells)
+
+  acts <- matrix(nrow = length(tfs), ncol = length(cells), dimnames = list(tfs, cells))
+
+  for(tf in tfs){
+    s <- run_aucell(mat=2*mod$effect[tf,,]^2, net=net[net$source == tf,], .source='source', .target='target')
+    s <- dcast(s, source ~ condition, value.var = "score")
+    acts[tf,] <- as.numeric(s[,-1])
+    print(tf)
+  }
+  Seurat::Misc(seurat.obj, "acts") <- acts
+  seurat.obj
+}
+
+# Acquired from rTRM
+.getCoordinates = function(x, r) {
+  l = length(x)
+  d = 360/l
+  c1 = seq(0, 360, d)
+  c1 = c1[1:(length(c1)-1)]
+  tmp = t(sapply(c1, function(cc) c(cos(cc*pi/180)*r, sin(cc*pi/180)*r)))
+  rownames(tmp) = x
+  tmp
+}
+
+.checkValid = function(x) {
+  if(any(table(x) > 1)) FALSE else TRUE
+}
+
+layout.concentric = function (g, concentric = NULL, radius = NULL, order.by)
+{
+  if(is.null(concentric))
+    concentric = list(V(g)$name)
+
+  all_c = unlist(concentric, use.names = FALSE)
+
+  if (!.checkValid(all_c))
+    stop("Duplicated nodes in layers!")
+
+  if (!.checkValid(radius))
+    stop("Duplicated radius in layers!")
+
+  all_n = igraph::V(g)$name
+  sel_other = all_n[ ! all_n %in% all_c ]
+
+  if(length(sel_other) > 0)
+    concentric[[length(concentric)+1]] = sel_other
+
+  if(is.null(radius)) {
+    radius = seq(0, 1, 1/(length(concentric)))
+    if(length(concentric[[1]]) == 1)
+      radius = radius[-length(radius)]
+    else
+      radius = radius[-1]
+  }
+
+  if( ! missing(order.by) )
+    order.values = lapply(order.by, function(b) get.vertex.attribute(g, b))
+
+  res = matrix(NA, nrow = length(all_n), ncol = 2)
+  for(k in 1:length(concentric)) {
+    r = radius[k]
+    l = concentric[[k]]
+
+    i = which(igraph::V(g)$name %in% l) - 1
+    i_o = i
+    if (!missing(order.by)) {
+      ob = lapply(order.values, function(v) v[i + 1])
+      ord = do.call(order, ob)
+      i_o = i_o[ord]
+    }
+    res[i_o+1, ] = .getCoordinates(i_o, r)
+
+  }
+  res
+}
+
+

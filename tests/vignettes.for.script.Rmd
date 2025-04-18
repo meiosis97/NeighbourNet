@@ -1,0 +1,207 @@
+---
+title: "Vignettes for R script"
+author: "Yidi Deng"
+date: "2025-03-15"
+output: 
+  md_document:
+    variant: markdown_github
+---
+
+```{r setup, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This vignette demonstrates the usage of the NeighbourNet by sourcing the provided R script into the global environment.
+
+## Install dependencies
+
+```{r}
+uninstalled.packages <- c("Seurat", "dplyr", "Matrix", "ggplot2", "ggraph", "scatterpie", "ggrepel", "ggpubr", "igraph")
+uninstalled.packages <- uninstalled.packages[!uninstalled.packages%in%installed.packages()]
+if(length(uninstalled.packages)){
+  install.packages(uninstalled.packages)
+}
+```
+
+## Source and read data
+
+```{r, echo=F}
+source("script.new.R")
+```
+
+Then, load in the pre-computed prior knowledge networks that are available at our [github](https://github.com/meiosis97/NeighbourNet/tree/main/data).
+
+```{r}
+load("../data/gene.list.rda")
+load("../data/sig.graph.rda")
+load("../data/gr.graph.rda")
+load("../data/receptor.ppr.rda")
+```
+
+Alternatively, you can also download the prior knowledge networks complied by NicheNet, which contain more but less confident interactions
+
+```{r, eval=F}
+# Not run
+gene.list <-  readRDS(url("https://zenodo.org/records/15240485/files/gene.list.rds"))
+sig.graph <-  readRDS(url("https://zenodo.org/records/15240485/files/sig.graph.rds"))
+gr.graph <-  readRDS(url("https://zenodo.org/records/15240485/files/gr.graph.rds"))
+receptor.ppr <-  readRDS(url("https://zenodo.org/records/15240485/files/receptor.ppr.rds"))
+```
+
+Read the demonstrating data, which should be a Seurat object.
+
+```{r}
+load("data/luad.rda")
+```
+
+## Preprocess
+
+Prepare receptor prior regulatory potential matrix on targets.
+
+```{r}
+rt.ppr <- get.ppr()
+```
+
+Quality control to filter out lowly expressed genes. Remaining genes are grouped by their annotations as transcriptional factors (TF), targets, receptors, and ligands.
+
+```{r}
+genes <- select.gene(obj, min.cells = 10)
+```
+
+Run PCA using genes selected. Co-expression will be measured within these genes.
+
+```{r}
+obj <- prepare.seurat(obj, genes = genes$genes)
+```
+
+Construct a KNN graph
+
+```{r}
+obj <- prepare.graph(obj)
+```
+
+Optionally, for data containing many cells (\>5000), run analysis on a subset of representative cells.
+
+```{r}
+obj <- select.cell(obj)
+```
+
+Finally, calculate local variance.
+
+```{r}
+# Local variance will be calculated for predictor genes and response genes
+# Reponse genes will be low rank approximated
+# We want to measure co-expression between TFs and targets
+obj <- prepare.reg(obj, predictors = genes$tfs, responses = genes$targets)
+```
+
+Now, the prerequisite settings of NeighbourNet regression are stored in the `misc` slot of the Seurat object.
+
+```{r}
+Misc(obj, "setting") %>% str
+```
+
+Get cells on which co-expression will be measured.
+
+```{r}
+cells <- Misc(obj, "setting")$cells
+```
+
+## NeighbourNet regression
+
+For the demonstration purpose, we only use ten response genes to construct co-expression networks.
+
+```{r}
+(responses <- genes$targets[1:10])
+```
+
+NeighbourNet regression.
+
+```{r}
+obj <- run.nn.reg(obj, responses = responses, return.p.val = T)
+```
+
+The resulting network ensemble can be found also in the `misc` slot under the name `mod`.
+
+```{r}
+# effect: the (response x predictor x cell) ensemble of co-expression networks.
+# p.val: the ensemble of co-expression significance corresponds to `effect`
+Misc(obj, "mod") %>% str
+```
+
+Build meta-networks.
+
+```{r}
+obj <- build.meta.network(obj)
+```
+
+Meta-networks are also stored as a (response x predictor x meta-cell) network ensemble.
+
+```{r, eval= F}
+Misc(obj, "mod")$meta.network$memeta.network %>% dim
+```
+
+## Visualisation
+
+First, we identify the most connected genes to visualise.
+
+```{r}
+# All responses will be visualised by `keep.responses = T`
+# `n.net` controls the number of meta-networks to examine
+# For each meta-network, eigenvector centrality of `k` sub-networks will be calculated
+# On each eigenvector, `n.per.component` central genes will be selected to visualise
+central.genes  <- select.central.genes(obj, keep.responses = T, n.per.component = 4, n.net = 5, k = 2)
+```
+
+Prepare visualisation parameters.
+
+```{r}
+# TFs will be clustered into `n.clu` groups represented by different colours
+obj <- prepare.visualise(obj, central.genes = central.genes, n.clu = 4)
+```
+
+Visualise the network of cell `i`.
+
+```{r, fig.height = 10, fig.width = 10}
+i <- cells[10]
+visualise.network(obj,i, cutoff = 0.95,
+                  radius = c(0.4,0.7,0.85,1),pie.radius = 0.04, text.size = 5)
+```
+
+Visualise meta-network `i`.
+
+```{r, fig.height = 10, fig.width = 10}
+i <- 1
+cutoff <- apply(obj@misc$mod$meta.network$p.val[,,i],1,max) %>% sort(decreasing = T) %>% mean
+visualise.network(obj,i, meta.network = T, cutoff = cutoff,
+                  radius = c(0.4,0.7,0.85,1),pie.radius = 0.04, text.size = 5)
+```
+
+Visualise which cells represent meta-network `i`.
+
+```{r, fig.height = 5, fig.width = 6}
+i <- 1
+weights <- obj@misc$mod$meta.network$npca.loadings[,i]
+ggplot() + geom_point(data = Embeddings(obj,"pca"), aes(PC_1,PC_2)) + 
+  geom_point(data = Embeddings(obj,"pca")[cells,], aes(PC_1,PC_2, col = weights))
+```
+## Receptor activity
+
+Calculate receptor activity for each cell.
+
+```{r}
+act <- receptor.activity(obj)
+```
+
+Visualise the activity distribution of NOTCH2, and identify TFs with highly correlated activities.
+
+```{r}
+notch2.act <- act$receptor.act["NOTCH2",] %>% as.numeric()
+ggplot() + geom_point(data = Embeddings(obj,"pca"), aes(PC_1,PC_2)) + 
+  geom_point(data = Embeddings(obj,"pca")[cells,], aes(PC_1,PC_2, col = notch2.act))
+
+cor(notch2.act, t(act$tf.act)) %>% drop %>% sort 
+```
+We identified potential E2F1 mediated NOTCH inhibition of URI1.

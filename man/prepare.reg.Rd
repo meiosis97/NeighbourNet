@@ -9,7 +9,7 @@ prepare.reg(
   responses = NULL,
   predictors = NULL,
   cells = NULL,
-  check.expressed = TRUE
+  check.expressed = FALSE
 )
 }
 \arguments{

@@ -34,11 +34,11 @@ lra <- Seurat::Misc(obj, "NNet.setting")$lra
 obj <- Seurat::RunUMAP(obj, dims = 1:ncol(pcs))
 umap <- data.frame(Seurat::Embeddings(obj, "umap"))
 
-gene <- genes[4]
+gene <- genes[1]
 predictor <- rowSums(2*obj@misc$NNet.mod$effect[gene, , ]^2) %>%
-  sort(decreasing = T) %>% names %>% dplyr::nth(1000)
+  sort(decreasing = T) %>% names %>% dplyr::nth(500)
 
-Seurat::FeaturePlot(obj, features = c(gene, predictor))
+Seurat::FeaturePlot(obj, features = c(gene, predictor), reduction = "umap")
 ggplot() +
   geom_point(data = umap, aes(umap_1, umap_2, col =
                                 2*obj@misc$NNet.mod$effect[gene,predictor,]^2))+
@@ -78,7 +78,7 @@ expand.genes <- rownames(new.obj)
 
 new.obj <- prepare.seurat(new.obj, genes = expand.genes)
 new.obj <- prepare.graph(new.obj)
-new.obj <- prepare.reg(new.obj)
+new.obj <- prepare.reg(new.obj, check.expressed = T)
 
 pcs <- Seurat::Misc(new.obj, "NNet.setting")$pcs
 lra <- Seurat::Misc(new.obj, "NNet.setting")$lra
@@ -87,19 +87,18 @@ umap <- data.frame(Seurat::Embeddings(new.obj, "umap"))
 
 gene <- null.genes[1]
 new.obj <- run.nn.reg(new.obj, responses = gene, return.p.val = T)
-predictor <-  genes[1]
+predictor <-  gene
 mu <- new.obj@misc$NNet.mod$mus
 sigma <- new.obj@misc$NNet.mod$sigmas
 
 ggplot() + geom_jitter(aes(x= "umi", y= log(abs(new.obj@misc$NNet.mod$effect[gene,"n.umi",])))) +
   geom_jitter(aes(x= "predictor", y= log(abs(new.obj@misc$NNet.mod$effect[gene,predictor,])))) +
   geom_jitter(aes(x= "null", y= log(abs(new.obj@misc$NNet.mod$effect[gene,paste("NULL",predictor, sep = "-"),]))))+
-  geom_errorbar(aes(x = "predictor", ymin = mu-1.96*sigma, ymax =mu + 1.96*sigma), color = "darkred",size = 3)+
+  geom_errorbar(aes(x = "predictor", ymin = mu-1.64*sigma, ymax =mu + 1.64*sigma), color = "darkred",size = 3)+
   geom_point(aes(x = "predictor", y=mu), color = "darkred",size = 5)
 
-rowMeans(log(abs(new.obj@misc$NNet.mod$effect)[1,,]) > mu + 1.96*sigma) %>% sort(decreasing = T)
-
-
+rowMeans(log(abs(new.obj@misc$NNet.mod$effect)[1,,]) > mu + 1.64*sigma) %>% sort(decreasing = T) %>%
+  plot
 
 log(abs(new.obj@misc$NNet.mod$effect)[1,,])
 

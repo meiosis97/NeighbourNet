@@ -88,6 +88,7 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
 
   # Extract PC embedding (X matrix)
   X <- setting$pcs
+  sds <- apply(X,2,sd)
 
   # Determine if subsampling of cells has been applied
   subsampled <- !is.null(setting$cells)
@@ -232,10 +233,18 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
       }
     }
 
+    if(!custom.y){
+      y.factor <- setting$nn.scale.gene[responses[i],names(cells)]/nn.scale.y[i,]
+    }else{
+      y.factor <- 1
+    }
+
     # Compute noise distribution for pruning
     rand.loadings <- replicate(100, rnorm(n.pc)) %>% t
     rand.loadings <- rand.loadings/sqrt(rowSums(rand.loadings^2))
+    rand.loadings <- sweep(rand.loadings, 2, 1/(sds-1), "*")
     noise <- tcrossprod(rand.loadings, b) %>% as.matrix
+    noise <-  sweep(noise, 2, y.factor , "*")
     noise <- tcrossprod(noise %*% vd[cells, ], u[cells, ])
     noise <- log(abs(noise))
     mus[i] <- mean(noise)
@@ -246,6 +255,7 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
 
     # Calculate effect
     effect <- (b * setting$nn.scale.gene[genes,names(cells),drop=F]) %>%
+      sweep(2, y.factor , "*") %>%
       as.matrix
 
     if (return.smooth | return.p.val) effect.hat <- tcrossprod(effect %*% vd[cells, ], u[cells, ])

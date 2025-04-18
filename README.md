@@ -1,5 +1,7 @@
 # NeighbourNet
 
+![Logo](./logo/NNet.png)
+
 The NeighbourNet (NNet) package is currently under development. 
 
 The data and the reproducible R scripts used to generate the figures in the manuscript can be found at [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15031726.svg)](https://doi.org/10.5281/zenodo.15031726).

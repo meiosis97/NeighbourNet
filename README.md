@@ -10,41 +10,106 @@ The main difference lies in how NNet prunes the inferred co-expression networks.
 
 In comparison, the pruning strategy described in the paper is heuristic and less statistically rigorous, although it yields better results in our numerical evaluation. We conducted an analysis, available [here](./tests/investigate.pruning.md), to compare and understand the differences between the two strategies.
 
-## ── NeighbourNet: rapid test drive ─────────────────────────────────────────────
-## 0. House‑keeping ----------------------------------------------------------------
+# ⚡ NeighbourNet ‑ 5‑Minute Quick‑Start
+
+This mini‑walkthrough reproduces the **full vignette** in about 25 lines.  
+Copy‑paste into an R session and you’ll have cell‑level TF‑target networks and meta‑networks ready for downstream analysis & visualisation.
+
+> **Requires:** R ≥4.2, internet access for downloading demo data.
+
+---
+
+## 1 · Install / load core packages
+
+```r
 pkgs <- c("Seurat","dplyr","Matrix","ggplot2","ggraph",
           "scatterpie","ggrepel","ggpubr","igraph")
 if(any(miss <- !pkgs %in% installed.packages()[,1]))
     install.packages(pkgs[miss], repos = "https://cloud.r-project.org")
 invisible(lapply(pkgs, library, character.only = TRUE))
+```
 
-## 1. Load priors + demo Seurat object -------------------------------------------
+---
+
+## 2 · Fetch priors & demo dataset
+
+```r
+# local copies?  ->  ../data/*.rda
 lapply(c("gene.list","sig.graph","gr.graph","receptor.ppr"),
        \(f) load(file.path("../data", paste0(f,".rda"))))
-load("data/luad.rda")                                           # -->  obj
 
-## 2. Minimal preprocessing (QC, PCA, KNN, subsample, local‑var settings) ---------
-rt.ppr <- get.ppr()                                             # receptor–target matrix
-genes  <- select.gene(obj, min.cells = 10)                      # TF / target lists
+# Seurat object with ~4 k LUAD cells
+load("data/luad.rda")     # loads `obj`
+```
 
-obj <- obj              |>                                      # original Seurat obj
-       prepare.seurat(genes = genes$genes) |>                   # scaling + PCA
-       prepare.graph()              |>                          # KNN construction
-       select.cell()                |>                          # subsample if n > 5k
-       prepare.reg(predictors = genes$tfs,
-                   responses  = genes$targets)                  # local variance etc.
+---
 
-## 3. Run NeighbourNet on first 10 response genes + build meta‑networks ----------
-top10 <- head(genes$targets, 10)
+## 3 · One‑liner preprocessing
+
+```r
+rt.ppr <- get.ppr()                        # receptor‑target prior matrix
+genes  <- select.gene(obj, min.cells = 10) # QC → TF / target lists
+
+obj <- obj |>
+  prepare.seurat(genes = genes$genes) |>   # scale + PCA
+  prepare.graph() |>                       # 30‑NN graph
+  select.cell() |>                         # subsample if n > 5 k
+  prepare.reg(predictors = genes$tfs,      # local variance scaffolding
+              responses  = genes$targets)
+```
+
+---
+
+## 4 · Run NeighbourNet and build meta‑networks
+
+```r
+top10 <- head(genes$targets, 10)           # demo: first 10 targets
 obj   <- run.nn.reg(obj, responses = top10, return.p.val = TRUE) |>
          build.meta.network()
+```
 
-## 4. One‑click snapshot: plot meta‑network #1 -----------------------------------
-cut   <- mean(apply(obj@misc$mod$meta.network$p.val[,,1], 1, max))
+`obj@misc$mod` now contains:
+
+| slot | description |
+|------|-------------|
+| `effect` | (response × predictor × cell) co‑expression tensor |
+| `p.val`  | matching significance tensor |
+| `meta.network` | (response × predictor × meta‑cell) ensemble |
+
+---
+
+## 5 · Snapshot plot (meta‑network #1)
+
+```r
+cut <- mean(apply(obj@misc$mod$meta.network$p.val[,,1], 1, max))
 visualise.network(obj, 1, meta.network = TRUE, cutoff = cut,
-                  radius = c(.4,.7,.85,1), pie.radius = .04, text.size = 5)
+                  radius = c(.4,.7,.85,1), pie.radius = .04,
+                  text.size = 5)
+```
 
-## You now have:
-##   obj@misc$mod$effect         # cell‑level TF‑target networks
-##   obj@misc$mod$meta.network   # meta‑networks for downstream exploration
-##   receptor.activity(obj)      # receptor activity scores (optional)
+---
+
+## 6 · (Option) Receptor activity per cell
+
+```r
+act  <- receptor.activity(obj)             # matrix: receptor × cell
+lrp6 <- act$receptor.act["LRP6", ]
+```
+
+Plot on PCA:
+
+```r
+library(ggplot2)
+ggplot(Embeddings(obj, "pca"), aes(PC_1, PC_2)) +
+  geom_point(alpha = .2, size = .6, colour = "grey80") +
+  geom_point(data = Embeddings(obj, "pca")[names(lrp6), ],
+             aes(col = lrp6), size = 1)
+```
+
+---
+
+### ✨ That’s it
+
+You now have a full NeighbourNet analysis in under two minutes of run‑time.  
+Tweak gene lists, increase `responses`, or switch visualisation parameters exactly as in the full vignette.
+```

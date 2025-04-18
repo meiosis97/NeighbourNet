@@ -27,6 +27,9 @@ pkgs <- c("Seurat","dplyr","Matrix","ggplot2","ggraph",
 if(any(miss <- !pkgs %in% installed.packages()[,1]))
     install.packages(pkgs[miss], repos = "https://cloud.r-project.org")
 invisible(lapply(pkgs, library, character.only = TRUE))
+
+# Source NeighbourNet (in develop)
+source("tests/script.new.R")
 ```
 
 ---
@@ -111,7 +114,7 @@ library(ggplot2)
 ggplot(Embeddings(obj, "pca"), aes(PC_1, PC_2)) +
   geom_point(alpha = .2, size = .6, colour = "grey80") +
   geom_point(data = Embeddings(obj, "pca")[names(lrp6), ],
-             aes(col = lrp6), size = 1)
+             aes(col = as.numeric(lrp6)), size = 1)
 ```
 
 ---

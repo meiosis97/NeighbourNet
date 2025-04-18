@@ -1,6 +1,6 @@
 # NeighbourNet
 
-![Logo](./logo/NNet.png =250x250)
+![Logo](./logo/NNet.png){width=50%}
 
 The NeighbourNet (NNet) package is currently under development. 
 

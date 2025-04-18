@@ -1,6 +1,6 @@
 # NeighbourNet
 
-<img src="./logo/NNet.png" width="200" height="300">
+<img src="./logo/NNet.png" width="200" height="220">
 
 The NeighbourNet (NNet) package is currently under development. 
 

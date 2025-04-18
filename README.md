@@ -10,9 +10,10 @@ The main difference lies in how NNet prunes the inferred co-expression networks.
 
 In comparison, the pruning strategy described in the paper is heuristic and less statistically rigorous, although it yields better results in our numerical evaluation. We conducted an analysis, available [here](./tests/investigate.pruning.md), to compare and understand the differences between the two strategies.
 
-# ⚡ NeighbourNet ‑ 5‑Minute Quick‑Start
+# ⚡ 5‑Minute Quick‑Start
 
 This mini‑walkthrough reproduces the **full vignette** in about 25 lines.  
+The full vignette can be found in [here](./tests/vignettes.for.script.md)
 Copy‑paste into an R session and you’ll have cell‑level TF‑target networks and meta‑networks ready for downstream analysis & visualisation.
 
 > **Requires:** R ≥4.2, internet access for downloading demo data.

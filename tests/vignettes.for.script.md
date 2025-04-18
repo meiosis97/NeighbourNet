@@ -1,3 +1,7 @@
+``` r
+knitr::opts_chunk$set(echo = TRUE)
+```
+
 ## Introduction
 
 This vignette demonstrates the usage of the NeighbourNet by sourcing the
@@ -14,6 +18,60 @@ if(length(uninstalled.packages)){
 ```
 
 ## Source and read data
+
+    ## Loading required package: Seurat
+
+    ## Loading required package: SeuratObject
+
+    ## Loading required package: sp
+
+    ## 
+    ## Attaching package: 'SeuratObject'
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, t
+
+    ## Loading required package: dplyr
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+    ## Loading required package: Matrix
+
+    ## Loading required package: ggplot2
+
+    ## Loading required package: ggraph
+
+    ## 
+    ## Attaching package: 'ggraph'
+
+    ## The following object is masked from 'package:sp':
+    ## 
+    ##     geometry
+
+    ## Loading required package: scatterpie
+
+    ## scatterpie v0.2.4 Learn more at https://yulab-smu.top/
+
+    ## 
+    ## Attaching package: 'scatterpie'
+
+    ## The following object is masked from 'package:sp':
+    ## 
+    ##     recenter
+
+    ## Loading required package: ggrepel
+
+    ## Loading required package: ggpubr
 
 Then, load in the pre-computed prior knowledge networks that are
 available at our
@@ -382,54 +440,54 @@ Calculate receptor activity for each cell.
 act <- receptor.activity(obj)
 ```
 
-Visualise the activity distribution of NOTCH2, and identify TFs with
+Visualise the activity distribution of LRP6, and identify TFs with
 highly correlated activities.
 
 ``` r
-notch2.act <- act$receptor.act["NOTCH2",] %>% as.numeric()
+lrp6.act <- act$receptor.act["LRP6",] %>% as.numeric()
 ggplot() + geom_point(data = Embeddings(obj,"pca"), aes(PC_1,PC_2)) + 
-  geom_point(data = Embeddings(obj,"pca")[cells,], aes(PC_1,PC_2, col = notch2.act))
+  geom_point(data = Embeddings(obj,"pca")[cells,], aes(PC_1,PC_2, col = lrp6.act))
 ```
 
 ![](vignettes.for.script_files/figure-markdown_github/unnamed-chunk-25-1.png)
 
 ``` r
-cor(notch2.act, t(act$tf.act)) %>% drop %>% sort 
+cor(lrp6.act, t(act$tf.act)) %>% drop %>% sort 
 ```
 
-    ## Warning in cor(notch2.act, t(act$tf.act)): the standard deviation is zero
+    ## Warning in cor(lrp6.act, t(act$tf.act)): the standard deviation is zero
 
-    ##        SMAD3      TGFB1I1        FOXA2         E2F1         SFPQ        MYBL2 
-    ## -0.176631011 -0.151598307 -0.142649139 -0.141363295 -0.115478842 -0.110618144 
-    ##          ID2         HES6        NR1H2        EPAS1          RB1          YY1 
-    ## -0.109707241 -0.107903916 -0.106747436 -0.099787304 -0.098437222 -0.094429587 
-    ##        ESRRA        SNAI1          REL       SREBF1        KDM5B       STAT5B 
-    ## -0.094287161 -0.090010246 -0.080805812 -0.075681691 -0.074109859 -0.072018809 
-    ##        MECOM         MAFB          VDR        GATA2         KAT5         DLX2 
-    ## -0.070412510 -0.067046197 -0.066752438 -0.065536371 -0.064278329 -0.063631553 
-    ##        EWSR1        NR3C1          AHR        CLOCK         MSX2        PPARG 
-    ## -0.061142385 -0.060905000 -0.057856843 -0.056576992 -0.055576199 -0.053856641 
-    ##        PRDM2         RXRA         USF2        KDM5C          FOS          SP3 
-    ## -0.048586971 -0.047296889 -0.045290140 -0.040405432 -0.039984728 -0.036666775 
-    ##         E2F4         MTA1         TP53         JUND         BCL3         PBX1 
-    ## -0.036461158 -0.036002748 -0.031346192 -0.029533063 -0.027844945 -0.025636753 
-    ##        NFKB1        NFIL3        HDAC9      SMARCC1          MAZ        NCOA3 
-    ## -0.020725119 -0.017500058 -0.008626192 -0.008620578 -0.005065852 -0.000958519 
-    ##          JUN        CREB1          MYC        FOXA1         ELF3         RARA 
-    ##  0.008252310  0.029564825  0.047879965  0.064549498  0.065614890  0.065621548 
-    ##         HSF1         EGR1         CUX1        FOXM1         IRF2         PURA 
-    ##  0.065623569  0.066819047  0.111378831  0.137606275  0.139241206  0.211715862 
-    ##         YBX3       BCLAF1         ELK3        MECP2        KMT2A        DNMT1 
-    ##  0.220361815  0.373525646  0.393305993  0.407475118  0.407569410  0.444402653 
-    ##         NRG1        MEF2C         ENO1       RBFOX2          AIP         NONO 
-    ##  0.444696974  0.505091913  0.513123663  0.546218782  0.584553719  0.601727195 
-    ##         NFYC        HDAC1       NFE2L2         FHL2        FOSL1         CTCF 
-    ##  0.606599318  0.614943742  0.634727759  0.643698695  0.660142413  0.679738940 
-    ##        CTBP1        STAT1        MYBL1      SMARCA4         MED1         ETS1 
-    ##  0.742598770  0.753939140  0.755040006  0.776785212  0.795550179  0.806757520 
-    ##        HIF1A         MITF        TFDP1         MUC1        DMAP1        KLF10 
-    ##  0.837509883  0.842854012  0.862571851  0.910622094  0.912416875  0.915882072 
-    ##      LRRFIP1       HOXA10        NR2F2         SOX2         RBPJ 
-    ##  0.919312798  0.945587426  0.984347510  0.985741533  0.988629735
+    ##     TGFB1I1        SFPQ       NR1H2       MYBL2       EPAS1         YY1 
+    ## -0.23436736 -0.22050872 -0.18535154 -0.18433232 -0.18279110 -0.16703976 
+    ##       ESRRA       SNAI1         RB1         REL      SREBF1       CLOCK 
+    ## -0.16570604 -0.16432237 -0.15134971 -0.14623130 -0.14499265 -0.13223862 
+    ##      STAT5B         VDR       KDM5B         AHR       PPARG        KAT5 
+    ## -0.11044264 -0.11026694 -0.10472000 -0.09590079 -0.09341641 -0.09119584 
+    ##       GATA2        MAFB        DLX2        USF2       NR3C1        PBX1 
+    ## -0.09037135 -0.08912394 -0.08719102 -0.08029845 -0.07776153 -0.07605961 
+    ##       KDM5C        MSX2       PRDM2        MTA1         SP3       NFIL3 
+    ## -0.07351519 -0.06842290 -0.06641455 -0.06214424 -0.06084898 -0.05714620 
+    ##        E2F4         FOS        JUND        BCL3       NFKB1        TP53 
+    ## -0.05403517 -0.05166120 -0.04874402 -0.04536729 -0.03637087 -0.03576867 
+    ##        RXRA        HES6       EWSR1       FOXA2         MAZ     SMARCC1 
+    ## -0.02507150 -0.01469190 -0.01278912  0.02353263  0.03125413  0.03176561 
+    ##       NCOA3       HDAC9        EGR1       MECOM        E2F1        HSF1 
+    ##  0.03804905  0.04682376  0.05921529  0.06055866  0.08336832  0.11794130 
+    ##        ELF3        RARA       FOXA1        IRF2         ID2       FOXM1 
+    ##  0.11795243  0.11795592  0.11823532  0.11886785  0.12325953  0.13287226 
+    ##        CUX1         JUN        YBX3       SMAD3        ELK3      BCLAF1 
+    ##  0.13495698  0.14231493  0.20793331  0.22466139  0.23575172  0.25845377 
+    ##       MEF2C        NFYC         AIP       CREB1        NRG1      NFE2L2 
+    ##  0.30528459  0.32129249  0.33054993  0.34013795  0.34744649  0.34844606 
+    ##       MECP2       KMT2A        FHL2        PURA       DNMT1       HDAC1 
+    ##  0.35815293  0.35845965  0.37330754  0.40563518  0.41151894  0.42712949 
+    ##        CTCF       FOSL1       MYBL1         MYC        ENO1      RBFOX2 
+    ##  0.45644167  0.47944405  0.49013413  0.50047059  0.50115166  0.50263063 
+    ##        MITF        ETS1       TFDP1        NONO     LRRFIP1       DMAP1 
+    ##  0.50349973  0.51937894  0.53819339  0.54864611  0.57993536  0.58242423 
+    ##        MUC1       KLF10       STAT1       HIF1A      HOXA10        MED1 
+    ##  0.58529666  0.59028653  0.60538860  0.61515828  0.63444813  0.63743772 
+    ##        RBPJ        SOX2       NR2F2       CTBP1     SMARCA4 
+    ##  0.64003637  0.64192050  0.65089858  0.65267156  0.74264401
 
-We identified potential E2F1 mediated NOTCH inhibition of URI1.
+We identified potential JUN mediated LRP inhibition of TPM1.

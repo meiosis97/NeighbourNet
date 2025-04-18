@@ -195,13 +195,13 @@ Calculate receptor activity for each cell.
 act <- receptor.activity(obj)
 ```
 
-Visualise the activity distribution of NOTCH2, and identify TFs with highly correlated activities.
+Visualise the activity distribution of LRP6, and identify TFs with highly correlated activities.
 
-```{r}
-notch2.act <- act$receptor.act["NOTCH2",] %>% as.numeric()
+```{r, fig.height = 5, fig.width = 6}
+lrp6.act <- act$receptor.act["LRP6",] %>% as.numeric()
 ggplot() + geom_point(data = Embeddings(obj,"pca"), aes(PC_1,PC_2)) + 
-  geom_point(data = Embeddings(obj,"pca")[cells,], aes(PC_1,PC_2, col = notch2.act))
+  geom_point(data = Embeddings(obj,"pca")[cells,], aes(PC_1,PC_2, col = lrp6.act))
 
-cor(notch2.act, t(act$tf.act)) %>% drop %>% sort 
+cor(lrp6.act, t(act$tf.act)) %>% drop %>% sort 
 ```
-We identified potential E2F1 mediated NOTCH inhibition of URI1.
+We identified potential JUN mediated LRP inhibition of TPM1.

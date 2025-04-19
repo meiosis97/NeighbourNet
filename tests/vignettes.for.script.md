@@ -51,6 +51,8 @@ if(length(uninstalled.packages)){
 
     ## Loading required package: ggraph
 
+    ## Warning: package 'ggraph' was built under R version 4.4.3
+
     ## 
     ## Attaching package: 'ggraph'
 
@@ -59,6 +61,8 @@ if(length(uninstalled.packages)){
     ##     geometry
 
     ## Loading required package: scatterpie
+
+    ## Warning: package 'scatterpie' was built under R version 4.4.3
 
     ## scatterpie v0.2.4 Learn more at https://yulab-smu.top/
 
@@ -72,6 +76,8 @@ if(length(uninstalled.packages)){
     ## Loading required package: ggrepel
 
     ## Loading required package: ggpubr
+
+    ## Warning: package 'ggpubr' was built under R version 4.4.3
 
 Then, load in the pre-computed prior knowledge networks that are
 available at our
@@ -358,7 +364,7 @@ Meta-networks are also stored as a (response x predictor x meta-cell)
 network ensemble.
 
 ``` r
-Misc(obj, "mod")$meta.network$memeta.network %>% dim
+Misc(obj, "mod")$meta.network$meta.network %>% dim
 ```
 
 ## Visualisation

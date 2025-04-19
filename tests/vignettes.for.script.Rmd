@@ -140,7 +140,7 @@ obj <- build.meta.network(obj)
 Meta-networks are also stored as a (response x predictor x meta-cell) network ensemble.
 
 ```{r, eval= F}
-Misc(obj, "mod")$meta.network$memeta.network %>% dim
+Misc(obj, "mod")$meta.network$meta.network %>% dim
 ```
 
 ## Visualisation

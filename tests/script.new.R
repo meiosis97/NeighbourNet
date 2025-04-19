@@ -618,8 +618,13 @@ get.network <- function(seurat.obj, i = NULL, assay = NULL, remove.self.loops = 
   if(assay != "meta.network"){
     if(is.null(i)){
       i <- mod$cells
-    }else{
+    }else if(is.numeric(i)){
       names(i) <- rownames(w$u)[i]
+    }else if(is.character(i)){
+      i <- which(rownames(w$u) %in% i)
+      names(i) <- rownames(w$u)[i]
+    }else{
+      stop("Invalid index.")
     }
     need.impute <- !all(i %in% mod$cells)
     if(smoothed & need.impute) stop("Unable to impute cell networks due to the effect network is already smoothed.")
@@ -1223,6 +1228,7 @@ receptor.activity <- function(seurat.obj, i = NULL, meta.network = FALSE, t = 2,
                               prune = NULL,
                               receptors = NULL,
                               cutoff = NULL, check.receptor.expression = TRUE,
+                              check.gr.evidence = TRUE,
                               scale.receptor.activity = F,
                               scale.target.activity = F,
                               tfs = NULL, as.tfs = c("predictors", "responses"),
@@ -1317,7 +1323,7 @@ receptor.activity <- function(seurat.obj, i = NULL, meta.network = FALSE, t = 2,
   }
 
   # Get the prior knowledge network
-  adj <- get.gr.adj(t = t) %>% t
+  if(check.gr.evidence) adj <- get.gr.adj(t = t) %>% t
 
   # Prepare output
   if(length(cells) > 1){
@@ -1346,8 +1352,7 @@ receptor.activity <- function(seurat.obj, i = NULL, meta.network = FALSE, t = 2,
 
     if(as.tfs == "responses") network <- t(network)
 
-    network <- network[targets,tfs,drop=F] *
-      (adj[targets, tfs,drop=F] != 0)
+    if(check.gr.evidence) network <- network[targets,tfs,drop=F] * (adj[targets, tfs,drop=F] != 0)
 
     if(scale.target.activity){
       # Scale target activity.
@@ -1395,6 +1400,7 @@ receptor.activity <- function(seurat.obj, i = NULL, meta.network = FALSE, t = 2,
 
 
 prepare.visualise <- function(seurat.obj, n.clu = 4, as.g2 = c("predictors", "responses"),
+                              check.gr.evidence = TRUE,
                               central.genes = NULL, g1 = NULL, g2 = NULL, receptors = NULL, t = 2){
   setting <- Seurat::Misc(seurat.obj, "setting")
   if(is.null(setting)) stop("Run prepare.graph first, and then prepare.reg.")
@@ -1461,14 +1467,20 @@ prepare.visualise <- function(seurat.obj, n.clu = 4, as.g2 = c("predictors", "re
   }
 
   # Build up evidences
-  evidence <- matrix(1, nrow = length(g1), ncol = length(g2.full), dimnames = list(g1,g2.full))
-  adj <- get.gr.adj(t = t) %>% t
-  known.g1 <- g1[g1%in%names(igraph::V(gr.graph))]
-  known.g2 <- g2.full[g2.full%in%names(igraph::V(gr.graph))]
-  evidence[known.g1,known.g2] <- as.matrix(
-    evidence[known.g1,known.g2] +
-      (adj[known.g1, known.g2] > 0) + 2*(adj[known.g1, known.g2] < 0)
-  )
+  if(check.gr.evidence){
+    evidence <- matrix(1, nrow = length(g1), ncol = length(g2.full), dimnames = list(g1,g2.full))
+    adj <- get.gr.adj(t = t) %>% t
+    known.g1 <- g1[g1%in%names(igraph::V(gr.graph))]
+    known.g2 <- g2.full[g2.full%in%names(igraph::V(gr.graph))]
+
+    evidence[known.g1,known.g2] <- as.matrix(
+      evidence[known.g1,known.g2] +
+        (adj[known.g1, known.g2] > 0) + 2*(adj[known.g1, known.g2] < 0)
+    )
+  }else{
+    message("check.gr.evidence is set FLASE, all co-expression will be considerred as stimulation.")
+    evidence <- matrix(2, nrow = length(g1), ncol = length(g2.full), dimnames = list(g1,g2.full))
+  }
   suppressWarnings(
     Seurat::Misc(seurat.obj, "visual.setting") <-
       list(g1 = g1, g2 = g2, clu.g12 = clu.g12, hubs = hubs, receptors = receptors, rg2.ppr = rg2.ppr, as.g2 = as.g2,

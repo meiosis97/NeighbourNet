@@ -282,7 +282,7 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
 
   # Extract X
   X <- setting$pcs
-  sds <- apply(X,2,sd)
+  nu <- apply(X,2,var)
 
   # Extract Cells
   subsampled <- !is.null(setting$cells)
@@ -442,8 +442,8 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
 
     # Generate noise distribution
     rand.loadings <- replicate(500, rnorm(n.pc)) %>% t
+    rand.loadings <- sweep(rand.loadings, 2, sqrt(nu)/(nu-1), "*")
     rand.loadings <- rand.loadings/sqrt(rowSums(rand.loadings^2))
-    rand.loadings <- sweep(rand.loadings, 2, 1/(sds-1), "*")
     noise <- tcrossprod(rand.loadings, b) %>% as.matrix
     noise <-  sweep(noise, 2, y.factor , "*")
     noise <- tcrossprod(noise %*% vd[cells, ], u[cells, ])

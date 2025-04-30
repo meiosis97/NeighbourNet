@@ -15,8 +15,7 @@ In comparison, the pruning strategy described in the paper is heuristic and less
 # ⚡ 5‑Minute Quick‑Start
 
 This mini‑walkthrough reproduces the **full vignette** in about 25 lines.  
-The full vignette can be found in [here](./tests/vignettes.for.script.md)
-Copy‑paste into an R session and you’ll have cell‑level TF‑target networks and meta‑networks ready for downstream analysis & visualisation.
+The full vignette can be found in [here](./tests/vignettes.for.script.md).
 
 ---
 

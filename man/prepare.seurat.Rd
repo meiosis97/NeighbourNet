@@ -38,11 +38,14 @@ A \code{Seurat} object with PC regression settings stored in its \code{misc} slo
   \item{p}{Placeholder for the KNN affinity matrix.}
   \item{nn.idx}{Placeholder for the indices of nearest neighbors.}
   \item{nn.w}{Placeholder for the weights of nearest neighbors.}
+  \item{all.cells}{A character vector of cells used to ran PCA.}
+  \item{all.genes}{A character vector of genes used to ran PCA.}
   \item{cells}{Placeholder for selected cells.}
   \item{predictors}{Placeholder for selected predictor genes.}
   \item{responses}{Placeholder for selected response genes.}
   \item{genes}{Placeholder for the set of selected genes.}
   \item{lra}{Placeholder for the low-rank approximation matrix.}
+  \item{scale.gene}{Placeholder for global gene scales.}
   \item{nn.scale.gene}{Placeholder for gene-level variance scaling.}
   \item{nn.scale.pc}{Placeholder for PC-level variance scaling.}
   \item{n.eff}{Placeholder for effective neighborhood sizes.}

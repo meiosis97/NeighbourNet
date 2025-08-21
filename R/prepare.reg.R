@@ -25,6 +25,7 @@
 #'   \item{genes}{A character vector of all selected genes (responses and predictors).}
 #'   \item{cells}{A vector of selected cell indices, named by cell barcodes.}
 #'   \item{lra}{A low-rank approximation matrix representing the reconstructed expression of response genes based on PCs.}
+#'   \item{scale.gene}{A numeric vector of global gene scales.}
 #'   \item{nn.scale.gene}{A sparse matrix of local variances for the selected genes in each selected cell.}
 #'   \item{nn.scale.pc}{A matrix of local variances for the PCs in each selected cell.}
 #'   \item{n.eff}{A numeric vector of effective neighborhood sizes for each selected cell.}
@@ -56,7 +57,8 @@
 #' @seealso \code{\link{prepare.graph}}, \code{\link{run.nn.reg}}
 #'
 #' @export
-prepare.reg <- function(seurat.obj, responses = NULL, predictors = NULL, cells = NULL, check.expressed = FALSE) {
+prepare.reg <- function(seurat.obj, responses = NULL, predictors = NULL,
+                        cells = NULL, check.expressed = FALSE) {
 
   # Retrieve the stored settings from the Seurat object
   setting <- Seurat::Misc(seurat.obj, "NNet.setting")
@@ -86,17 +88,20 @@ prepare.reg <- function(seurat.obj, responses = NULL, predictors = NULL, cells =
   # Combine responses and predictors into a unique set of genes
   genes <- unique(c(responses, predictors))
 
+  # Get all the cells that were used to ran PCA.
+  all.cells <- setting$all.cells
+
   # Select cells for analysis
   if (is.null(cells)) {
     # Use pre-selected cells if available, otherwise use all cells
     cells <- setting$cells
     if (is.null(cells)) {
-      cells <- 1:nrow(setting$pcs)
-      names(cells) <- rownames(setting$pcs)
+      cells <- 1:length(all.cells)
+      names(cells) <- all.cells
     }
   } else {
     # Map the provided cell indices to their cell names
-    names(cells) <- rownames(setting$pcs)[cells]
+    names(cells) <- all.cells[cells]
     # Store selected cells in settings
     setting$cells <- cells
   }
@@ -116,7 +121,7 @@ prepare.reg <- function(seurat.obj, responses = NULL, predictors = NULL, cells =
 
   # Initialize matrices for local variances
   message("Calculating local variance.")
-  nn.scale.gene <- matrix(0, nrow = n.gene, ncol = n.cell,
+  nn.scale.gene <- matrix(1, nrow = n.gene, ncol = n.cell,
                           dimnames = list(genes, names(cells)))
   nn.scale.pc <- matrix(0, nrow = n.pc, ncol = n.cell,
                         dimnames = dimnames(pcs) %>% rev)
@@ -126,7 +131,10 @@ prepare.reg <- function(seurat.obj, responses = NULL, predictors = NULL, cells =
   names(n.eff) <- names(cells)
 
   # Retrieve scaled data for selected genes and cells
-  scale.data <- SeuratObject::LayerData(seurat.obj, layer = "scale.data")[genes, names(cells)]
+  scale.data <- SeuratObject::LayerData(seurat.obj, layer = "scale.data")[genes, all.cells]
+
+  # Get an indicator matrix of gene expression
+  if(check.expressed) expression <- SeuratObject::LayerData(seurat.obj, layer = "counts")[genes, all.cells] != 0
 
   # Loop through each selected cell to calculate local variances
   for (i in 1:n.cell) {
@@ -137,6 +145,8 @@ prepare.reg <- function(seurat.obj, responses = NULL, predictors = NULL, cells =
     w.mean <- as.numeric(scale.data[, idx] %*% w)  # Weighted mean for genes
     res <- scale.data[, idx] - w.mean              # Residuals
     nn.scale.gene[, i] <- as.numeric(res^2 %*% w) * n.eff[i] / (n.eff[i] - 1)
+    # Optionally scale local gene variance by local sparsity
+    if(check.expressed) nn.scale.gene[,i] <- nn.scale.gene[,i] * as.numeric(expression[,idx] %*% w)
 
     # Local PC scales
     w.mean <- as.numeric(w %*% setting$pcs[idx, ]) # Weighted mean for PCs
@@ -144,16 +154,14 @@ prepare.reg <- function(seurat.obj, responses = NULL, predictors = NULL, cells =
     nn.scale.pc[, i] <- as.numeric(res^2 %*% w) * n.eff[i] / (n.eff[i] - 1)
   }
 
-  # Optionally filter for expressed genes to exclude zero counts
-  if (check.expressed) {
-    nn.scale.gene <- nn.scale.gene *
-      (SeuratObject::LayerData(seurat.obj, layer = "counts")[genes, names(cells)] != 0)
-  }
-
   # Store calculated variances and effective neighborhood size
   setting$nn.scale.gene <- Matrix::Matrix(sqrt(nn.scale.gene))  # Gene-level variances
   setting$nn.scale.pc <- sqrt(nn.scale.pc)                      # PC-level variances
   setting$n.eff <- n.eff                                        # Effective neighborhood sizes
+
+  # Calculate the global scales of genes
+  setting$scale.gene <- SeuratObject::LayerData(seurat.obj, layer = "data")[genes,all.cells] %>%
+    apply(., 1, sd)
 
   # Update the Seurat object with the new settings
   suppressWarnings(

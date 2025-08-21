@@ -76,7 +76,7 @@ select.cell <- function(seurat.obj, p = 0.1, n = NULL, all = FALSE, ...) {
 
     # Remove duplicate cell indices and assign cell names
     cells <- unique(cells)
-    names(cells) <- rownames(setting$pcs)[cells]
+    names(cells) <- setting$all.cells[cells]
 
     # Store the selected cell indices
     setting$cells <- cells

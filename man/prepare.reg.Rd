@@ -34,6 +34,7 @@ A \code{Seurat} object with the updated \code{NNet.setting} stored in the \code{
   \item{genes}{A character vector of all selected genes (responses and predictors).}
   \item{cells}{A vector of selected cell indices, named by cell barcodes.}
   \item{lra}{A low-rank approximation matrix representing the reconstructed expression of response genes based on PCs.}
+  \item{scale.gene}{A numeric vector of global gene scales.}
   \item{nn.scale.gene}{A sparse matrix of local variances for the selected genes in each selected cell.}
   \item{nn.scale.pc}{A matrix of local variances for the PCs in each selected cell.}
   \item{n.eff}{A numeric vector of effective neighborhood sizes for each selected cell.}

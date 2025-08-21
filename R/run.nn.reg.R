@@ -209,6 +209,7 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
 
   for (i in 1:n.response) {
     pb$tick()
+    r <- responses[i]
 
     # Initialize a matrix to store regression coefficients
     b <- matrix(0, nrow = n.cell, ncol = n.pc)
@@ -234,7 +235,7 @@ run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
     }
 
     if(!custom.y){
-      y.factor <- setting$nn.scale.gene[responses[i],names(cells)]/nn.scale.y[i,]
+      y.factor <- setting$nn.scale.gene[r,names(cells)]/nn.scale.y[i,]*setting$scale.gene[r]
     }else{
       y.factor <- 1
     }

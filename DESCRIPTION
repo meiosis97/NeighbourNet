@@ -15,7 +15,8 @@ Imports:
     RANN,
     igraph,
     progress,
-    RSpectra
+    RSpectra,
+    Seurat
 Depends: 
     R (>= 4.4.0)
 Suggests: 

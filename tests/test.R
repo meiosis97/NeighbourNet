@@ -1,3 +1,4 @@
+require(Seurat)
 require(NeighbourNet)
 require(ggplot2)
 require(dplyr)

@@ -20,22 +20,8 @@ set.defaults <- function(seurat.obj, clean.up = FALSE, defaults = list()) {
   # --- Locate the model container in misc -------------------------------------
   # Prefer the canonical name used by run.nn.reg ("NNet.mod"), but support "mod" for back-compat.
   mod <- Seurat::Misc(seurat.obj, "NNet.mod")
-  misc_key <- "NNet.mod"
-  if (is.null(mod)) {
-    mod <- Seurat::Misc(seurat.obj, "mod")
-    misc_key <- "mod"
-  }
   if (is.null(mod)) {
     stop("No model found in misc. Run `prepare.reg`/`run.nn.reg` first.")
-  }
-
-  # --- Basic sanity checks on structure ---------------------------------------
-  if (is.null(mod$defaults)) {
-    stop("`mod$defaults` is missing. Ensure the model was created by `run.nn.reg` or compatible code.")
-  }
-  if (is.null(mod$gene.sets) || is.null(mod$gene.sets$genes) ||
-      is.null(mod$gene.sets$predictors) || is.null(mod$gene.sets$responses)) {
-    stop("`mod$gene.sets` is incomplete. Did you run `run.nn.reg` successfully?")
   }
 
   # --- Optional full reset of defaults ----------------------------------------

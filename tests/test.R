@@ -7,9 +7,9 @@ load("tests/data/luad.rda")
 obj <- Seurat::FindVariableFeatures(obj)
 genes <- Seurat::VariableFeatures(obj)
 
-get.prior.model()
+get.prior.model() %>% str
 
-get.gr.adj()
+get.gr.adj() %>% str
 
 gene.list <- select.gene(obj)
 
@@ -17,7 +17,7 @@ obj <- prepare.seurat(obj, genes = genes)
 
 obj <- prepare.graph(obj)
 
-obj <- select.cell(obj, all = TRUE)
+obj <- select.cell(obj)
 
 obj <- prepare.reg(obj, responses = genes)
 
@@ -32,6 +32,15 @@ obj <- set.defaults(obj, clean.up = TRUE)
 str(Seurat::Misc(obj, "NNet.mod"))
 
 str(Seurat::Misc(obj, "NNet.setting"))
+
+get.network(obj) %>% str
+
+get.network(obj, i = 2) %>% str
+
+get.network(obj, i = 2,
+                       assay = "effect", responses = genes[2:3], predictors = sample(genes, 10)) %>% str
+
+get.network(obj, assay = "p.val", cutoff = 0.9) %>% str
 
 ###################  Check results ###################
 pcs <- Seurat::Misc(obj, "NNet.setting")$pcs

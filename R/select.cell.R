@@ -61,7 +61,7 @@ select.cell <- function(seurat.obj, p = 0.1, n = NULL, all = FALSE, ...) {
   } else {
     # Calculate the number of cells to select if `n` is not provided
     if (is.null(n)) {
-      n <- nrow(setting$pcs)
+      n <- length(setting$all.cells)
       n <- ceiling(n * p)
     }
 

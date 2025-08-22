@@ -93,10 +93,8 @@
 #' net.meta <- get.network(seurat.obj, assay = "meta.network", i = 3, drop = FALSE)
 #'
 #' # Effect network with pruning + custom transform, keeping self-loops
-#' net.imp <- get.network(
-#'   seurat.obj,
-#'   assay = "effect",
-#'   cutoff = 0.95,
+#' net.imp <- get.network(seurat.obj,
+#'   assay = "effect", cutoff = 0.95,
 #'   f = function(x) abs(x),
 #'   remove.self.loops = FALSE
 #' )
@@ -104,22 +102,16 @@
 #' @seealso \code{\link{run.nn.reg}}, \code{\link{set.defaults}}
 #'
 #' @export
-get.network <- function(
-  seurat.obj,
-  i = NULL,
-  assay = NULL,
-  remove.self.loops = NULL,
-  responses = NULL,
-  predictors = NULL,
-  f = NULL,
-  drop = TRUE,
-  cutoff = NULL
+get.network <- function(seurat.obj,  i = NULL,  assay = NULL,
+  remove.self.loops = NULL,  responses = NULL,  predictors = NULL,  f = NULL,
+  drop = TRUE,  cutoff = NULL
 ) {
-  # --- Fetch the model container ------------------------------------------------
-  mod <- Seurat::Misc(seurat.obj, "mod")
-  if (is.null(mod)) stop("Run prepare.reg first.")
+  mod <- Seurat::Misc(seurat.obj, "NNet.mod")
+  if (is.null(mod)) {
+    stop("No model found in misc. Run prepare.reg / run.nn.reg first.")
+  }
 
-  # --- Resolve defaults / validate inputs --------------------------------------
+  # Resolve defaults / validate inputs
   # Assay
   if (is.null(assay)) {
     assay <- mod$defaults$assay
@@ -128,18 +120,33 @@ get.network <- function(
   }
 
   # Cutoff
-  if (is.null(cutoff)) {
-    cutoff <- mod$defaults$cutoff
-  } else if (!is.numeric(cutoff)) {
-    stop("cutoff must be numerical and between 0 and 1.")
+  cutoff <- mod$defaults$cutoff
+  if (!is.numeric(cutoff) || length(cutoff) != 1L || is.na(cutoff)) {
+    stop("`cutoff` must be a numeric scalar between 0 and 1.")
   }
-  if (cutoff < 0) cutoff <- 0
+  # Gentle clamping with a message (preserves your previous behavior for <0)
+  if (cutoff < 0) {
+    warning("`cutoff` < 0 detected; clamping to 0.")
+    mod$defaults$cutoff <- 0
+  } else if (cutoff > 1) {
+    warning("`cutoff` > 1 detected; clamping to 1.")
+    mod$defaults$cutoff <- 1
+  }
 
-  # Self-loops
+  # Validate `remove.self.loops`
   if (is.null(remove.self.loops)) {
     remove.self.loops <- mod$defaults$remove.self.loops
-  } else if (!is.logical(remove.self.loops)) {
-    stop("remove.self.loops must be logical.")
+  } 
+  if (!is.logical(remove.self.loops) || length(remove.self.loops) != 1L) {
+    stop("remove.self.loops must be a single logical (TRUE/FALSE).")
+  }
+
+  # Validate `f`
+  if (is.null(f)) {
+    f <- mod$defaults$f
+  }
+  if (!is.function(f)) {
+    stop("`f` must be a function (e.g., default: function(x) 2*x^2).")
   }
 
   # Gene panels
@@ -155,28 +162,23 @@ get.network <- function(
     predictors <- intersect(predictors, mod$gene.sets$genes)
   }
 
-  # Effect transform
-  if (is.null(f)) {
-    f <- mod$defaults$f
-  } else if (!is.function(f)) {
-    stop("f must be a function.")
-  }
-
   w <- mod$w
-  smoothed <- isTRUE(mod$smoothed)
+  smoothed <- mod$smoothed
+  all.cells <- rownames(w$u)
 
-  # --- Resolve cell indices -----------------------------------------------------
+  # Resolve cell indices
   if (assay != "meta.network") {
     if (is.null(i)) {
       # Use stored cells
       i <- mod$cells
     } else if (is.numeric(i)) {
-      # Numeric index into the Laplacian basis rows (u)
-      names(i) <- rownames(w$u)[i]
+      # Name numerical indeces with cell names
+      names(i) <- all.cells[i]
     } else if (is.character(i)) {
-      # Character names → indices via u's rownames
-      i <- which(rownames(w$u) %in% i)
-      names(i) <- rownames(w$u)[i]
+      # Character names → indices via all cell names
+      i.tmp <- which(all.cells %in% i)
+      names(i.tmp) <- all.cells[i.tmp]
+      i <- i.tmp[i]
     } else {
       stop("Invalid index for `i`. Provide NULL, numeric indices, or character cell names.")
     }
@@ -202,7 +204,7 @@ get.network <- function(
   n.response <- length(responses)
   n.predictor <- length(predictors)
 
-  # --- Build / fetch the network tensor ----------------------------------------
+  # Build / fetch the network tensor
   if (assay == "effect") {
 
     if (smoothed) {
@@ -264,13 +266,16 @@ get.network <- function(
     network <- mod$meta.network$meta.network[responses, predictors, i, drop = FALSE]
   }
 
-  # --- Pruning ------------------------------------------------------------------
-  if (cutoff > 0) {
+  # Pruning
+  if (cutoff > 0) { 
     if (assay == "effect") {
       # Per-response pruning using p-values
       for (r in responses) {
         if (need_impute || is.null(mod$p.val)) {
-          p.val <- pnorm(log(abs(network[r, predictors, ])), mod$mus[r], mod$sigmas[r])
+          p.val <- network[r, predictors, ] %>%
+                    abs %>% 
+                    log %>% 
+                    pnorm(., mod$mus[r], mod$sigmas[r])
         } else {
           p.val <- mod$p.val[r, predictors, names(i)]
         }
@@ -283,12 +288,12 @@ get.network <- function(
     # meta.network has no pruning branch here by design
   }
 
-  # --- Transform (effects only) -------------------------------------------------
+  # Transform (effects only)
   if (assay == "effect") {
     network <- f(network)
   }
 
-  # --- Remove self-loops --------------------------------------------------------
+  # Remove self-loops
   if (remove.self.loops) {
     diag_genes <- intersect(responses, predictors)
     if (length(diag_genes)) {
@@ -296,8 +301,8 @@ get.network <- function(
     }
   }
 
-  # --- Drop length-1 dimensions for convenience --------------------------------
-  if (isTRUE(drop)) {
+  #Drop length-1 dimensions for convenience
+  if (drop) {
     if (n.cell == 1) {
       network <- matrix(network, nrow = n.response,
                         dimnames = list(responses, predictors))

@@ -120,10 +120,8 @@ net.p <- get.network(seurat.obj, assay = "p.val", cutoff = 0.9)
 net.meta <- get.network(seurat.obj, assay = "meta.network", i = 3, drop = FALSE)
 
 # Effect network with pruning + custom transform, keeping self-loops
-net.imp <- get.network(
-  seurat.obj,
-  assay = "effect",
-  cutoff = 0.95,
+net.imp <- get.network(seurat.obj,
+  assay = "effect", cutoff = 0.95,
   f = function(x) abs(x),
   remove.self.loops = FALSE
 )

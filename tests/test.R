@@ -23,11 +23,15 @@ obj <- prepare.reg(obj, responses = genes)
 
 obj <- run.nn.reg(obj, responses = genes[1:5], return.p.val = T)
 
+obj <- set.defaults(obj)
+
+obj <- set.defaults(obj, defaults = c(cutoff = 2))
+
+obj <- set.defaults(obj, clean.up = TRUE)
+
 str(Seurat::Misc(obj, "NNet.mod"))
 
 str(Seurat::Misc(obj, "NNet.setting"))
-
-
 
 ###################  Check results ###################
 pcs <- Seurat::Misc(obj, "NNet.setting")$pcs

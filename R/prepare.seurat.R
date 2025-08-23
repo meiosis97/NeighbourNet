@@ -166,7 +166,7 @@ find.significant.pcs <- function(sd) {
   npcs <- max(which(s > sk)) + 1
 
   # Handle case where no significant PCs are identified
-  if (length(npcs) == 0) {
+  if (length(npcs) == 0 || is.infinite(npcs)) {
     warning("No significant components identified. Using all components.")
     return(k)
   }

@@ -8,8 +8,7 @@ set.defaults(seurat.obj, clean.up = FALSE, defaults = list())
 }
 \arguments{
 \item{seurat.obj}{A \code{Seurat} object with a \code{NNet.mod} list stored in the \code{misc} slot.
-This list is created by \code{\link{prepare.reg}} and updated by
-\code{\link{run.nn.reg}}.}
+This list is created by \code{\link{run.nn.reg}}.}
 
 \item{clean.up}{A logical indicating whether to reset defaults to initial values
 (effect-based assay, quadratic transformation, self-loop removal,

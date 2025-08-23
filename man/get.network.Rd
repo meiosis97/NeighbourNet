@@ -18,8 +18,7 @@ get.network(
 }
 \arguments{
 \item{seurat.obj}{A \code{Seurat} object with a \code{NNet.mod} list stored in the \code{misc} slot.
-This list is created by \code{\link{prepare.reg}} and updated by
-\code{\link{run.nn.reg}}.}
+This list is created by \code{\link{run.nn.reg}}.}
 
 \item{i}{Cells for which to extract networks. Can be:
 \itemize{

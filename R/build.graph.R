@@ -35,7 +35,7 @@ build.graph <- function(pcs, knn = 30){
   # Compute sigma for each cell
   for (i in 1:n) {
     dk <- scaled.dists[i, 1:knn]  # Distances to k-nearest neighbors
-    sigma[i] <- FindSigma(dk, a, knn)  # Optimal sigma for cell i
+    sigma[i] <- find.sigma(dk, a, knn)  # Optimal sigma for cell i
   }
 
   # Calculate affinity weights
@@ -69,7 +69,7 @@ build.graph <- function(pcs, knn = 30){
 # dk: distance vector to nearest neighbors
 # a: scaling factor
 # knn: number of nearest neighbors
-FindSigma <- function(dk, a, knn) {
+find.sigma <- function(dk, a, knn) {
   lower <- 0
   upper <- Inf
   cur <- dk[knn]  # Initial guess for sigma based on the kth nearest neighbor distance

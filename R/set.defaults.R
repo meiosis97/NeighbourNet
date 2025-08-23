@@ -9,8 +9,7 @@
 #' transformation functions for effect estimates.
 #'
 #' @param seurat.obj A \code{Seurat} object with a \code{NNet.mod} list stored in the \code{misc} slot.
-#'                   This list is created by \code{\link{prepare.reg}} and updated by
-#'                   \code{\link{run.nn.reg}}.
+#'                   This list is created by \code{\link{run.nn.reg}}.
 #' @param clean.up A logical indicating whether to reset defaults to initial values
 #'                 (effect-based assay, quadratic transformation, self-loop removal,
 #'                 and pruning at cutoff 0.95). Default is \code{FALSE}.

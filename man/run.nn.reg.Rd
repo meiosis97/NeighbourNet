@@ -57,7 +57,8 @@ A \code{Seurat} object with a list named \code{NNet.mod} stored in its \code{mis
 \code{NNet.mod} is a list containing:
 \item{effect}{A tensor of effect sizes (responses x predictors x cells).}
 \item{p.val}{A tensor of p-values (responses x predictors x cells) if \code{return.p.val = TRUE}.}
-\item{meta.network}{Reserved for future use.}
+\item{meta.network}{Reserved for \code{\link{build.meta.network}}.}
+\item{meta.response}{Reserved for \code{\link{build.meta.response}}.}
 \item{mus}{A named vector of mean log-transformed noise distributions for each response.}
 \item{sigmas}{A named vector of standard deviations for log-transformed noise distributions for each response.}
 \item{subsampled}{A logical indicating whether cell subsampling was performed.}

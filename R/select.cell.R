@@ -23,11 +23,13 @@
 #' @details
 #' This function provides flexibility in selecting cells for downstream PC regression analysis:
 #'
-#' - **Subset Selection**: If \code{all = FALSE}, a subset of cells is selected based on k-means clustering
+#' \strong{Subset Selection}: If \code{all = FALSE}, a subset of cells is selected based on k-means clustering
 #'   in the PC space. This ensures that the selected cells represent the overall distribution of the data.
-#' - **Balanced Sampling**: The function identifies cluster centers using k-means and selects
+#' 
+#' \strong{Balanced Sampling}: The function identifies cluster centers using k-means and selects
 #'   the nearest neighbors to achieve a balanced representation.
-#' - **Full Dataset Usage**: If \code{all = TRUE}, no cells are excluded, and the entire dataset is used.
+#' 
+#' \strong{Full Dataset Usage}: If \code{all = TRUE}, no cells are excluded, and the entire dataset is used.
 #'
 #' By default, the function selects 10% of the cells (\code{p = 0.1}). For large datasets,
 #' users can provide \code{n} to select an exact number of cells or use \code{all = TRUE} to include all cells.

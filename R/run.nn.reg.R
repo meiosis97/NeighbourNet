@@ -30,7 +30,8 @@
 #' \code{NNet.mod} is a list containing:
 #' \item{effect}{A tensor of effect sizes (responses x predictors x cells).}
 #' \item{p.val}{A tensor of p-values (responses x predictors x cells) if \code{return.p.val = TRUE}.}
-#' \item{meta.network}{Reserved for future use.}
+#' \item{meta.network}{Reserved for \code{\link{build.meta.network}}.}
+#' \item{meta.response}{Reserved for \code{\link{build.meta.response}}.}
 #' \item{mus}{A named vector of mean log-transformed noise distributions for each response.}
 #' \item{sigmas}{A named vector of standard deviations for log-transformed noise distributions for each response.}
 #' \item{subsampled}{A logical indicating whether cell subsampling was performed.}
@@ -292,16 +293,27 @@ run.nn.reg <- function(seurat.obj,
   names(mus) <- names(sigmas) <- responses
 
   mod <- list(
-    effect = effect.tensor, p.val = p.val.tensor, meta.network = NULL,
-    mus = mus, sigmas = sigmas, subsampled = subsampled,
-    smoothed = return.smooth, pruned = return.prune,
+    effect = effect.tensor, p.val = p.val.tensor,
+    meta.network = NULL,
+    meta.response = NULL,
+    mus = mus, sigmas = sigmas,
+    subsampled = subsampled,
+    smoothed = return.smooth,
+    pruned = return.prune,
     gene.sets = list(
       predictors = list(genes = predictors, tfs = tfs.in.predictors, targets = targets.in.predictors),
       responses = list(genes = responses, tfs = tfs.in.responses, targets = targets.in.responses),
       genes = genes
     ),
     cells = cells,
-    defaults = list(f = f, remove.self.loops = remove.self.loops, assay = assay, predictors = predictors, responses = responses, cutoff = cutoff, prune = prune),
+    defaults = list(f = f,
+                    remove.self.loops = remove.self.loops,
+                    assay = assay, 
+                    predictors = predictors, 
+                    responses = responses, 
+                    cutoff = cutoff, 
+                    prune = prune
+                   ),
     custom.y = custom.y, w = list(u = u, vd = vd)
   )
 

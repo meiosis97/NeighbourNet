@@ -2,10 +2,12 @@
 
 export(build.graph)
 export(build.meta.network)
+export(build.meta.response)
 export(get.gr.adj)
 export(get.network)
 export(get.prior.model)
 export(gg.color.spec)
+export(npca)
 export(prepare.graph)
 export(prepare.reg)
 export(prepare.seurat)

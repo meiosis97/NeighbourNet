@@ -44,6 +44,8 @@ get.network(obj, assay = "p.val", cutoff = 0.9) %>% str
 
 obj <- build.meta.network(obj)
 
+obj <- build.meta.response(obj)
+
 cells <- Misc(obj)$NNet.mod$cells
 
 ###################  Check results ###################
@@ -81,7 +83,7 @@ ggplot() +
 
                                 ggplot() +
 geom_point(data = umap, aes(umap_1, umap_2, col =
-                                obj@misc$NNet.mod$meta.network$npca.loadings[,3]))
+                                obj@misc$NNet.mod$meta.network$npca.loadings[,1]))
 
 
 ###################  Check results2 ###################

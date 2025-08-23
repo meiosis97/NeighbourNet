@@ -61,7 +61,13 @@
 #' @seealso \code{\link[Seurat]{ScaleData}}, \code{\link[Seurat]{RunPCA}}
 #'
 #' @export
-prepare.seurat <- function(seurat.obj, genes, npcs = 100, truncated = TRUE, ScaleData.ctrl = list(), RunPCA.ctrl = list()) {
+prepare.seurat <- function(seurat.obj,
+  genes,
+  npcs = 100,
+  truncated = TRUE,
+  ScaleData.ctrl = list(),
+  RunPCA.ctrl = list()
+  ) {
 
   # Ensure `genes` is valid and present in `seurat.obj`
   genes <- intersect(genes, rownames(seurat.obj))

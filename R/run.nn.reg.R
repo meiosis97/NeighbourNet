@@ -1,3 +1,6 @@
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Exported
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #' Run Nearest-Neighbor PC Regression for Gene Co-Expression Analysis
 #'
 #' This function performs nearest-neighbor regression on a Seurat object to measure
@@ -16,7 +19,7 @@
 #' @param f A function to map the effect estimation to importance scores for downstream analysis. Default is \code{function(x) 2*x^2} that yields permutation feature importamce.
 #' @param assay A character string indicating the co-expression measure to use in downstream analysis. Options are \code{"effect"} or \code{"p.val"}. Default is \code{"effect"}.
 #' @param prune A logical indicating whether to prune networks based on p-values for downstream analysis. Default is \code{TRUE}.
-#' @param cutoff A numeric value specifying the p-value threshold for pruning for downstream analysis.. Default is 0.5.
+#' @param cutoff A numeric value specifying the p-value threshold for pruning for downstream analysis.. Default is 0.95.
 #' @param return.p.val A logical indicating whether to return p-values in addition to the effect tensor. Set to \code{FALSE} to save memory. Default is \code{FALSE}.
 #' @param return.smooth A logical indicating whether to return the smoothed effect tensor.
 #' If set to \code{TRUE}, networks will not be further smoothed in downstream analysis. Default is \code{TRUE}.
@@ -66,11 +69,21 @@
 #' @seealso \code{\link{prepare.graph}}, \code{\link{prepare.reg}}, \code{\link{set.defaults}}
 #'
 #' @export
-run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,
-                       predictors = NULL, t = 3, k = NULL,
-                       remove.self.loops = T, f = function(x) 2*x^2, assay = c("effect", "p.val"),
-                       prune = TRUE, cutoff = 0.5,
-                       return.p.val = FALSE, return.smooth = TRUE, return.prune = FALSE) {
+run.nn.reg <- function(seurat.obj,
+                       responses = NULL,
+                       Y = NULL,
+                       predictors = NULL,
+                       t = 3,
+                       k = NULL,
+                       remove.self.loops = T,
+                       f = function(x) 2*x^2,
+                       assay = c("effect", "p.val"),
+                       prune = TRUE,
+                       cutoff = 0.95,
+                       return.p.val = FALSE,
+                       return.smooth = TRUE,
+                       return.prune = FALSE
+                       ) {
   # Retrieve the stored settings from the Seurat object
   setting <- Seurat::Misc(seurat.obj, "NNet.setting")
 

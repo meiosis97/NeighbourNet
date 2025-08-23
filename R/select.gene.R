@@ -69,5 +69,9 @@ select.gene <- function(seurat.obj,
   genes <- unique(c(tfs, targets, bgs))
 
   # Return the filtered gene lists
-  list(tfs = tfs, targets = targets, bgs = bgs, genes = genes)
+  list(tfs = tfs,
+       targets = targets,
+       bgs = bgs,
+       genes = genes
+      )
 }

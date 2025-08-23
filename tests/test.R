@@ -42,15 +42,19 @@ get.network(obj, i = 2,
 
 get.network(obj, assay = "p.val", cutoff = 0.9) %>% str
 
+obj <- build.meta.network(obj)
+
+cells <- Misc(obj)$NNet.mod$cells
+
 ###################  Check results ###################
-pcs <- Seurat::Misc(obj, "NNet.setting")$pcs
-lra <- Seurat::Misc(obj, "NNet.setting")$lra
+pcs <- Seurat::Misc(obj, "NNet.setting")$pcs[cells,]
+lra <- Seurat::Misc(obj, "NNet.setting")$lra[cells,]
 obj <- Seurat::RunUMAP(obj, dims = 1:ncol(pcs))
-umap <- data.frame(Seurat::Embeddings(obj, "umap"))
+umap <- data.frame(Seurat::Embeddings(obj, "umap"))[cells,]
 
 gene <- genes[1]
 predictor <- rowSums(2*obj@misc$NNet.mod$effect[gene, , ]^2) %>%
-  sort(decreasing = T) %>% names %>% dplyr::nth(500)
+  sort(decreasing = T) %>% names %>% dplyr::nth(1)
 
 Seurat::FeaturePlot(obj, features = c(gene, predictor), reduction = "umap")
 ggplot() +
@@ -74,6 +78,11 @@ ggplot() + geom_point(aes(lra[,predictor],lra[,gene], col =
 ggplot() +
   geom_point(data = umap, aes(umap_1, umap_2, col =
                                 obj@misc$NNet.mod$p.val[gene,predictor,] > 0.95))
+
+                                ggplot() +
+geom_point(data = umap, aes(umap_1, umap_2, col =
+                                obj@misc$NNet.mod$meta.network$npca.loadings[,3]))
+
 
 ###################  Check results2 ###################
 # Build the null data matrix

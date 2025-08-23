@@ -15,7 +15,7 @@ run.nn.reg(
   f = function(x) 2 * x^2,
   assay = c("effect", "p.val"),
   prune = TRUE,
-  cutoff = 0.5,
+  cutoff = 0.95,
   return.p.val = FALSE,
   return.smooth = TRUE,
   return.prune = FALSE
@@ -42,7 +42,7 @@ run.nn.reg(
 
 \item{prune}{A logical indicating whether to prune networks based on p-values for downstream analysis. Default is \code{TRUE}.}
 
-\item{cutoff}{A numeric value specifying the p-value threshold for pruning for downstream analysis.. Default is 0.5.}
+\item{cutoff}{A numeric value specifying the p-value threshold for pruning for downstream analysis.. Default is 0.95.}
 
 \item{return.p.val}{A logical indicating whether to return p-values in addition to the effect tensor. Set to \code{FALSE} to save memory. Default is \code{FALSE}.}
 

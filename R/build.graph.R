@@ -59,7 +59,10 @@ build.graph <- function(pcs, knn = 30){
   diag(p) <- diag(p) + 0.5  # Adjust diagonal entries
 
   # Return the results
-  return(list(p = p, nn.idx = nn.idx, nn.w = nn.w))
+  list(p = p,
+       nn.idx = nn.idx,
+       nn.w = nn.w
+      )
 }
 
 # Helper function to find the optimal sigma for adaptive kernel scaling

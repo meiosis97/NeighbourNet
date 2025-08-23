@@ -57,8 +57,11 @@
 #' @seealso \code{\link{prepare.graph}}, \code{\link{run.nn.reg}}
 #'
 #' @export
-prepare.reg <- function(seurat.obj, responses = NULL, predictors = NULL,
-                        cells = NULL, check.expressed = FALSE) {
+prepare.reg <- function(seurat.obj,
+                        responses = NULL,
+                        predictors = NULL,
+                        cells = NULL,
+                        check.expressed = FALSE) {
 
   # Retrieve the stored settings from the Seurat object
   setting <- Seurat::Misc(seurat.obj, "NNet.setting")

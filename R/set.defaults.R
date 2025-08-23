@@ -1,3 +1,6 @@
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Exported
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #' Set Default Parameters for Network Extraction
 #'
 #' This function updates or resets default settings used in downstream network
@@ -48,7 +51,10 @@
 #' @seealso \code{\link{run.nn.reg}}, \code{\link{prepare.reg}}
 #'
 #' @export
-set.defaults <- function(seurat.obj, clean.up = FALSE, defaults = list()) {
+set.defaults <- function(seurat.obj,
+                         clean.up = FALSE,
+                         defaults = list()
+                         ) {
   # Model extraction
   mod <- Seurat::Misc(seurat.obj, "NNet.mod")
   if (is.null(mod)) {

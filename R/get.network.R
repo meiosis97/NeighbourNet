@@ -1,3 +1,6 @@
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Exported
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #' Extract Per-Cell Gene Co-Expression Networks
 #'
 #' Retrieves effect or p-value networks (or meta-networks) from a \code{Seurat}
@@ -102,10 +105,16 @@
 #' @seealso \code{\link{run.nn.reg}}, \code{\link{set.defaults}}
 #'
 #' @export
-get.network <- function(seurat.obj,  i = NULL,  assay = NULL,
-  remove.self.loops = NULL,  responses = NULL,  predictors = NULL,  f = NULL,
-  drop = TRUE,  cutoff = NULL
-) {
+get.network <- function(seurat.obj,
+                        i = NULL,
+                        assay = NULL,
+                        remove.self.loops = NULL,
+                        responses = NULL,
+                        predictors = NULL,
+                        f = NULL,
+                        drop = TRUE,
+                        cutoff = NULL
+                        ) {
   mod <- Seurat::Misc(seurat.obj, "NNet.mod")
   if (is.null(mod)) {
     stop("No model found in misc. Run prepare.reg / run.nn.reg first.")

@@ -47,7 +47,11 @@
 #' @seealso \code{\link{prepare.seurat}}, \code{\link[stats]{kmeans}}
 #'
 #' @export
-select.cell <- function(seurat.obj, p = 0.1, n = NULL, all = FALSE, ...) {
+select.cell <- function(seurat.obj,
+                        p = 0.1,
+                        n = NULL,
+                        all = FALSE, ...
+                        ) {
   # Retrieve the stored NNet.setting from the Seurat object
   setting <- Seurat::Misc(seurat.obj, "NNet.setting")
 

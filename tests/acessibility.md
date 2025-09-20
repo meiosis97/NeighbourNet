@@ -24,17 +24,12 @@ obj   <- run.nn.reg(obj, responses = top10, return.p.val = TRUE) |>
 
 ## 3 · Snapshot plot (Cell #1)
 ```r
-visualise.network(obj, 1, 
-                  radius = c(.4,.7,.85,1), pie.radius = .04,
-                  text.size = 5)
+visualise.network(obj, 1)
 ```
 
 ## 4 · Snapshot plot (meta‑network #1)
 ```r
-cut <- mean(apply(obj@misc$mod$meta.network$p.val[,,1], 1, max))
-visualise.network(obj, 1, meta.network = TRUE, cutoff = cut,
-                  radius = c(.4,.7,.85,1), pie.radius = .04,
-                  text.size = 5)
+visualise.network(obj, 1, meta.network = TRUE)
 ```
 
 ## 5. Receptor activity

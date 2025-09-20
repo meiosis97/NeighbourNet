@@ -68,7 +68,9 @@ obj <- obj |>
 ```r
 top10 <- head(genes$targets, 10)           # demo: first 10 targets
 obj   <- run.nn.reg(obj, responses = top10, return.p.val = TRUE) |>
-         build.meta.network()
+         build.meta.network() |>
+         select.central.genes() |>
+         prepare.visualise()
 ```
 
 `obj@misc$mod` now contains:

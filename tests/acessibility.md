@@ -9,8 +9,7 @@ genes  <- select.gene(obj, min.cells = 10) # QC → TF / target lists
 # Obj: A Seurat Object
 obj <- obj |>
   prepare.seurat(genes = genes$genes) |>   # scale + PCA
-  prepare.graph() |>                       # 30‑NN graph
-  select.cell() |>                         # subsample 
+  prepare.graph() |>                       # build KNN graph
   prepare.reg(predictors = genes$tfs,      # local variance scaffolding
               responses  = genes$targets)
 ```

@@ -2,9 +2,11 @@
 
 ```r
 require(NeighbourNet)
+require(Seurat)
 rt.ppr <- get.ppr()                        # receptor‑target prior matrix
 genes  <- select.gene(obj, min.cells = 10) # QC → TF / target lists
 
+# Obj: A Seurat Object
 obj <- obj |>
   prepare.seurat(genes = genes$genes) |>   # scale + PCA
   prepare.graph() |>                       # 30‑NN graph

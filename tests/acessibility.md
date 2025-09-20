@@ -58,3 +58,4 @@ flowchart TD
     E[5 · Receptor activity<br/><br/>act <- receptor.activity(obj)]
 
     A --> B --> C --> D --> E
+```

@@ -70,7 +70,7 @@
 #' \strong{Transformation}
 #' \itemize{
 #'   \item When \code{assay = "effect"}, the returned tensor/matrix is transformed
-#'         by \code{f} (default often \code{function(x) 2*x^2}) to yield an
+#'         by \code{f} (default \code{function(x) 2*x^2}) to yield an
 #'         importance score. No transform is applied for \code{"p.val"} or
 #'         \code{"meta.network"}.
 #' }

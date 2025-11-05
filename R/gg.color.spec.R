@@ -26,12 +26,6 @@
 #' # Palette with 7 colors, including a background color
 #' gg.color.spec(n = 7, background = TRUE)
 #'
-#' # Use the palette in a ggplot
-#' library(ggplot2)
-#' ggplot(mpg, aes(x = class, fill = class)) +
-#'   geom_bar() +
-#'   scale_fill_manual(values = gg.color.spec(7))
-#'
 #' @export
 gg.color.spec <- function(n = 11, background = FALSE) {
   # Generate the reversed Spectral palette

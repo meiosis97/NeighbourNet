@@ -35,7 +35,11 @@ str(Seurat::Misc(obj, "NNet.setting"))
 
 get.network(obj) %>% str
 
+get.network(obj, i = 1)
+
 get.network(obj, i = 2) %>% str
+
+get.network(obj, i = c(2,4)) %>% str
 
 get.network(obj, i = 2,
                        assay = "effect", responses = genes[2:3], predictors = sample(genes, 10)) %>% str
@@ -47,6 +51,14 @@ obj <- build.meta.network(obj)
 obj <- build.meta.response(obj)
 
 cells <- Misc(obj)$NNet.mod$cells
+
+select.central.genes(obj) %>% str
+
+select.central.genes(obj, k = 2) %>% str
+
+select.central.genes(obj, k = 2, keep.responses = TRUE) %>% str
+
+select.central.genes(obj, k = 2, n.net = 1) %>% str
 
 ###################  Check results ###################
 pcs <- Seurat::Misc(obj, "NNet.setting")$pcs[cells,]

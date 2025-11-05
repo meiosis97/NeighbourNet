@@ -29,7 +29,7 @@
 #' gene set with provided or default lists of TFs, targets, and background genes.
 #'
 #' @examples
-#' selected.genes <- select.gene(seurat.obj)
+#' select.gene(seurat.obj)
 #'
 #' @seealso \code{\link{gr.graph}}
 #'

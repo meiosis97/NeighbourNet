@@ -19,19 +19,6 @@
 #' This list is crucial for gene regulatory network (GRN) inference and upstream
 #' signaling pathway (USP) analysis in NNet.
 #'
-#' @examples
-#' # Access the list of transcription factors
-#' head(gene.list$tfs)
-#'
-#' # Access the list of target genes
-#' head(gene.list$targets)
-#'
-#' # Access the list of receptors
-#' head(gene.list$receptors)
-#'
-#' # Access the list of ligands
-#' head(gene.list$ligands)
-#'
 #' @source The integrated prior knowledge network used in NNet analysis.
 #'
 "gene.list"

@@ -29,10 +29,10 @@
 #'
 #' @examples
 #' # Generate an adjacency matrix with the default 2-step propagation
-#' adj_matrix <- get.gr.adj()
+#' get.gr.adj()
 #'
 #' # Generate an adjacency matrix with 3-step propagation
-#' adj_matrix <- get.gr.adj(t = 3)
+#' get.gr.adj(t = 3)
 #'
 #' @seealso \code{\link{gr.graph}}
 #'

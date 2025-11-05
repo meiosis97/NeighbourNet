@@ -28,13 +28,10 @@
 #'
 #' @examples
 #' # Generate a pruned prior model using the default threshold
-#' pruned_model <- get.prior.model()
+#' get.prior.model()
 #'
 #' # Generate a pruned prior model using a custom threshold (e.g., 0.75 quantile)
-#' pruned_model <- get.prior.model(p = 0.75)
-#'
-#' # Check the dimensions of the pruned model
-#' dim(pruned_model)
+#' get.prior.model(p = 0.75)
 #'
 #' @seealso \code{\link{receptor.ppr}}
 #'

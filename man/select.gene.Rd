@@ -39,7 +39,7 @@ expressed in more than \code{min.cells} cells. It then intersects the filtered
 gene set with provided or default lists of TFs, targets, and background genes.
 }
 \examples{
-selected.genes <- select.gene(seurat.obj)
+select.gene(seurat.obj)
 
 }
 \seealso{

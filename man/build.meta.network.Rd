@@ -123,9 +123,6 @@ tail of singular-value differences selects the working rank of the edge emebddin
 # From a Seurat object (built by run.nn.reg)
 seurat.obj <- build.meta.network(seurat.obj, k = 100, n.net = 20, non.neg = TRUE)
 
-# From a network tensor (responses × predictors × cells)
-meta <- build.meta.network(network = my_tensor, k = 50, truncated = FALSE, non.neg = FALSE)
-
 }
 \seealso{
 \code{\link{run.nn.reg}}, \code{\link{get.network}}

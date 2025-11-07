@@ -106,24 +106,38 @@ or on meta-networks, and can be optionally filtered by receptor expression and
 prior gene regulatory network (GRN) evidence.
 }
 \details{
-This function integrates three components to infer receptor activity:
+This function integrates three hierarchical components to infer receptor activity:
 (i) a receptor–TF prior model obtained from \code{\link{get.prior.model}},
-(ii) TF–target co-expression networks, and (iii) optional TF–target adjacency
-from \code{\link{get.gr.adj}} as prior GRN evidence. 
-These two layers are combined to yield receptor-, TF-,
-and target-level activity scores for each cell or meta-network component.
+(ii) TF–target co-expression networks derived from NeighbourNet, and
+(iii) optional TF–target adjacency matrices from \code{\link{get.gr.adj}} as
+prior gene regulatory network (GRN) evidence. Together, these components
+define a receptor–TF–target signalling cascade that quantifies how upstream
+receptors potentially influence downstream target genes through TFs.
 
-Receptor activity can be computed on per-cell networks (default) or on
-meta-networks (\code{meta.network = TRUE}).
-The arguments \code{scale.ppr} and \code{scale.network}
-enables simple L2 normalisation steps on the prior model and co-expression 
-networks, helping to mitigate the influence of highly connected nodes.
-The arguments \code{check.receptor.expression} and
-\code{check.gr.evidence} respectively enforce that receptor activity is
-supported by observed expression and by prior GRN evidence on co-expression.
-The choice of \code{receptor.activity} (\code{"cprod"} or \code{"dist"}) then determines
-whether the prior model and co-expression networks are aggregated by cross-products
-(measures cosine similarity)  or by max-over-path scores.
+For each cell or meta-network component, the receptor–TF prior model encodes
+the probability of regulatory transmission from receptors to TF, 
+while the TF–target network represents local co-expression
+relationships inferred by NeighbourNet. Receptor activity is computed by
+aggregating these two layers to estimate receptor influence on downstream
+targets, mediated by TFs. The resulting matrices describe receptor-, TF-, and
+target-level activity for each cell or component, providing an interpretable
+summary of upstream signalling dynamics.
+
+Activity can be inferred from per-cell networks (default) or from
+meta-networks when \code{meta.network = TRUE}. The arguments \code{scale.ppr} and
+\code{scale.network} apply L2-normalisation to the prior model and
+co-expression network respectively, reducing the influence of highly connected
+nodes and ensuring comparable contribution across genes. The options
+\code{check.receptor.expression} and \code{check.gr.evidence} introduce two
+filters on receptor activity : the first enforces that receptors must be transcriptionally
+detected, while the second prunes TF–target co-expression to those 
+supported by prior GRN knowledge.
+
+The argument \code{receptor.activity} controls how the two layers are
+combined: \code{"cprod"} performs a cross-product aggregation equivalent to
+measuring cosine similarity between receptor–TF and TF–target profiles,
+while \code{"dist"} applies a max-over-path operation that highlights the
+strongest possible receptor–target link through any intermediate TF.
 }
 \examples{
 # Per-cell receptor activity using default settings

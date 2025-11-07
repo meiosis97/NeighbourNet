@@ -71,6 +71,17 @@ receptor.activity(obj) %>% str
 receptor.activity(obj, meta.network = TRUE) %>% str
 
 receptor.activity(obj, i = 2) %>% str
+
+ctr.genes <- select.central.genes(obj) 
+
+obj <- prepare.visualise(obj,  central.genes = ctr.genes) 
+
+Seurat::Misc(obj, "NNet.visual.setting") %>% str
+
+obj <- prepare.visualise(obj,  central.genes = ctr.genes, as.g2 = "responses") 
+
+Seurat::Misc(obj, "NNet.visual.setting") %>% str
+
 ###################  Check results ###################
 pcs <- Seurat::Misc(obj, "NNet.setting")$pcs[cells,]
 lra <- Seurat::Misc(obj, "NNet.setting")$lra[cells,]

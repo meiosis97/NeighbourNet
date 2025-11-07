@@ -10,7 +10,7 @@
 #' @param seurat.obj A \code{Seurat} object containing a \code{data} layer.
 #' @param genes A character vector of gene names to use for scaling and PCA.
 #'   Only genes present in \code{seurat.obj} will be used.
-#' @param npcs An integer specifying the maximum number of principal components to compute. Default is 100.
+#' @param npcs An integer specifying the maximum number of principal components to compute. Default is \code{100}.
 #' @param truncated A logical value indicating whether to select a subset of significant PCs
 #'   based on their standard deviation. If \code{TRUE}, only significant PCs are used. Default is \code{TRUE}.
 #' @param ScaleData.ctrl A list of additional parameters to pass to \code{\link[Seurat]{ScaleData}}.

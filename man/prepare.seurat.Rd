@@ -19,7 +19,7 @@ prepare.seurat(
 \item{genes}{A character vector of gene names to use for scaling and PCA.
 Only genes present in \code{seurat.obj} will be used.}
 
-\item{npcs}{An integer specifying the maximum number of principal components to compute. Default is 100.}
+\item{npcs}{An integer specifying the maximum number of principal components to compute. Default is \code{100}.}
 
 \item{truncated}{A logical value indicating whether to select a subset of significant PCs
 based on their standard deviation. If \code{TRUE}, only significant PCs are used. Default is \code{TRUE}.}

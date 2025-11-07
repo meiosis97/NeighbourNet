@@ -15,32 +15,31 @@
 #' \code{build.meta.response} is alike. 
 #'
 #' @param seurat.obj A \code{Seurat} object with a \code{NNet.mod} list stored in the
-#'   \code{misc} slot. This list is created by  \code{\link{run.nn.reg}}. 
+#'   \code{misc} slot. This list is created by \code{\link{run.nn.reg}}. 
 #'   If provided, \code{assay} and gene panels are taken from
 #'   \code{NNet.mod$defaults}. Ignored when \code{network} is supplied.
 #' @param network Optional 3D tensor of networks with dimension order
 #'   (responses x predictors x cells).
 #'   If supplied, \code{return.p.val} is forced to \code{FALSE}.
-#' @param k Integer; Ranks to keep for the “long-and-tall” matrix of concatenated network vectors.
+#' @param k A integer specifying ranks to keep for the “long-and-tall” matrix of concatenated network vectors.
 #'   Limited to \code{min(k, n.response * n.predictor, n.cell)}. Default: \code{100}.
-#' @param cutoff Numeric p-value threshold (in \code{[0, 1]}) passed to
+#' @param cutoff A numeric value specifying the p-value threshold (in \code{[0, 1]}) passed to
 #'   \code{\link{get.network}} when pulling per-cell networks. \code{NULL} uses
 #'   defaults from \code{NNet.mod$defaults$cutoff}.
-#' @param big.memory Logical; if \code{TRUE}, loads the full network tensor internally via
-#'   \code{get.network(..., drop = FALSE, cutoff = cutoff)} to reduce repeated reads.
+#' @param big.memory A logical indicating whether to load the full network tensor internally to reduce repeated reads.
 #'   Default: \code{FALSE}.
-#' @param scale Logical; if \code{TRUE}, scales each single-cell network by its Frobenius
+#' @param scale A logical indicating whether to scale each single-cell network by its Frobenius
 #'   norm across edges before aggregation (per-cell normalization). Default: \code{TRUE}.
-#' @param truncated Logical; if \code{TRUE}, retain only significant edge embeddings
+#' @param truncated A logical indicating whether to retain only significant edge embeddings
 #'   (spectral-gap heuristic) before running nPCA; otherwise, use exactly \code{k}
 #'   embeddings. Default: \code{TRUE}. If \code{k < 100}, this is set to \code{FALSE}.
-#' @param n.net Integer; number of meta-networks to output. Default: \code{20}.
-#' @param non.neg Logical; if \code{TRUE}, performs nPCA (iterative deflation with
+#' @param n.net A integer specifying the number of meta-networks to output. Default: \code{20}.
+#' @param non.neg A logical indicating whether to perform nPCA (iterative deflation with
 #'   non-negativity constraints) on the edge-embedded matrix, then embeds cell networks
 #'   with nPCA loadings. Otherwise, embeds with standard PCA loadings. Default: \code{TRUE}.
-#' @param max.iter Integer; maximum iterations for calculating each nPCA component.
+#' @param max.iter A integer specifying the maximum iterations for calculating each nPCA component.
 #'   Default: \code{1000}.
-#' @param tol Numeric; convergence tolerance for nPCA iterations. Default: \code{1e-10}.
+#' @param tol A numeric value specifying the convergence tolerance for nPCA iterations. Default: \code{1e-10}.
 #' @param return.p.val Logical; if \code{TRUE} and \code{assay == "effect"}, also returns
 #'   per–meta-network p-values by embedding the p-value tensor (\code{NNet.mod$p.val})
 #'   with the nPCA loadings. Forced to \code{FALSE} when \code{network} is supplied or

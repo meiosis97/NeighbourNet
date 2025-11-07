@@ -1,3 +1,9 @@
+require(devtools)
+document()
+build()
+install()
+
+
 require(Seurat)
 require(NeighbourNet)
 require(ggplot2)
@@ -60,6 +66,11 @@ select.central.genes(obj, k = 2, keep.responses = TRUE) %>% str
 
 select.central.genes(obj, k = 2, n.net = 1) %>% str
 
+receptor.activity(obj) %>% str
+
+receptor.activity(obj, meta.network = TRUE) %>% str
+
+receptor.activity(obj, i = 2) %>% str
 ###################  Check results ###################
 pcs <- Seurat::Misc(obj, "NNet.setting")$pcs[cells,]
 lra <- Seurat::Misc(obj, "NNet.setting")$lra[cells,]

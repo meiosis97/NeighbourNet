@@ -7,25 +7,26 @@
 #' meta-networks by decomposing each meta-network into principal components
 #' (via singular value decomposition, SVD) and selecting genes with the
 #' highest absolute loadings on leading singular vectors. These loadings
-#' correspond to each gene’s **eigenvector centrality** within the meta-network,
+#' correspond to each gene’s eigenvector centrality within the meta-network,
 #' capturing genes that are most influential in the overall co-expression
 #' structure. The function optionally operates directly on a supplied
 #' meta-network tensor or retrieves it from a \code{Seurat} object prepared by
 #' the NeighbourNet workflow.
 #'
-#' @param seurat.obj A \code{Seurat} object with a \code{NNet.mod} list stored in the
-#'   \code{misc} slot. This list is created by  \code{\link{run.nn.reg}}. 
-#'   If provided, \code{assay} and gene panels are taken from
-#'   \code{NNet.mod$defaults}. Ignored when \code{network} is supplied.
+#' @param seurat.obj A \code{Seurat} object containing NeighbourNet results,
+#'   with both cell-specific networks and meta-networks stored in the
+#'   \code{NNet.mod} list within the \code{misc} slot. This list is generated
+#'   by \code{\link{run.nn.reg}} and subsequently updated by
+#'   \code{\link{build.meta.network}}.
 #' @param network Optional 3D tensor of networks with dimension order
 #'   (responses x predictors x cells).
-#' @param n.net Integer; number of leading meta-networks from which
+#' @param n.net A integer specifying the number of leading meta-networks from which
 #'  central genes are extracted
-#' @param k Integer; number of leading eigenvectors (components) to extract from
+#' @param k A integer specifying the number of leading eigenvectors (components) to extract from
 #'   each meta-network when scoring central genes.
 #' @param n.per.component Integer; number of top-scoring genes to select per
-#'   eigenvector and per meta-network (default 4).
-#' @param keep.responses Logical; controls whether responses are also selected.
+#'   eigenvector and per meta-network. Default: \code{4}.
+#' @param keep.responses A logical to control whether responses are also selected.
 #'   \itemize{
 #'     \item If \code{FALSE} (default), both responses and predictors are
 #'       selected based on eigenvector centrality scores.

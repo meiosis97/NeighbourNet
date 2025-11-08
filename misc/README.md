@@ -6,7 +6,7 @@
 </p>
 
 |                                               |                                               |
-|-----------------------------------------------|-----------------------------------------------|
+|-------------------------------------------------------------------------------------------------|-----------------------------------------------|
 |<img width="30%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" >  | <img width="50%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png">  |
 
 

@@ -11,6 +11,4 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(NeighbourNet)
-library(here)
-source(here("./vignettes/articles/script.R"))
 ```

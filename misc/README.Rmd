@@ -12,10 +12,16 @@ knitr:
 
 # NeighbourNet
 
-::: {style="display:flex; justify-content:space-evenly; align-items:center;"}
-<img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" width="200" height="220"> 
-<img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png" width="300" height="300"> 
-::: 
+<table style="width:100%; border:none;">
+  <tr>
+    <td style="width:50%; text-align:center;">
+      <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" width="200" height="220">
+    </td>
+    <td style="width:50%; text-align:center;">
+      <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png" width="300" height="300">
+    </td>
+  </tr>
+</table>
 
 The **NeighbourNet (NNet)** package is currently under development.
 

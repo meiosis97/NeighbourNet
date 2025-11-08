@@ -1,12 +1,15 @@
 # NeighbourNet
 
-<div
-style="display:flex; justify-content:space-evenly; align-items:center;">
-
+<table style="width:100%; border:none;">
+<tr>
+<td style="width:50%; text-align:center;">
 <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" width="200" height="220">
+</td>
+<td style="width:50%; text-align:center;">
 <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png" width="300" height="300">
-
-</div>
+</td>
+</tr>
+</table>
 
 The **NeighbourNet (NNet)** package is currently under development.
 

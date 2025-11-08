@@ -1,6 +1,6 @@
 # NeighbourNet
 
-<p align="center" width="100%">
+<p align="center>
   
 ![](https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png){width=25%}
 \

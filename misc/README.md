@@ -1,9 +1,14 @@
 # NeighbourNet
 
-<p align="center"; justify-content:center>
-  <img width="20%" style="margin:0 1rem;" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png">
-  <img width="40%" style="margin:0 1rem;" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png">
-</p>
+<div style="display:flex; justify-content:center; align-items:center; gap:2rem;">
+
+  <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png"
+       style="width:30%; height:auto;">
+
+  <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png"
+       style="width:50%; height:auto;">
+
+</div>
 
 The **NeighbourNet (NNet)** package is currently under development.
 

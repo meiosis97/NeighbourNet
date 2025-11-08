@@ -2,8 +2,8 @@
 
 <p align="center">
   
-  ![](https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png){width=25%}
-  
+<img width="30%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png"> 
+
 </p>
 
 The **NeighbourNet (NNet)** package is currently under development.

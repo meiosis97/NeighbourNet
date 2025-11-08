@@ -13,7 +13,7 @@ require(NeighbourNet)
 require(ggplot2)
 require(dplyr)
 require(Matrix)
-load("tests/data/luad.rda")
+data(luad)
 obj <- Seurat::FindVariableFeatures(obj)
 genes <- Seurat::VariableFeatures(obj)
 

@@ -1,12 +1,12 @@
 # NeighbourNet
 
 <p align="center">
-<img  width="30%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png">
+<img  width="30%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png?raw=true">
 </p>
 
 ------------------------------------------------------------------------
 
-<img align="right" width="40%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png">
+<img align="right" width="40%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png?raw=true">
 
 The **NeighbourNet (NNet)** package is currently under development.
 
@@ -47,6 +47,8 @@ remotes::install_github("https://github.com/meiosis97/NeighbourNet")
 ``` r
 # Load the package
 require(NeighbourNet)
+require(ggplot2)
+require(Seurat)
 
 # Seurat object with ~4k LUAD cells
 data(luad)     # loads `obj`
@@ -99,7 +101,7 @@ visualise.network(obj, 1,
 ## 5.2 · Snapshot plot (meta-network \#1)
 
 ``` r
-cut <- mean(apply(obj@misc$mod$meta.network$p.val[,,1], 1, max))
+cut <- mean(apply(obj@misc$NNet.mod$meta.network$p.val[,,1], 1, max))
 visualise.network(obj, 1, meta.network = TRUE, cutoff = cut,
                   radius = c(.4,.7,.85,1), pie.radius = .04,
                   text.size = 5)
@@ -115,7 +117,6 @@ lrp6 <- act$receptor.act["LRP6", ]
 Plot on PCA:
 
 ``` r
-library(ggplot2)
 ggplot(Embeddings(obj, "pca"), aes(PC_1, PC_2)) +
   geom_point(alpha = .2, size = .6, colour = "grey80") +
   geom_point(data = Embeddings(obj, "pca")[names(lrp6), ],

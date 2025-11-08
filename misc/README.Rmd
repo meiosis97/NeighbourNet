@@ -12,12 +12,13 @@ knitr:
 
 # NeighbourNet
 
-<div style="display:flex; justify-content:center; align-items:center; gap:2rem;">
+<p align="center">
+    <img  width="30%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png"> 
+</p>
 
-![](https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png){width=25%}
-![](https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png){width=50%}
+---
 
-</div>
+<img align="right" width="40%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png"> 
 
 The **NeighbourNet (NNet)** package is currently under development.
 
@@ -35,8 +36,6 @@ We conducted an analysis, available [here](https://github.com/meiosis97/Neighbou
 
 This mini-walkthrough reproduces the **full vignette** in about 25 lines.  
 The full vignette can be found [here](https://github.com/meiosis97/NeighbourNet/blob/main/misc/vignettes.for.script.md).
-
----
 
 ## 1 · Install / load core packages
 

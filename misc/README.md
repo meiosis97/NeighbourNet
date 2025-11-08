@@ -1,11 +1,10 @@
 # NeighbourNet
 
-<div style="display:flex; justify-content:center; align-items:center; gap:2rem;">
+<p align="center">
+  <img width="40%" style="margin:0 1rem;" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png">
+  <img width="40%" style="margin:0 1rem;" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png">
+</p>
 
-  <img style="width:25%;" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" alt="NNet Logo">
-  <img style="width:50%;" src="https://github.meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png" alt="Cell Specific Network">
-
-</div>
 The **NeighbourNet (NNet)** package is currently under development.
 
 The data and reproducible R scripts used to generate the figures in the

@@ -1,6 +1,6 @@
 # NeighbourNet
 
-![](https://github.com/meiosis97/NeighbourNet/misc/logo/NNet.png)![](https://github.com/meiosis97/NeighbourNet/misc/logo/An_cell_specific_network.png)
+![](https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png)![](https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png)
 
 The NeighbourNet (NNet) package is currently under development.
 
@@ -13,16 +13,17 @@ from those used in the analysis presented in our paper.
 
 The main difference lies in how NNet prunes the inferred co-expression
 networks. The functions used in our paper’s analysis are provided in
-[this script](https://github.com/meiosis97/NeighbourNet/misc/script.R)
+[this
+script](https://github.com/meiosis97/NeighbourNet/blob/main/misc/script.R)
 and can be directly sourced into R’s global environment. For now, if you
 wish to use the alternative pruning strategy intended for the R package,
 please source the R script located
-[here](https://github.com/meiosis97/NeighbourNet/misc/script.new.R).
+[here](https://github.com/meiosis97/NeighbourNet/blob/main/misc/script.new.R).
 
 In comparison, the pruning strategy described in the paper is heuristic
 and less statistically rigorous, although it yields better results in
 our numerical evaluation. We conducted an analysis, available
-[here](https://github.com/meiosis97/NeighbourNet/misc/investigate.pruning.md),
+[here](https://github.com/meiosis97/NeighbourNet/blob/main/misc/investigate.pruning.md),
 to compare and understand the differences between the two strategies.
 
 # ⚡ 5‑Minute Quick‑Start
@@ -30,7 +31,7 @@ to compare and understand the differences between the two strategies.
 This mini‑walkthrough reproduces the **full vignette** in about 25
 lines.  
 The full vignette can be found in
-[here](https://github.com/meiosis97/NeighbourNet/misc/vignettes.for.script.md).
+[here](https://github.com/meiosis97/NeighbourNetblob/main//misc/vignettes.for.script.md).
 
 ------------------------------------------------------------------------
 

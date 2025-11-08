@@ -1,9 +1,8 @@
 pandoc: 3.1.11
 pkgdown: 2.2.0
 pkgdown_sha: ~
-articles:
-  articles/test: test.html
-last_built: 2025-11-08T08:21Z
+articles: {}
+last_built: 2025-11-08T09:00Z
 urls:
   reference: https://meiosis97.github.io/NeighbourNet/reference
   article: https://meiosis97.github.io/NeighbourNet/articles

@@ -2,7 +2,7 @@
 
 | | |
 |:--:|:--:|
-| <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" width="40%"> | <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png" width="100%"> |
+| <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" width="40%"> | <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png" width="200%"> |
 
 
 The **NeighbourNet (NNet)** package is currently under development.

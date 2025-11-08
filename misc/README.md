@@ -1,11 +1,10 @@
 # NeighbourNet
 
-<div
-style="display:flex; justify-content:center; align-items:center; gap:2rem;">
+<p align="center">
 
 <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" style="width:25.0%" />
 
-</div>
+</p>
 
 The **NeighbourNet (NNet)** package is currently under development.
 

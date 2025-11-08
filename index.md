@@ -1,6 +1,10 @@
 # NeighbourNet
 
-![](https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png)![](https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png)
+![](https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png)
+
+------------------------------------------------------------------------
+
+![](https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png)
 
 The **NeighbourNet (NNet)** package is currently under development.
 
@@ -29,8 +33,6 @@ This mini-walkthrough reproduces the **full vignette** in about 25
 lines.  
 The full vignette can be found
 [here](https://github.com/meiosis97/NeighbourNet/blob/main/misc/vignettes.for.script.md).
-
-------------------------------------------------------------------------
 
 ## 1 · Install / load core packages
 

@@ -12,8 +12,10 @@ knitr:
 
 # NeighbourNet
 
+::: {layout="[[40, 22.5]]"}
 <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" width="200" height="220"> 
 <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png" width="300" height="300"> 
+::: 
 
 The **NeighbourNet (NNet)** package is currently under development.
 
@@ -26,8 +28,6 @@ The functions used in our paper’s analysis are provided in [this script](https
 
 In comparison, the pruning strategy implemented by the R package is more statistically rigorous, although it does not necessarily yield better results in our numerical evaluation.  
 We conducted an analysis, available [here](https://github.com/meiosis97/NeighbourNet/blob/main/misc/investigate.pruning.md), to compare and understand the differences between the two strategies.
-
----
 
 # ⚡ 5-Minute Quick-Start
 
@@ -42,8 +42,6 @@ The full vignette can be found [here](https://github.com/meiosis97/NeighbourNet/
 remotes::install_github("https://github.com/meiosis97/NeighbourNet")
 ````
 
----
-
 ## 2 · Fetch demo dataset (can be found in the data folder)
 
 ```r
@@ -53,8 +51,6 @@ require(NeighbourNet)
 # Seurat object with ~4k LUAD cells
 data(luad)     # loads `obj`
 ```
-
----
 
 ## 3 · One-liner preprocessing
 
@@ -68,8 +64,6 @@ obj <- obj |>
   prepare.reg(predictors = genes$tfs,      # local variance scaffolding
               responses  = genes$targets)
 ```
-
----
 
 ## 4 · Run NeighbourNet and build meta-networks
 
@@ -86,8 +80,6 @@ obj   <- run.nn.reg(obj, responses = top10, return.p.val = TRUE) |>
 | `effect`       | (response × predictor × cell) co-expression tensor |
 | `p.val`        | matching significance tensor                       |
 | `meta.network` | (response × predictor × meta-cell) ensemble        |
-
----
 
 ## 5.0   Prepare Visualisation
 ```r
@@ -112,8 +104,6 @@ visualise.network(obj, 1, meta.network = TRUE, cutoff = cut,
                   text.size = 5)
 ```
 
----
-
 ## 6 · (Option) Receptor activity per cell
 
 ```r
@@ -131,11 +121,7 @@ ggplot(Embeddings(obj, "pca"), aes(PC_1, PC_2)) +
              aes(col = as.numeric(lrp6)), size = 1)
 ```
 
----
-
 ### ✨ That’s it
 
 You now have a full **NeighbourNet** analysis in under two minutes of run-time.
 Tweak gene lists, increase `responses`, or switch visualisation parameters exactly as in the full vignette.
-
-````

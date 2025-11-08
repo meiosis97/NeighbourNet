@@ -50,48 +50,38 @@
 <p><img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" width="200" height="220"><img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png" width="300" height="300"></p>
 <p>The NeighbourNet (NNet) package is currently under development.</p>
 <p>The data and the reproducible R scripts used to generate the figures in the manuscript can be found at <a href="https://doi.org/10.5281/zenodo.15031726" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.15031726.svg" alt="DOI"></a>.</p>
-<p>Note that the functions implemented in the final R package will differ from those used in the analysis presented in our paper.</p>
-<p>The main difference lies in how NNet prunes the inferred co-expression networks. The functions used in our paper’s analysis are provided in <a href="https://github.com/meiosis97/NeighbourNet/blob/main/misc/script.R" class="external-link">this script</a> and can be directly sourced into R’s global environment. For now, if you wish to use the alternative pruning strategy intended for the R package, please source the R script located <a href="https://github.com/meiosis97/NeighbourNet/blob/main/misc/script.new.R" class="external-link">here</a>.</p>
-<p>In comparison, the pruning strategy described in the paper is heuristic and less statistically rigorous, although it yields better results in our numerical evaluation. We conducted an analysis, available <a href="https://github.com/meiosis97/NeighbourNet/blob/main/misc/investigate.pruning.md" class="external-link">here</a>, to compare and understand the differences between the two strategies.</p>
+<p>Note that the functions implemented in the final R package will differ from those used in the analysis presented in our paper. The main difference lies in how NNet prunes the inferred co-expression networks. The functions used in our paper’s analysis are provided in <a href="https://github.com/meiosis97/NeighbourNet/blob/main/misc/script.R" class="external-link">this script</a> and can be directly sourced into R’s global environment.</p>
+<p>In comparison, the pruning strategy implemented by the R package is more statistically rigorous, although it does not necessarily yield better results in our numerical evaluation. We conducted an analysis, available <a href="https://github.com/meiosis97/NeighbourNet/blob/main/misc/investigate.pruning.md" class="external-link">here</a>, to compare and understand the differences between the two strategies.</p>
 </div>
 <div class="section level1">
 <h1 id="id_-5minute-quickstart">⚡ 5‑Minute Quick‑Start<a class="anchor" aria-label="anchor" href="#id_-5minute-quickstart"></a>
 </h1>
 <p>This mini‑walkthrough reproduces the <strong>full vignette</strong> in about 25 lines.<br>
-The full vignette can be found in <a href="https://github.com/meiosis97/NeighbourNetblob/main//misc/vignettes.for.script.md" class="external-link">here</a>.</p>
+The full vignette can be found in <a href="https://github.com/meiosis97/NeighbourNet/blob/main/misc/vignettes.for.script.md" class="external-link">here</a>.</p>
 <hr>
 <div class="section level2">
 <h2 id="id_1--install--load-core-packages">1 · Install / load core packages<a class="anchor" aria-label="anchor" href="#id_1--install--load-core-packages"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pkgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Seurat"</span>,<span class="st">"dplyr"</span>,<span class="st">"Matrix"</span>,<span class="st">"ggplot2"</span>,<span class="st">"ggraph"</span>,</span>
-<span>          <span class="st">"scatterpie"</span>,<span class="st">"ggrepel"</span>,<span class="st">"ggpubr"</span>,<span class="st">"igraph"</span><span class="op">)</span></span>
-<span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">miss</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="va">pkgs</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html" class="external-link">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="va">pkgs</span><span class="op">[</span><span class="va">miss</span><span class="op">]</span>, repos <span class="op">=</span> <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">pkgs</span>, <span class="va">library</span>, character.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Source NeighbourNet (in develop)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"tests/script.new.R"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"https://github.com/meiosis97/NeighbourNet"</span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
-<h2 id="id_2--fetch-priors--demo-dataset-can-be-found-in-the-data-folder">2 · Fetch priors &amp; demo dataset (can be found in the data folder)<a class="anchor" aria-label="anchor" href="#id_2--fetch-priors--demo-dataset-can-be-found-in-the-data-folder"></a>
+<h2 id="id_2--fetch-demo-dataset-can-be-found-in-the-data-folder">2 · Fetch demo dataset (can be found in the data folder)<a class="anchor" aria-label="anchor" href="#id_2--fetch-demo-dataset-can-be-found-in-the-data-folder"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># local copies?  -&gt;  ../data/*.rda</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene.list"</span>,<span class="st">"sig.graph"</span>,<span class="st">"gr.graph"</span>,<span class="st">"receptor.ppr"</span><span class="op">)</span>,</span>
-<span>       \<span class="op">(</span><span class="va">f</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">f</span>,<span class="st">".rda"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Load the package</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://meiosis97.github.io/NeighbourNet/">NeighbourNet</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Seurat object with ~4 k LUAD cells</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="st">"data/luad.rda"</span><span class="op">)</span>     <span class="co"># loads `obj`</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="va">luad</span><span class="op">)</span>     <span class="co"># loads `obj`</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
 <h2 id="id_3--oneliner-preprocessing">3 · One‑liner preprocessing<a class="anchor" aria-label="anchor" href="#id_3--oneliner-preprocessing"></a>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rt.ppr</span> <span class="op">&lt;-</span> <span class="fu">get.ppr</span><span class="op">(</span><span class="op">)</span>                        <span class="co"># receptor‑target prior matrix</span></span>
-<span><span class="va">genes</span>  <span class="op">&lt;-</span> <span class="fu"><a href="reference/select.gene.html">select.gene</a></span><span class="op">(</span><span class="va">obj</span>, min.cells <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># QC → TF / target lists</span></span>
+<code class="sourceCode R"><span><span class="va">genes</span>  <span class="op">&lt;-</span> <span class="fu"><a href="reference/select.gene.html">select.gene</a></span><span class="op">(</span><span class="va">obj</span>, min.cells <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># QC → TF / target lists</span></span>
 <span></span>
 <span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="va">obj</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/prepare.seurat.html">prepare.seurat</a></span><span class="op">(</span>genes <span class="op">=</span> <span class="va">genes</span><span class="op">$</span><span class="va">genes</span><span class="op">)</span> <span class="op">|&gt;</span>   <span class="co"># scale + PCA</span></span>

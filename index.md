@@ -9,20 +9,15 @@ the manuscript can be found at
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15031726.svg)](https://doi.org/10.5281/zenodo.15031726).
 
 Note that the functions implemented in the final R package will differ
-from those used in the analysis presented in our paper.
-
-The main difference lies in how NNet prunes the inferred co-expression
-networks. The functions used in our paper’s analysis are provided in
-[this
+from those used in the analysis presented in our paper. The main
+difference lies in how NNet prunes the inferred co-expression networks.
+The functions used in our paper’s analysis are provided in [this
 script](https://github.com/meiosis97/NeighbourNet/blob/main/misc/script.R)
-and can be directly sourced into R’s global environment. For now, if you
-wish to use the alternative pruning strategy intended for the R package,
-please source the R script located
-[here](https://github.com/meiosis97/NeighbourNet/blob/main/misc/script.new.R).
+and can be directly sourced into R’s global environment.
 
-In comparison, the pruning strategy described in the paper is heuristic
-and less statistically rigorous, although it yields better results in
-our numerical evaluation. We conducted an analysis, available
+In comparison, the pruning strategy implemented by the R package is more
+statistically rigorous, although it does not necessarily yield better
+results in our numerical evaluation. We conducted an analysis, available
 [here](https://github.com/meiosis97/NeighbourNet/blob/main/misc/investigate.pruning.md),
 to compare and understand the differences between the two strategies.
 
@@ -31,34 +26,26 @@ to compare and understand the differences between the two strategies.
 This mini‑walkthrough reproduces the **full vignette** in about 25
 lines.  
 The full vignette can be found in
-[here](https://github.com/meiosis97/NeighbourNetblob/main//misc/vignettes.for.script.md).
+[here](https://github.com/meiosis97/NeighbourNet/blob/main/misc/vignettes.for.script.md).
 
 ------------------------------------------------------------------------
 
 ## 1 · Install / load core packages
 
 ``` r
-pkgs <- c("Seurat","dplyr","Matrix","ggplot2","ggraph",
-          "scatterpie","ggrepel","ggpubr","igraph")
-if(any(miss <- !pkgs %in% installed.packages()[,1]))
-    install.packages(pkgs[miss], repos = "https://cloud.r-project.org")
-invisible(lapply(pkgs, library, character.only = TRUE))
-
-# Source NeighbourNet (in develop)
-source("tests/script.new.R")
+remotes::install_github("https://github.com/meiosis97/NeighbourNet")
 ```
 
 ------------------------------------------------------------------------
 
-## 2 · Fetch priors & demo dataset (can be found in the data folder)
+## 2 · Fetch demo dataset (can be found in the data folder)
 
 ``` r
-# local copies?  ->  ../data/*.rda
-lapply(c("gene.list","sig.graph","gr.graph","receptor.ppr"),
-       \(f) load(file.path("data", paste0(f,".rda"))))
+# Load the package
+require(NeighbourNet)
 
 # Seurat object with ~4 k LUAD cells
-load("data/luad.rda")     # loads `obj`
+load(luad)     # loads `obj`
 ```
 
 ------------------------------------------------------------------------
@@ -66,7 +53,6 @@ load("data/luad.rda")     # loads `obj`
 ## 3 · One‑liner preprocessing
 
 ``` r
-rt.ppr <- get.ppr()                        # receptor‑target prior matrix
 genes  <- select.gene(obj, min.cells = 10) # QC → TF / target lists
 
 obj <- obj |>

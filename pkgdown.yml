@@ -2,7 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles: {}
-last_built: 2025-11-08T09:08Z
+last_built: 2025-11-08T09:30Z
 urls:
   reference: https://meiosis97.github.io/NeighbourNet/reference
   article: https://meiosis97.github.io/NeighbourNet/articles

@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   articles/test: test.html
-last_built: 2025-11-08T06:08Z
+last_built: 2025-11-08T08:21Z
 urls:
   reference: https://meiosis97.github.io/NeighbourNet/reference
   article: https://meiosis97.github.io/NeighbourNet/articles

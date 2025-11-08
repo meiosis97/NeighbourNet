@@ -4,7 +4,6 @@
 style="display:flex; justify-content:center; align-items:center; gap:2rem;">
 
 <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" style="width:25.0%" />
-<img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png" style="width:50.0%" />
 
 </div>
 

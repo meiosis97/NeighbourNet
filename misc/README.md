@@ -1,9 +1,9 @@
 # NeighbourNet
 
-<p align="center>
+<p align="center">
   
 ![](https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png){width=25%}
-\
+
 </p>
 
 The **NeighbourNet (NNet)** package is currently under development.

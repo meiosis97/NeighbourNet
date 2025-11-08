@@ -1,10 +1,5 @@
 # NeighbourNet
 
-<p align="center">
-<img width="30%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" > 
-<img width="50%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png"> 
-</p>
-
 |                                                                                                |                                                                                                                      |
 |------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
 |<img width="100%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png">  | <img width="200%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png">  |

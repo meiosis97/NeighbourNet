@@ -1,8 +1,12 @@
 require(devtools)
+require(pkgdown)
 document()
 build()
 install()
-
+usethis::use_pkgdown()
+pkgdown::build_site()
+usethis::use_article("test")
+usethis::use_pkgdown_github_pages()
 
 require(Seurat)
 require(NeighbourNet)

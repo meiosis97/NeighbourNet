@@ -22,3 +22,5 @@ Depends:
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Config/Needs/website: rmarkdown
+URL: https://meiosis97.github.io/NeighbourNet/

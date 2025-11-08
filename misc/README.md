@@ -36,8 +36,6 @@ lines.
 The full vignette can be found
 [here](https://github.com/meiosis97/NeighbourNet/blob/main/misc/vignettes.for.script.md).
 
-------------------------------------------------------------------------
-
 ## 1 · Install / load core packages
 
 ``` r

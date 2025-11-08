@@ -1,10 +1,9 @@
 # NeighbourNet
 
-<div
-style="display:flex; justify-content:center; align-items:center; gap:2rem;">
+<div layout="[[50, 50]]">
 
-<img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" style="width:40%; height:auto;">
-<img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png" style="width:40%; height:auto;">
+<img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png">
+<img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png">
 
 </div>
 

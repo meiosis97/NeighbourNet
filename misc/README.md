@@ -3,8 +3,8 @@
 <div
 style="display:flex; justify-content:space-evenly; align-items:center; width:100%;">
 
-<img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" style="width:45%; height:auto;">
-<img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png" style="width:45%; height:auto;">
+<img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" style="width:25%; height:auto;">
+<img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png" style="width:50%; height:auto;">
 
 </div>
 

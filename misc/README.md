@@ -1,6 +1,6 @@
 # NeighbourNet
 
-<div layout="[[50, 50]]">
+<div layout="[[25, 25]]">
 
 <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png">
 <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png">

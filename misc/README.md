@@ -1,9 +1,8 @@
 # NeighbourNet
 
-| | |
-|:--:|:--:|
-| <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" width="40%"> | <img src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png" width="200%"> |
-
+<p align="center" width="100%">
+    <img width="33%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png"> 
+</p>
 
 <img align="right" width="40%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png"> 
 
@@ -23,8 +22,7 @@ and can be directly sourced into R’s global environment.
 
 In comparison, the pruning strategy implemented by the R package is more
 statistically rigorous, although it does not necessarily yield better
-results in our numerical evaluation.  
-We conducted an analysis, available
+results in our numerical evaluation.  We conducted an analysis, available
 [here](https://github.com/meiosis97/NeighbourNet/blob/main/misc/investigate.pruning.md),
 to compare and understand the differences between the two strategies.
 

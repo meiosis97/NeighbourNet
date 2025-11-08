@@ -1,7 +1,7 @@
 # NeighbourNet
 
 <p align="center">
-<img width="30%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" style="margin-bottom:100rem;"> 
+<img width="30%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/NNet.png" style="margin-bottom:1cm;"> 
 <img width="50%" src="https://github.com/meiosis97/NeighbourNet/blob/main/misc/logo/An_cell_specific_network.png"> 
 </p>
 

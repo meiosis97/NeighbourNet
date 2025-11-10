@@ -51,8 +51,8 @@ require(NeighbourNet)
 require(ggplot2)
 require(Seurat)
 
-# Seurat object with ~4k LUAD cells
-data(luad)     # loads `obj`
+# Seurat object with ~4k LUAD cells available under the misc folder of the repository
+load("misc/luad.rda")    # loads `obj`
 ```
 
 ## 3 · One-liner preprocessing

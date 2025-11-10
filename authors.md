@@ -6,15 +6,15 @@
 
 ## Citation
 
-Deng Y (2025). *NeighbourNet: NeighbourNet: a novel statistical method
-to predict gene regulatory network for individual cells in single cell
-RNA-seq data*. R package version 0.1.0,
-<https://meiosis97.github.io/NeighbourNet/>.
+Deng, Yidi, Mao, Jiadong, Choi, Jarny, Cao, Lê K (2025). “NeighbourNet:
+Scalable cell-specific co-expression networks for granular regulatory
+pattern discovery.” *bioRxiv*.
+[doi:10.1101/2025.03.27.645629](https://doi.org/10.1101/2025.03.27.645629).
 
-    @Manual{,
-      title = {NeighbourNet: NeighbourNet: a novel statistical method to predict gene regulatory network for individual cells in single cell RNA-seq data},
-      author = {Yidi Deng},
+    @Article{,
+      title = {NeighbourNet: Scalable cell-specific co-expression networks for granular regulatory pattern discovery},
+      author = {{Deng} and {Yidi} and {Mao} and {Jiadong} and {Choi} and {Jarny} and {Cao} and Kim-Anh Lê},
+      journal = {bioRxiv},
       year = {2025},
-      note = {R package version 0.1.0},
-      url = {https://meiosis97.github.io/NeighbourNet/},
+      doi = {10.1101/2025.03.27.645629},
     }

@@ -7,7 +7,7 @@ install()
 # usethis::use_pkgdown_github_pages()
 # usethis::use_pkgdown()
 # pkgdown::build_site()
-# usethis::use_article("test")
+# usethis::use_article("cell.cycle.Rmd")
 
 #require(Seurat)
 require(NeighbourNet)

@@ -118,6 +118,11 @@ stored in its `misc` slot. This list contains:
   A `hclust` object describing hierarchical clustering of selected genes
   based on PCs.
 
+- clu.g12:
+
+  A `hclust` object describing hierarchical clustering of `g2` genes
+  based on PCs.
+
 - hubs:
 
   A character vector of hub genes, one per cluster, selected to

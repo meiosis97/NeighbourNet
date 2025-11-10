@@ -202,7 +202,7 @@ be updated later using
 # Assuming `seurat.obj` has been pre-processed with `prepare.reg`:
 responses <- Seurat::Misc(seurat.obj, "NNet.setting")$responses %>%
              head(n =5)
-#> Error in Seurat::Misc(seurat.obj, "NNet.setting")$responses %>% head(n = 5): could not find function "%>%"
+#> Error: object 'seurat.obj' not found
 
 # Run PC regression
 seurat.obj <- run.nn.reg(

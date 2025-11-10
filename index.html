@@ -135,7 +135,7 @@ The full vignette can be found <a href="https://github.com/meiosis97/NeighbourNe
 <h2 id="id_51--snapshot-plot-cell-1">5.1 · Snapshot plot (Cell #1)<a class="anchor" aria-label="anchor" href="#id_51--snapshot-plot-cell-1"></a>
 </h2>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">visualise.network</span><span class="op">(</span><span class="va">obj</span>, <span class="fl">1</span>, </span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/visualise.network.html">visualise.network</a></span><span class="op">(</span><span class="va">obj</span>, <span class="fl">1</span>, </span>
 <span>                  radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.4</span>,<span class="fl">.7</span>,<span class="fl">.85</span>,<span class="fl">1</span><span class="op">)</span>, pie.radius <span class="op">=</span> <span class="fl">.04</span>,</span>
 <span>                  text.size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -144,7 +144,7 @@ The full vignette can be found <a href="https://github.com/meiosis97/NeighbourNe
 </h2>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cut</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">obj</span><span class="op">@</span><span class="va">misc</span><span class="op">$</span><span class="va">NNet.mod</span><span class="op">$</span><span class="va">meta.network</span><span class="op">$</span><span class="va">p.val</span><span class="op">[</span>,,<span class="fl">1</span><span class="op">]</span>, <span class="fl">1</span>, <span class="va">max</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu">visualise.network</span><span class="op">(</span><span class="va">obj</span>, <span class="fl">1</span>, meta.network <span class="op">=</span> <span class="cn">TRUE</span>, cutoff <span class="op">=</span> <span class="va">cut</span>,</span>
+<span><span class="fu"><a href="reference/visualise.network.html">visualise.network</a></span><span class="op">(</span><span class="va">obj</span>, <span class="fl">1</span>, meta.network <span class="op">=</span> <span class="cn">TRUE</span>, cutoff <span class="op">=</span> <span class="va">cut</span>,</span>
 <span>                  radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.4</span>,<span class="fl">.7</span>,<span class="fl">.85</span>,<span class="fl">1</span><span class="op">)</span>, pie.radius <span class="op">=</span> <span class="fl">.04</span>,</span>
 <span>                  text.size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 </div>

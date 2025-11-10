@@ -48,3 +48,8 @@
   : Select Genes for Analysis
 - [`set.defaults()`](https://meiosis97.github.io/NeighbourNet/reference/set.defaults.md)
   : Set Default Parameters for Network Extraction
+- [`topn()`](https://meiosis97.github.io/NeighbourNet/reference/topn.md)
+  : Select indices of the top-n highest values
+- [`visualise.network()`](https://meiosis97.github.io/NeighbourNet/reference/visualise.network.md)
+  : Visualise Receptor–TF–Target Pathways on NeighbourNet Cell-Specific
+  Networks.

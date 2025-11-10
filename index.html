@@ -32,6 +32,12 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/cell-cycle.html">NeighbourNet: Workflow Example</a></li>
+  </ul>
+</li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -79,8 +85,8 @@ The full vignette can be found <a href="https://github.com/meiosis97/NeighbourNe
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Seurat object with ~4k LUAD cells</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">luad</span><span class="op">)</span>     <span class="co"># loads `obj`</span></span></code></pre></div>
+<span><span class="co"># Seurat object with ~4k LUAD cells available under the misc folder of the repository</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="st">"misc/luad.rda"</span><span class="op">)</span>    <span class="co"># loads `obj`</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="id_3--one-liner-preprocessing">3 · One-liner preprocessing<a class="anchor" aria-label="anchor" href="#id_3--one-liner-preprocessing"></a>

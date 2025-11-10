@@ -48,8 +48,8 @@ require(NeighbourNet)
 require(ggplot2)
 require(Seurat)
 
-# Seurat object with ~4k LUAD cells
-data(luad)     # loads `obj`
+# Seurat object with ~4k LUAD cells available under the misc folder of the repository
+load("misc/luad.rda")    # loads `obj`
 ```
 
 ## 3 · One-liner preprocessing
@@ -183,3 +183,9 @@ visualisation parameters exactly as in the full vignette.
   : Visualise Receptor–TF–Target Pathways on NeighbourNet Cell-Specific
   Networks.
 
+# Articles
+
+### All vignettes
+
+- [NeighbourNet: Workflow
+  Example](https://meiosis97.github.io/NeighbourNet/articles/cell-cycle.md):

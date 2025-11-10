@@ -128,7 +128,9 @@ get.network <- function(seurat.obj,
   }
 
   # Cutoff
-  cutoff <- mod$defaults$cutoff
+  if(is.null(cutoff)){
+    cutoff <- mod$defaults$cutoff
+  }
   if (!is.numeric(cutoff) || length(cutoff) != 1L || is.na(cutoff)) {
     stop("`cutoff` must be a numeric scalar between 0 and 1.")
   }

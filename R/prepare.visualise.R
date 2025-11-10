@@ -56,6 +56,8 @@
 #' \item{g2}{The ordered second-layer gene set used for visualisation.}
 #' \item{clu.g12}{A \code{hclust} object describing hierarchical clustering of
 #'                selected genes based on PCs.}
+#' \item{clu.g12}{A \code{hclust} object describing hierarchical clustering of
+#'                \code{g2} genes based on PCs.}
 #' \item{hubs}{A character vector of hub genes, one per cluster, selected to
 #'             represent major loading patterns.}
 #' \item{receptors}{The subset of receptors to visualise, if any.}
@@ -220,6 +222,7 @@ prepare.visualise <- function(seurat.obj,
   visual.setting <- list(g1 = g1,
                          g2 = g2,
                          clu.g12 = clu.g12,
+                         clu.g2  = clu.g2,
                          hubs = hubs,
                          receptors = receptors,
                          ppr = ppr,

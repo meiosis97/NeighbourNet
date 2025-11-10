@@ -118,11 +118,6 @@ select.central.genes <- function(seurat.obj = NULL,
   n.response  <- length(responses)
   n.predictor <- length(predictors)
 
-  # 2. Helper: indices of top n loadings (ties broken at random)
-  which.max.n <- function(x, n = n.per.component){
-    which(rank(-x, ties.method = "random" ) <= n)
-  }
-
   # Storage for selected genes
   central.predictors <- character()
   central.responses  <- character()
@@ -170,8 +165,8 @@ select.central.genes <- function(seurat.obj = NULL,
         if (length(central.responses))  u[central.responses, ]  <- 0
 
         # Extract top genes per component
-        new.preds <- apply(v, 2, function(col) predictors[which.max.n(col)])
-        new.resps <- apply(u, 2, function(col) responses[which.max.n(col)])
+        new.preds <- apply(v, 2, function(col) predictors[NeighbourNet::topn(col, n.per.component)])
+        new.resps <- apply(u, 2, function(col) responses[NeighbourNet::topn(col, n.per.component)])
 
         central.predictors <- c(central.predictors, as.vector(new.preds))
         central.responses  <- c(central.responses,  as.vector(new.resps))
@@ -184,7 +179,7 @@ select.central.genes <- function(seurat.obj = NULL,
                     dimnames = dimnames(network)[c(1, 3)])  # responses × components
       if (length(central.responses)) mat[central.responses, ] <- 0
 
-      new.resps <- apply(mat, 2, function(col) responses[which.max.n(col)])
+      new.resps <- apply(mat, 2, function(col) responses[NeighbourNet::topn(col, n.per.component)])
       central.responses  <- as.vector(new.resps)
       central.predictors <- predictors
       predictor.module   <- NULL
@@ -196,7 +191,7 @@ select.central.genes <- function(seurat.obj = NULL,
                     dimnames = dimnames(network)[c(2, 3)])  # predictors × components
       if (length(central.predictors)) mat[central.predictors, ] <- 0
 
-      new.preds <- apply(mat, 2, function(col) predictors[which.max.n(col)])
+      new.preds <- apply(mat, 2, function(col) predictors[NeighbourNet::topn(col, n.per.component)])
       central.predictors <- as.vector(new.preds)
       central.responses  <- responses
       response.module    <- NULL
@@ -222,7 +217,7 @@ select.central.genes <- function(seurat.obj = NULL,
         rownames(v) <- predictors
         if (length(central.predictors)) v[central.predictors, ] <- 0
 
-        new.preds <- apply(v, 2, function(col) predictors[which.max.n(col)])
+        new.preds <- apply(v, 2, function(col) predictors[NeighbourNet::topn(col, n.per.component)])
         central.predictors <- c(central.predictors, as.vector(new.preds))
       }
 
@@ -237,7 +232,7 @@ select.central.genes <- function(seurat.obj = NULL,
                     dimnames = dimnames(network)[c(2, 3)])  # predictors × components
       if (length(central.predictors)) mat[central.predictors, ] <- 0
 
-      new.preds <- apply(mat, 2, function(col) predictors[which.max.n(col)])
+      new.preds <- apply(mat, 2, function(col) predictors[NeighbourNet::topn(col, n.per.component)])
       central.predictors <- as.vector(new.preds)
     }
   }

@@ -104,7 +104,7 @@ receptor.ppr <-  readRDS(url("https://zenodo.org/records/15240485/files/receptor
 Read the demonstrating data, which should be a Seurat object.
 
 ``` r
-load("data/luad.rda")
+load("luad.rda")
 ```
 
 ## Preprocess

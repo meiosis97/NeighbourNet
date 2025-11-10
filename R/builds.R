@@ -29,9 +29,11 @@
 #' @import Matrix
 NULL
 
-#' @import Seurat
+#' @import ggplot2
 NULL
 
 #' @importFrom magrittr `%>%`
 NULL
 
+#' @export
+magrittr::`%>%`

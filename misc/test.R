@@ -1,19 +1,20 @@
 require(devtools)
-require(pkgdown)
 document()
 build()
 install()
-usethis::use_pkgdown_github_pages()
-usethis::use_pkgdown()
-pkgdown::build_site()
-usethis::use_article("test")
 
-require(Seurat)
+#require(pkgdown)
+# usethis::use_pkgdown_github_pages()
+# usethis::use_pkgdown()
+# pkgdown::build_site()
+# usethis::use_article("test")
+
+#require(Seurat)
 require(NeighbourNet)
-require(ggplot2)
-require(dplyr)
-require(Matrix)
-data(luad)
+#require(ggplot2)
+#require(dplyr)
+#require(Matrix)
+load("./misc/luad.rda")
 obj <- Seurat::FindVariableFeatures(obj)
 genes <- Seurat::VariableFeatures(obj)
 
@@ -60,7 +61,7 @@ obj <- build.meta.network(obj)
 
 obj <- build.meta.response(obj)
 
-cells <- Misc(obj)$NNet.mod$cells
+cells <- Seurat::Misc(obj)$NNet.mod$cells
 
 select.central.genes(obj) %>% str
 
@@ -84,7 +85,35 @@ Seurat::Misc(obj, "NNet.visual.setting") %>% str
 
 obj <- prepare.visualise(obj,  central.genes = ctr.genes, as.g2 = "responses") 
 
-Seurat::Misc(obj, "NNet.visual.setting") %>% str
+visualise.network(obj, 2, cutoff = 0.5)
+
+visualise.network(obj, 1, meta.network = T)
+
+# #####################################################
+# exp.mat <- read.table(file = "./tests/nestorawa_forcellcycle_expressionMatrix.txt",
+#     header = TRUE, as.is = TRUE, row.names = 1)
+
+# # A list of cell cycle markers, from Tirosh et al, 2015, is loaded with Seurat.  We can
+# # segregate this list into markers of G2/M phase and markers of S phase
+# s.genes <- cc.genes$s.genes
+# g2m.genes <- cc.genes$g2m.genes
+
+# # Create our Seurat object and complete the initalization steps
+# marrow <- CreateSeuratObject(counts = Matrix::Matrix(as.matrix(exp.mat), sparse = T))
+# marrow <- NormalizeData(marrow)
+# marrow <- FindVariableFeatures(marrow, selection.method = "vst")
+# marrow <- CellCycleScoring(marrow, s.features = s.genes, g2m.features = g2m.genes, set.ident = TRUE)
+# marrow <- RunUMAP(marrow, dims = 1:10)
+
+# genes <- unique(c(s.genes, g2m.genes))
+# marrow <- prepare.seurat(marrow, genes = genes)
+# marrow <- prepare.graph(marrow)
+# marrow <- prepare.reg(marrow, responses = genes)
+# marrow <- run.nn.reg(marrow, responses = genes, return.p.val = TRUE,  cutoff = 0.95)
+# marrow <- build.meta.network(marrow)
+# ggplot(marrow@misc$NNet.mod$meta.network$pcs) + geom_point(aes(component_1,component_2, col = marrow$Phase))
+# DimPlot(marrow, group.by = "Phase")
+# str(obj@misc$NNet.mod$meta.network )
 
 ###################  Check results ###################
 pcs <- Seurat::Misc(obj, "NNet.setting")$pcs[cells,]
@@ -245,8 +274,6 @@ ggplot() + geom_jitter(aes(x= "umi", y= log(abs(null.effect)))) +
 print(mu)
 print(sigma)
 FeaturePlot(obj,gene)
-
-
 
 ###################  Check results4 ###################
 special.run.nn.reg <- function(seurat.obj, responses = NULL, Y = NULL,

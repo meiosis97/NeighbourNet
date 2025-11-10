@@ -26,7 +26,7 @@ require(Seurat)
 
 ```{r}
 # Load the example data
-load("data/luad.rda")
+load("luad.rda")
 ```
 
 ## Preprocessing and Data Preparation

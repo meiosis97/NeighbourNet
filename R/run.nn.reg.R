@@ -269,7 +269,7 @@ run.nn.reg <- function(seurat.obj,
     b <- tcrossprod(loadings, b) %>% as.matrix
 
     # Calculate effect
-    effect <- (b * setting$nn.scale.gene[genes,names(cells),drop=F]) %>%
+    effect <- (b * setting$nn.scale.gene[genes,names(cells),drop=FALSE]) %>%
       sweep(2, y.factor , "*") %>%
       as.matrix
 

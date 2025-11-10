@@ -16,7 +16,11 @@ Imports:
     igraph,
     progress,
     RSpectra,
-    Seurat
+    Seurat,
+    ggraph,
+    reshape2,
+    scatterpie,
+    plyr
 Depends: 
     R (>= 4.4.0)
 Suggests: 

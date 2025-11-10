@@ -35,7 +35,8 @@ We conducted an analysis, available [here](https://github.com/meiosis97/Neighbou
 # ⚡ 5-Minute Quick-Start
 
 This mini-walkthrough reproduces the **full vignette** in about 25 lines.  
-The full vignette can be found [here](https://github.com/meiosis97/NeighbourNet/blob/main/misc/vignettes.for.script.md).
+The full vignette can be found
+[here](https://github.com/meiosis97/NeighbourNet/blob/main/misc/vignettes.for.script.md) (script) and [here](https://meiosis97.github.io/NeighbourNet/) (package).
 
 ## 1 · Install / load core packages
 

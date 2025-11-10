@@ -34,7 +34,7 @@ to compare and understand the differences between the two strategies.
 This mini-walkthrough reproduces the **full vignette** in about 25
 lines.  
 The full vignette can be found
-[here](https://github.com/meiosis97/NeighbourNet/blob/main/misc/vignettes.for.script.md).
+[here](https://github.com/meiosis97/NeighbourNet/blob/main/misc/vignettes.for.script.md) (script) and [here]()
 
 ## 1 · Install / load core packages
 

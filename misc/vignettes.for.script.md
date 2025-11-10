@@ -10,7 +10,10 @@ provided R script into the global environment.
 ## Install dependencies
 
 ``` r
-uninstalled.packages <- c("Seurat", "dplyr", "Matrix", "ggplot2", "ggraph", "scatterpie", "ggrepel", "ggpubr", "igraph")
+uninstalled.packages <- c("Seurat", "dplyr", "Matrix", "ggplot2",
+                          "ggraph", "scatterpie", "ggrepel", "ggpubr",
+                          "igraph", "plyr", "RANN", "reshape2"
+                          "RSpectra", "magrittr", "progress")
 uninstalled.packages <- uninstalled.packages[!uninstalled.packages%in%installed.packages()]
 if(length(uninstalled.packages)){
   install.packages(uninstalled.packages)

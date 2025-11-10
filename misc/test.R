@@ -8,6 +8,7 @@ install()
 # usethis::use_pkgdown()
 # pkgdown::build_site()
 # usethis::use_article("cell.cycle.Rmd")
+# usethis::use_citation()
 
 #require(Seurat)
 require(NeighbourNet)

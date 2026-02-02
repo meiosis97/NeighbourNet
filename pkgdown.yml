@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   articles/cell-cycle: cell-cycle.html
-last_built: 2025-11-10T11:01Z
+last_built: 2026-02-02T06:04Z
 urls:
   reference: https://meiosis97.github.io/NeighbourNet/reference
   article: https://meiosis97.github.io/NeighbourNet/articles

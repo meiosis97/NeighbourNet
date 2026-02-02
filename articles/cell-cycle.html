@@ -72,9 +72,6 @@
 <span><span class="co">#&gt; 'SeuratObject' was built under R 4.5.0 but the current version is</span></span>
 <span><span class="co">#&gt; 4.5.2; it is recomended that you reinstall 'SeuratObject' as the ABI</span></span>
 <span><span class="co">#&gt; for R may have changed</span></span>
-<span><span class="co">#&gt; 'SeuratObject' was built with package 'Matrix' 1.7.3 but the current</span></span>
-<span><span class="co">#&gt; version is 1.7.4; it is recomended that you reinstall 'SeuratObject' as</span></span>
-<span><span class="co">#&gt; the ABI for 'Matrix' may have changed</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'SeuratObject'</span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
@@ -262,10 +259,10 @@ meta-networks.</p>
 <span><span class="co">#&gt;   columns.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">igraph</span> package.</span></span>
 <span><span class="co">#&gt;   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/igraph/rigraph/issues&gt;</span>.</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once per session.</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span></code></pre></div>
-<p><img src="cell-cycle_files/figure-html/plot-cell-1.png" class="r-plt" width="960"></p>
+<p><img src="cell-cycle_files/figure-html/plot-cell-1.png" class="r-plt" alt="" width="960"></p>
 </div>
 <div class="section level3">
 <h3 id="visualise-a-meta-network-component">Visualise a meta-network component<a class="anchor" aria-label="anchor" href="#visualise-a-meta-network-component"></a>
@@ -286,7 +283,7 @@ meta-networks.</p>
 <span>  pie.radius   <span class="op">=</span> <span class="fl">0.04</span>,</span>
 <span>  text.size    <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="cell-cycle_files/figure-html/plot-meta-1.png" class="r-plt" width="960"></p>
+<p><img src="cell-cycle_files/figure-html/plot-meta-1.png" class="r-plt" alt="" width="960"></p>
 </div>
 <div class="section level3">
 <h3 id="visualise-meta-network-components-in-pc-space">Visualise meta-network components in PC space<a class="anchor" aria-label="anchor" href="#visualise-meta-network-components-in-pc-space"></a>
@@ -304,7 +301,7 @@ component in the meta-network PC space.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Cell Weights on Meta-network 1"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cell-cycle_files/figure-html/plot-meta-pcs-1.png" class="r-plt" width="576"></p>
+<p><img src="cell-cycle_files/figure-html/plot-meta-pcs-1.png" class="r-plt" alt="" width="576"></p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">pcs</span><span class="op">)</span> <span class="op">+</span></span>
@@ -313,7 +310,7 @@ component in the meta-network PC space.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Cell by Predicted Phase"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cell-cycle_files/figure-html/plot-meta-pcs-2.png" class="r-plt" width="576"></p>
+<p><img src="cell-cycle_files/figure-html/plot-meta-pcs-2.png" class="r-plt" alt="" width="576"></p>
 </div>
 </div>
 <div class="section level2">
@@ -336,7 +333,7 @@ receptor-TF-target integration.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Notch2"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cell-cycle_files/figure-html/notch2-activity-1.png" class="r-plt" width="576"></p>
+<p><img src="cell-cycle_files/figure-html/notch2-activity-1.png" class="r-plt" alt="" width="576"></p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">tf.cor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">notch2.act</span>, <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">act</span><span class="op">$</span><span class="va">tf.act</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>

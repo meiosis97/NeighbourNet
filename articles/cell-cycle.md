@@ -7,9 +7,6 @@ library(Seurat)
 #> 'SeuratObject' was built under R 4.5.0 but the current version is
 #> 4.5.2; it is recomended that you reinstall 'SeuratObject' as the ABI
 #> for R may have changed
-#> 'SeuratObject' was built with package 'Matrix' 1.7.3 but the current
-#> version is 1.7.4; it is recomended that you reinstall 'SeuratObject' as
-#> the ABI for 'Matrix' may have changed
 #> 
 #> Attaching package: 'SeuratObject'
 #> The following objects are masked from 'package:base':
@@ -221,7 +218,7 @@ NeighbourNet::visualise.network(
 #>   columns.
 #> ℹ The deprecated feature was likely used in the igraph package.
 #>   Please report the issue at <https://github.com/igraph/rigraph/issues>.
-#> This warning is displayed once every 8 hours.
+#> This warning is displayed once per session.
 #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 #> generated.
 ```

@@ -10,12 +10,12 @@
 #' the embedded matrix. It accepts either a \code{Seurat} object prepared by the
 #' NeighbourNet workflow or a precomputed 3D network tensor. Similarly, using
 #' \code{build.meta.response}, meta-responses representing functional gene modules can
-#' be built by nPCA embedding on vectorised response profiles (cell*predictors-by-response). 
+#' be built by nPCA embedding on vectorised response profiles (cell*predictors-by-response).
 #' The detailed arguments and usage of \code{build.meta.network} is documented, and that of
-#' \code{build.meta.response} is alike. 
+#' \code{build.meta.response} is alike.
 #'
 #' @param seurat.obj A \code{Seurat} object with a \code{NNet.mod} list stored in the
-#'   \code{misc} slot. This list is created by \code{\link{run.nn.reg}}. 
+#'   \code{misc} slot. This list is created by \code{\link{run.nn.reg}}.
 #'   If provided, \code{assay} and gene panels are taken from
 #'   \code{NNet.mod$defaults}. Ignored when \code{network} is supplied.
 #' @param network Optional 3D tensor of networks with dimension order
@@ -54,7 +54,7 @@
 #'     \item \code{pcs}: A matrix of PC scores learnt on per-cell networks; rows = cells, columns = components.
 #'     \item \code{pca.loadings}: A matrix of PCA loadings learnt on per-cell networks.
 #'     \item \code{pca.sd}: A numeric vector of singular values from network covariance.
-#'     \item \code{npca.loadings}: A matrix of PC scores learnt on per-cell networks; 
+#'     \item \code{npca.loadings}: A matrix of PC scores learnt on per-cell networks;
 #'                                 if \code{non.neg = TRUE}; else \code{NULL}.
 #'     \item \code{scale}, \code{non.neg}: Echo of the input flags.
 #'     \item \code{setting}: Copy of \code{NNet.mod$defaults} if \code{seurat.obj} was provided.
@@ -62,7 +62,7 @@
 #'
 #' @details
 #' \strong{Edge embedding}: If both \code{responses} and \code{predictors} have size > 1, a
-#' cell-by-cell kernel that represents co-variation in network structure across cells is computed. 
+#' cell-by-cell kernel that represents co-variation in network structure across cells is computed.
 #' Eigen-decomposition is ran to construct a edge-embedding x cell matrix.
 #' If one axis is size 1, perform SVD directly on the (edges × cells) matrix.
 #'
@@ -175,8 +175,11 @@ build.meta.network <- function(
     } else {
       as.matrix(K) %>% eigen()
     }
-    v <- eigs$vectors
-    d <- sqrt(eigs$values)
+    values <- eigs$values
+    values <- values[abs(values) > tol]
+    k <- length(values)
+    v <- eigs$vectors[,1:k]
+    d <- sqrt(values)
     vd <- v %*% diag(d)
     rownames(v)  <- rownames(vd) <- cells
     colnames(v)  <- colnames(vd) <- paste("component", 1:k, sep = "_")
@@ -208,8 +211,10 @@ build.meta.network <- function(
     } else {
       svd.mod <- RSpectra::svds(A, k = k)
     }
-    v <- svd.mod$v
-    d <- svd.mod$d[1:k]
+    d <- svd.mod$d
+    d <- d[abs(d) > tol]
+    k <- length(d)
+    v <- svd.mod$v[,1:k]
     vd <- v %*% diag(d)
     rownames(v)  <- rownames(vd) <- cells
     colnames(v)  <- colnames(vd) <- paste("component", 1:k, sep = "_")
@@ -238,7 +243,7 @@ build.meta.network <- function(
 
   # p-values can be returned only with Seurat context + effect assay + non.neg
   if (is.null(assay) || !non.neg)  return.p.val <- FALSE
-  
+
   p.val <- if (return.p.val) meta.network else NULL
 
   if (non.neg) {
@@ -262,7 +267,7 @@ build.meta.network <- function(
           NeighbourNet::get.network(seurat.obj, responses = r, assay = "p.val", cutoff = cutoff)
         } else {
           A
-        } 
+        }
         p.val[r, , ] <- P %*% npca.loadings
       }
 
@@ -454,7 +459,7 @@ build.meta.response <- function(
     rownames(v)  <- rownames(vd) <- responses
     colnames(v)  <- colnames(vd) <- paste("component", 1:k, sep = "_")
   }
-  
+
   # Rank selection via simple spectral-gap on tail differences (if truncated)
   if (truncated) {
     rank <- k
@@ -479,9 +484,9 @@ build.meta.response <- function(
 
   # p-values can be returned only with Seurat context + effect assay + non.neg
   if (is.null(assay) || !non.neg)  return.p.val <- FALSE
-  
+
   p.val <- if (return.p.val) meta.response else NULL
-  
+
   if (non.neg) {
     # Iterative nPCA with deflation in cell space
     npca.res <- NeighbourNet::npca(vd, n.net, tol, max.iter, return.score = FALSE)

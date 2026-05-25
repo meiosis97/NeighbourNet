@@ -50,7 +50,7 @@ select.gene <- function(seurat.obj,
 
   # Filter genes based on expression in at least min.cells
   genes <- rownames(seurat.obj)
-  n.cell.expressed <- rowSums(SeuratObject::LayerData(obj, "counts")[genes, ] > 0)
+  n.cell.expressed <- rowSums(SeuratObject::LayerData(seurat.obj, "counts")[genes, ] > 0)
   genes <- genes[n.cell.expressed > min.cells]
 
   # Filter TFs, targets, and background genes from the expressed genes

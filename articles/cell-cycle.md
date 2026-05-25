@@ -1,12 +1,10 @@
 # NeighbourNet: Workflow Example
 
 ``` r
+
 library(Seurat)
 #> Loading required package: SeuratObject
 #> Loading required package: sp
-#> 'SeuratObject' was built under R 4.5.0 but the current version is
-#> 4.5.2; it is recomended that you reinstall 'SeuratObject' as the ABI
-#> for R may have changed
 #> 
 #> Attaching package: 'SeuratObject'
 #> The following objects are masked from 'package:base':
@@ -65,6 +63,7 @@ We first perform quality control and gene selection, then prepare the
 object for NeighbourNet.
 
 ``` r
+
 # Filter out lowly expressed genes and annotate TFs/targets/receptors/ligands
 genes <- NeighbourNet::select.gene(obj, min.cells = 10)
 ```
@@ -73,6 +72,7 @@ Run PCA on the selected genes. Co-expression will be measured within
 this gene set.
 
 ``` r
+
 obj <- NeighbourNet::prepare.seurat(obj, genes = genes$genes)
 #> Running Seurat scaling and PCA...
 ```
@@ -80,6 +80,7 @@ obj <- NeighbourNet::prepare.seurat(obj, genes = genes$genes)
 Construct the KNN graph used by NeighbourNet.
 
 ``` r
+
 obj <- NeighbourNet::prepare.graph(obj)
 #> Building KNN graph...
 ```
@@ -88,6 +89,7 @@ Optionally, for data sets with many cells (\> 5000), you can run the
 regression on a subset of representative cells.
 
 ``` r
+
 # Not run
 obj <- NeighbourNet::select.cell(obj)
 ```
@@ -95,6 +97,7 @@ obj <- NeighbourNet::select.cell(obj)
 Finally, set up the regression problem and compute local variance.
 
 ``` r
+
 # Local variance is computed for predictor and response genes.
 # Response genes are low-rank approximated.
 # Here we measure co-expression between TFs (predictors) and cell-cycle targets (responses).
@@ -111,6 +114,7 @@ obj <- NeighbourNet::prepare.reg(
 The NeighbourNet regression settings are stored in the `misc` slot:
 
 ``` r
+
 Seurat::Misc(obj, "NNet.setting") %>% names()
 #>  [1] "pcs"           "loadings"      "p"             "nn.idx"       
 #>  [5] "nn.w"          "all.cells"     "all.genes"     "cells"        
@@ -123,6 +127,7 @@ Seurat::Misc(obj, "NNet.setting") %>% names()
 Run NeighbourNet regression to obtain per-cell co-expression networks.
 
 ``` r
+
 obj <- NeighbourNet::run.nn.reg(
   obj,
   responses    = targets,
@@ -141,6 +146,7 @@ The resulting network ensemble is stored in `NNet.mod` within the `misc`
 slot.
 
 ``` r
+
 # effect: (response × predictor × cell) tensor of co-expression effect sizes
 # p.val : corresponding significance tensor
 Seurat::Misc(obj, "NNet.mod") %>% names()
@@ -153,6 +159,7 @@ Seurat::Misc(obj, "NNet.mod") %>% names()
 Build meta-networks summarising the per-cell networks.
 
 ``` r
+
 obj <- NeighbourNet::build.meta.network(obj)
 #> Now construct the covariance matrix.
 #> Eigen decomposition.
@@ -162,6 +169,7 @@ obj <- NeighbourNet::build.meta.network(obj)
 Meta-networks are stored as a (response × predictor × meta-cell) tensor:
 
 ``` r
+
 Seurat::Misc(obj, "NNet.mod")$meta.network$meta.network %>% dim()
 ```
 
@@ -176,6 +184,7 @@ First, identify central genes based on eigenvector centrality across
 meta-networks.
 
 ``` r
+
 # All responses will be visualised when keep.responses = TRUE.
 # n.net controls the number of meta-networks to examine.
 # For each meta-network, k singular vectors are used, and
@@ -192,6 +201,7 @@ central.genes <- NeighbourNet::select.central.genes(
 ### Prepare visualisation settings
 
 ``` r
+
 # TFs (or the chosen g2 layer) are clustered into n.clu groups (colour-coded)
 obj <- NeighbourNet::prepare.visualise(
   obj,
@@ -203,6 +213,7 @@ obj <- NeighbourNet::prepare.visualise(
 ### Visualise a per-cell network
 
 ``` r
+
 i <- 1
 NeighbourNet::visualise.network(
   obj,
@@ -228,6 +239,7 @@ NeighbourNet::visualise.network(
 ### Visualise a meta-network component
 
 ``` r
+
 i <- 1
 meta.p <- Seurat::Misc(obj, "NNet.mod")$meta.network$p.val[,, i]
 cutoff <- apply(meta.p, 1, max) %>%
@@ -253,6 +265,7 @@ We can also inspect which cells contribute to a given meta-network
 component in the meta-network PC space.
 
 ``` r
+
 i <- 1
 pcs     <- Seurat::Misc(obj, "NNet.mod")$meta.network$pcs
 weights <- Seurat::Misc(obj, "NNet.mod")$meta.network$npca.loadings[, i]
@@ -268,6 +281,7 @@ ggplot(pcs) +
 ![](cell-cycle_files/figure-html/plot-meta-pcs-1.png)
 
 ``` r
+
 
 ggplot(pcs) +
   geom_point(aes(component_1, component_2, colour = obj$Phase)) +
@@ -285,6 +299,7 @@ We now compute receptor activity scores using NeighbourNet’s
 receptor-TF-target integration.
 
 ``` r
+
 act <- NeighbourNet::receptor.activity(obj)
 #> Now infer receptor activity.
 ```
@@ -292,6 +307,7 @@ act <- NeighbourNet::receptor.activity(obj)
 ### Visualise NOTCH2 activity and identify mediating TFs
 
 ``` r
+
 notch2.act <- act$receptor.act["NOTCH2", ] %>% as.numeric()
 
 ggplot(pcs) +
@@ -306,6 +322,7 @@ ggplot(pcs) +
 
 ``` r
 
+
 tf.cor <- cor(notch2.act, t(act$tf.act)) %>%
   drop() %>%
   sort(decreasing = TRUE)
@@ -319,6 +336,7 @@ We can inspect the inferred signalling path from NOTCH2 to a candidate
 TF (e.g. E2F1) using the prior signalling graph:
 
 ``` r
+
 igraph::shortest_paths(
   NeighbourNet::sig.graph,
   from    = "NOTCH2",

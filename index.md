@@ -39,12 +39,14 @@ The full vignette can be found
 ## 1 · Install / load core packages
 
 ``` r
+
 remotes::install_github("https://github.com/meiosis97/NeighbourNet")
 ```
 
 ## 2 · Fetch demo dataset (can be found in the data folder)
 
 ``` r
+
 # Load the package
 require(NeighbourNet)
 require(ggplot2)
@@ -57,6 +59,7 @@ load("misc/luad.rda")    # loads `obj`
 ## 3 · One-liner preprocessing
 
 ``` r
+
 genes  <- select.gene(obj, min.cells = 10) # QC → TF / target lists
 
 obj <- obj |>
@@ -70,6 +73,7 @@ obj <- obj |>
 ## 4 · Run NeighbourNet and build meta-networks
 
 ``` r
+
 top10 <- head(genes$targets, 10)           # demo: first 10 targets
 obj   <- run.nn.reg(obj, responses = top10, return.p.val = TRUE) |>
          build.meta.network() 
@@ -86,6 +90,7 @@ obj   <- run.nn.reg(obj, responses = top10, return.p.val = TRUE) |>
 ## 5.0 Prepare Visualisation
 
 ``` r
+
 ctr.genes <- select.central.genes(obj)  
 obj <- prepare.visualise(obj, central.genes = ctr.genes)
 ```
@@ -93,6 +98,7 @@ obj <- prepare.visualise(obj, central.genes = ctr.genes)
 ## 5.1 · Snapshot plot (Cell \#1)
 
 ``` r
+
 visualise.network(obj, 1, 
                   radius = c(.4,.7,.85,1), pie.radius = .04,
                   text.size = 5)
@@ -101,6 +107,7 @@ visualise.network(obj, 1,
 ## 5.2 · Snapshot plot (meta-network \#1)
 
 ``` r
+
 cut <- mean(apply(obj@misc$NNet.mod$meta.network$p.val[,,1], 1, max))
 visualise.network(obj, 1, meta.network = TRUE, cutoff = cut,
                   radius = c(.4,.7,.85,1), pie.radius = .04,
@@ -110,6 +117,7 @@ visualise.network(obj, 1, meta.network = TRUE, cutoff = cut,
 ## 6 · (Option) Receptor activity per cell
 
 ``` r
+
 act  <- receptor.activity(obj)             # matrix: receptor × cell
 lrp6 <- act$receptor.act["LRP6", ]
 ```
@@ -117,6 +125,7 @@ lrp6 <- act$receptor.act["LRP6", ]
 Plot on PCA:
 
 ``` r
+
 ggplot(Embeddings(obj, "pca"), aes(PC_1, PC_2)) +
   geom_point(alpha = .2, size = .6, colour = "grey80") +
   geom_point(data = Embeddings(obj, "pca")[names(lrp6), ],

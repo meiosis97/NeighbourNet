@@ -1,9 +1,9 @@
-pandoc: 3.1.11
+pandoc: 3.8.3
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   articles/cell-cycle: cell-cycle.html
-last_built: 2026-02-02T16:38Z
+last_built: 2026-05-25T09:38Z
 urls:
   reference: https://meiosis97.github.io/NeighbourNet/reference
   article: https://meiosis97.github.io/NeighbourNet/articles

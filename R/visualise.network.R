@@ -185,6 +185,15 @@
 #' )
 #' print(p.meta)
 #'
+#' # The same meta-network as an interactive widget (needs visNetwork):
+#' # hover for values, click a gene to highlight its partners, scroll to zoom
+#' visualise.network(
+#'   seurat.obj,
+#'   i = 1,
+#'   meta.network = TRUE,
+#'   interactive = TRUE
+#' )
+#'
 #' @seealso \code{\link{prepare.visualise}}, \code{\link{receptor.activity}}
 #'
 #' @export

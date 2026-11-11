@@ -22,8 +22,11 @@ Imports:
     plyr
 Depends: 
     R (>= 4.4.0)
-Suggests: 
-    testthat (>= 3.0.0)
+Suggests:
+    testthat (>= 3.0.0),
+    visNetwork,
+    htmlwidgets,
+    htmltools
 Config/testthat/edition: 3
 Config/Needs/website: rmarkdown
 URL: https://meiosis97.github.io/NeighbourNet/

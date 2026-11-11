@@ -104,8 +104,20 @@
 #'   the scatterpie representation. Default is \code{0.05}.
 #' @param text.size A numeric value giving the size of gene labels in the
 #'   plotted network. Default is \code{4}.
+#' @param interactive A logical. If \code{TRUE}, return an interactive
+#'   \pkg{visNetwork} widget instead of a \code{ggplot}, drawing the same
+#'   genes, edges, clusters and layout. Hover a gene or edge for its values,
+#'   click a gene (or pick it from the menu) to highlight its partners, and
+#'   scroll to zoom. In this view, \code{g2} genes are filled with their
+#'   cluster colour and other genes are neutral; edges are plain lines unless
+#'   prior knowledge supports them (arrow: activation, bar: inhibition);
+#'   genes with no edge above \code{cutoff} are greyed out. \code{pie.radius}
+#'   and \code{text.size} are ignored. Requires the \pkg{visNetwork},
+#'   \pkg{htmlwidgets} and \pkg{htmltools} packages. Default is \code{FALSE}.
 #'
-#' @return A \code{ggplot} object (built with \pkg{ggraph} and
+#' @return If \code{interactive = TRUE}, a \pkg{visNetwork} htmlwidget, which
+#'   displays in the RStudio viewer and in R Markdown / Quarto HTML output.
+#'   Otherwise, a \code{ggplot} object (built with \pkg{ggraph} and
 #'   \pkg{ggplot2}) representing a layered receptor–TF–target network. The plot
 #'   includes:
 #' \itemize{
@@ -195,7 +207,8 @@ visualise.network <- function(seurat.obj,
                               n.per.component = 10,
                               radius  = NULL,
                               pie.radius = 0.05,
-                              text.size = 4){
+                              text.size = 4,
+                              interactive = FALSE){
   view <- .network.view(seurat.obj = seurat.obj,
                         i = i,
                         meta.network = meta.network,
@@ -214,6 +227,7 @@ visualise.network <- function(seurat.obj,
                         k = k,
                         n.per.component = n.per.component,
                         radius = radius)
+  if(isTRUE(interactive)) return(.render.interactive(view))
   .render.static(view, pie.radius = pie.radius, text.size = text.size)
 }
 

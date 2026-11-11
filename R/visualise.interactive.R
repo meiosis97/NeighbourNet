@@ -16,7 +16,10 @@
 # Wrapper so that tests can simulate a missing package.
 .has.package <- function(pkg) requireNamespace(pkg, quietly = TRUE)
 
-.render.interactive <- function(view, height = "650px"){
+# Default height: the window (browser, RStudio viewer) minus room for the
+# legend below the network, so the network fills the screen and the legend
+# stays visible.
+.render.interactive <- function(view, height = "calc(100vh - 200px)"){
   for(pkg in c("visNetwork", "htmlwidgets", "htmltools")){
     if(!.has.package(pkg)){
       stop("interactive = TRUE needs the '", pkg, "' package. Install it with ",
@@ -133,8 +136,9 @@
     selectedBy = list(variable = "group", main = "Select a layer"))
   w <- visNetwork::visInteraction(w, hover = TRUE, tooltipDelay = 80,
                                   navigationButtons = TRUE, dragNodes = TRUE)
-  # Keep the requested height instead of filling the window, so the legend
-  # below the network stays visible.
+  # Use `height` as given rather than htmlwidgets' fill-the-window sizing,
+  # which would push the legend off screen (`height` already follows the
+  # window size).
   w$sizingPolicy$browser$fill <- FALSE
   w$sizingPolicy$viewer$fill  <- FALSE
   htmlwidgets::appendContent(w, legend)

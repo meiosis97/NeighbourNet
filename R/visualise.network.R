@@ -109,8 +109,9 @@
 #'   genes, edges, clusters and layout. Hover a gene or edge for its values,
 #'   click a gene (or pick it from the menu) to highlight its partners, and
 #'   scroll to zoom. In this view, \code{g2} genes are filled with their
-#'   cluster colour and other genes are neutral; edges are plain lines unless
-#'   prior knowledge supports them (arrow: activation, bar: inhibition);
+#'   cluster colour and other genes are neutral; as in the static plot, edges
+#'   without prior knowledge are dashed (undirected), and prior-supported edges
+#'   are solid with an arrow (activation) or a bar (inhibition);
 #'   genes with no edge above \code{cutoff} are greyed out. \code{pie.radius}
 #'   and \code{text.size} are ignored. Requires the \pkg{visNetwork},
 #'   \pkg{htmlwidgets} and \pkg{htmltools} packages. Default is \code{FALSE}.

@@ -100,7 +100,8 @@
       ifelse(is.na(ed$significance), "",
              paste0("<br>significance: ", sprintf("%.2f", ed$significance))),
       "<br>prior knowledge: ",
-      c(none = "none", activation = "activation", inhibition = "inhibition")[ed$prior]
+      c(none = "none (undirected)", activation = "activation",
+        inhibition = "inhibition")[ed$prior]
     ) else character(0)
   edges <- data.frame(
     from  = ed$from,
@@ -110,6 +111,15 @@
     title = edge.title,
     stringsAsFactors = FALSE
   )
+  # As in the static plot: edges without prior knowledge are undirected and
+  # dashed; prior-supported edges are solid with an arrow (activation) or a
+  # bar (inhibition).
+  # Dash and gap lengths grow with the edge width; vis.js's fixed default
+  # (5 px) makes thick dashed edges look solid.
+  edges$dashes <- lapply(seq_len(nrow(ed)), function(k) {
+    if(ed$prior[k] != "none") return(FALSE)
+    c(max(6, 2.5 * edges$width[k]), max(5, 2 * edges$width[k]))
+  })
   edges$arrows.to.enabled <- ed$prior != "none"
   edges$arrows.to.type    <- ifelse(ed$prior == "inhibition", "bar", "arrow")
 
@@ -210,9 +220,11 @@
       square   = '<rect x="5" y="5" width="10" height="10"')
     svg(sprintf('%s fill="%s" stroke="%s" stroke-width="1.5"/>', body, fill, stroke))
   }
-  edge.svg <- function(end = c("none", "arrow", "bar")){
+  edge.svg <- function(end = c("none", "arrow", "bar"), dashed = FALSE){
     end <- match.arg(end)
-    line <- '<line x1="2" y1="10" x2="34" y2="10" stroke="#555555" stroke-width="3"/>'
+    line <- sprintf(paste0('<line x1="2" y1="10" x2="34" y2="10" stroke="#555555" ',
+                           'stroke-width="3"%s/>'),
+                    if(dashed) ' stroke-dasharray="5,4"' else "")
     tip <- switch(end,
       none  = "",
       arrow = '<polygon points="38,10 29,5 29,15" fill="#555555"/>',
@@ -242,9 +254,11 @@
     item(node.svg("dot", "#F2F2F2", "#BDBDBD"), "no edge above cutoff")
   )
   edges <- c(
-    item(edge.svg("none"), "co-expression (width = weight)"),
+    item(edge.svg("none", dashed = TRUE),
+         "co-expression only (undirected, not in prior knowledge)"),
     item(edge.svg("arrow"), "+ prior knowledge: activation"),
-    item(edge.svg("bar"), "+ prior knowledge: inhibition")
+    item(edge.svg("bar"), "+ prior knowledge: inhibition"),
+    item("", "(width = weight)")
   )
   htmltools::HTML(sprintf(
     paste0('<div style="font-family:Arial,Helvetica,sans-serif;font-size:%dpx;',

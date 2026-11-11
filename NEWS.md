@@ -12,8 +12,9 @@
   - distinct shapes per layer: `g2` genes as diamonds filled with their
     cluster colour, `g1` genes as circles, receptors as triangles and
     intermediate signalling steps as small labelled squares;
-  - plain lines for co-expression only, with an arrow (activation) or a bar
-    (inhibition) when prior knowledge supports the edge;
+  - as in the static plot, dashed lines for co-expression only (undirected,
+    not in prior knowledge), and solid lines with an arrow (activation) or a
+    bar (inhibition) when prior knowledge supports the edge;
   - greyed-out genes for those with no edge above `cutoff`;
   - a legend below the network.
 

@@ -66,7 +66,7 @@ test_that("node shapes follow the layers, including receptor pathways", {
   expect_true(all(nodes$color.background[nodes$group == "target" & nodes$id %in% drawn] == "#FFFFFF"))
 })
 
-test_that("edges mark prior activation with an arrow and inhibition with a bar", {
+test_that("edges: dashed without prior knowledge, arrow / bar with it", {
   skip_if_no_widgets()
   obj <- nnet_fixture()
   v <- both_views(obj, 1, meta.network = TRUE, cutoff = meta_cutoff(obj))
@@ -76,6 +76,11 @@ test_that("edges mark prior activation with an arrow and inhibition with a bar",
   ev <- e$evidence[match(key(ed$from, ed$to), key(e$from, e$to))]
 
   expect_true(all(c(2, 3, 4) %in% ev))                       # fixture covers all three
+  # `dashes` is FALSE or a c(dash, gap) pattern per edge
+  dashed <- vapply(ed$dashes, function(d) !isFALSE(d), logical(1))
+  expect_true(all(dashed[ev == 2]))                          # undirected: dashed,
+  expect_true(all(!dashed[ev %in% c(3, 4)]))                 # as in the static plot
+  expect_true(all(vapply(ed$dashes[dashed], length, integer(1)) == 2))
   expect_true(all(!ed$arrows.to.enabled[ev == 2]))          # co-expression only
   expect_true(all(ed$arrows.to.enabled[ev %in% c(3, 4)]))
   expect_true(all(ed$arrows.to.type[ev == 3] == "arrow"))
@@ -124,6 +129,8 @@ test_that("the legend is added below the network", {
   expect_match(legend, "TF cluster")
   expect_match(legend, "receptor")
   expect_match(legend, "prior knowledge: inhibition")
+  expect_match(legend, "undirected")
+  expect_match(legend, "stroke-dasharray")
 })
 
 test_that("a missing visNetwork gives an informative error", {

@@ -13,9 +13,12 @@
 # Cluster colours: the static plot's palette (grey = no cluster, then Set1).
 .nnet.cluster.cols <- function() c("#BDBDBD", RColorBrewer::brewer.pal(9, "Set1"))
 
+# Wrapper so that tests can simulate a missing package.
+.has.package <- function(pkg) requireNamespace(pkg, quietly = TRUE)
+
 .render.interactive <- function(view, height = "650px"){
   for(pkg in c("visNetwork", "htmlwidgets", "htmltools")){
-    if(!requireNamespace(pkg, quietly = TRUE)){
+    if(!.has.package(pkg)){
       stop("interactive = TRUE needs the '", pkg, "' package. Install it with ",
            "install.packages(\"", pkg, "\").", call. = FALSE)
     }
@@ -86,19 +89,23 @@
                                ifelse(nd$role == "pathway step", "#555555", "#222222"))
   nodes$font.size    <- ifelse(nd$role == "pathway step", 13, 17)
 
-  edges <- data.frame(
-    from  = ed$from,
-    to    = ed$to,
-    width = 1 + 6 * ed$weight,
-    color = col.of(ed$module),
-    title = paste0(
+  # paste0() returns one string even for zero-length inputs, so build the
+  # tooltips only when there are edges.
+  edge.title <- if(nrow(ed)) paste0(
       "<b>", nd$label[match(ed$from, nd$name)], " &ndash; ",
       nd$label[match(ed$to, nd$name)], "</b> (", ed$kind, ")",
       "<br>edge weight: ", sprintf("%.2f", ed$weight),
       ifelse(is.na(ed$significance), "",
              paste0("<br>significance: ", sprintf("%.2f", ed$significance))),
       "<br>prior knowledge: ",
-      c(none = "none", activation = "activation", inhibition = "inhibition")[ed$prior]),
+      c(none = "none", activation = "activation", inhibition = "inhibition")[ed$prior]
+    ) else character(0)
+  edges <- data.frame(
+    from  = ed$from,
+    to    = ed$to,
+    width = 1 + 6 * ed$weight,
+    color = as.character(col.of(ed$module)),
+    title = edge.title,
     stringsAsFactors = FALSE
   )
   edges$arrows.to.enabled <- ed$prior != "none"
@@ -161,7 +168,7 @@
     from = e$from, to = e$to,
     kind = ifelse(coexp, "co-expression", "signalling path"),
     weight = e$weight,
-    significance = NA_real_,
+    significance = rep(NA_real_, nrow(e)),   # also valid with no edges drawn
     prior = c("none", "activation", "inhibition")[e$evidence - 1],
     module = ifelse(e$cluster > 1, e$cluster - 1L, NA_integer_),
     stringsAsFactors = FALSE)

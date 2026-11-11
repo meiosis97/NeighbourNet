@@ -16,10 +16,9 @@
 # Wrapper so that tests can simulate a missing package.
 .has.package <- function(pkg) requireNamespace(pkg, quietly = TRUE)
 
-# Default height: the window (browser, RStudio viewer) minus room for the
-# legend below the network, so the network fills the screen and the legend
-# stays visible.
-.render.interactive <- function(view, height = "calc(100vh - 200px)"){
+# `height = NULL` lets htmlwidgets pick a height for where the widget is
+# shown (see the sizing policy at the end).
+.render.interactive <- function(view, height = NULL){
   for(pkg in c("visNetwork", "htmlwidgets", "htmltools")){
     if(!.has.package(pkg)){
       stop("interactive = TRUE needs the '", pkg, "' package. Install it with ",
@@ -136,11 +135,20 @@
     selectedBy = list(variable = "group", main = "Select a layer"))
   w <- visNetwork::visInteraction(w, hover = TRUE, tooltipDelay = 80,
                                   navigationButtons = TRUE, dragNodes = TRUE)
-  # Use `height` as given rather than htmlwidgets' fill-the-window sizing,
-  # which would push the legend off screen (`height` already follows the
-  # window size).
+  # Height by context:
+  # - browser and RStudio Viewer: the window minus room for the legend, so
+  #   the network fills the screen and the legend stays visible. (Not
+  #   htmlwidgets' fill-the-window mode, which pushes the legend off screen.)
+  # - knitr (knitted documents and RStudio's inline chunk output): a fixed
+  #   650 px, since a window-relative height would follow the size of the
+  #   inline output frame.
+  window.height <- "calc(100vh - 200px)"
   w$sizingPolicy$browser$fill <- FALSE
   w$sizingPolicy$viewer$fill  <- FALSE
+  w$sizingPolicy$browser$defaultHeight <- window.height
+  w$sizingPolicy$viewer$defaultHeight  <- window.height
+  w$sizingPolicy$knitr$figure <- FALSE
+  w$sizingPolicy$knitr$defaultHeight <- "650px"
   htmlwidgets::appendContent(w, legend)
 }
 

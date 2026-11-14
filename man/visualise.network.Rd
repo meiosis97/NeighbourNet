@@ -24,7 +24,8 @@ visualise.network(
   n.per.component = 10,
   radius = NULL,
   pie.radius = 0.05,
-  text.size = 4
+  text.size = 4,
+  interactive = FALSE
 )
 }
 \arguments{
@@ -107,9 +108,23 @@ the scatterpie representation. Default is \code{0.05}.}
 
 \item{text.size}{A numeric value giving the size of gene labels in the
 plotted network. Default is \code{4}.}
+
+\item{interactive}{A logical. If \code{TRUE}, return an interactive
+\pkg{visNetwork} widget instead of a \code{ggplot}, drawing the same
+genes, edges, clusters and layout. Hover a gene or edge for its values,
+click a gene (or pick it from the menu) to highlight its partners, and
+scroll to zoom. In this view, \code{g2} genes are filled with their
+cluster colour and other genes are neutral; as in the static plot, edges
+without prior knowledge are dashed (undirected), and prior-supported edges
+are solid with an arrow (activation) or a bar (inhibition);
+genes with no edge above \code{cutoff} are greyed out. \code{pie.radius}
+and \code{text.size} are ignored. Requires the \pkg{visNetwork},
+\pkg{htmlwidgets} and \pkg{htmltools} packages. Default is \code{FALSE}.}
 }
 \value{
-A \code{ggplot} object (built with \pkg{ggraph} and
+If \code{interactive = TRUE}, a \pkg{visNetwork} htmlwidget, which
+  displays in the RStudio viewer and in R Markdown / Quarto HTML output.
+  Otherwise, a \code{ggplot} object (built with \pkg{ggraph} and
   \pkg{ggplot2}) representing a layered receptor–TF–target network. The plot
   includes:
 \itemize{
@@ -215,6 +230,15 @@ p.meta <- visualise.network(
   meta.network = TRUE,
 )
 print(p.meta)
+
+# The same meta-network as an interactive widget (needs visNetwork):
+# hover for values, click a gene to highlight its partners, scroll to zoom
+visualise.network(
+  seurat.obj,
+  i = 1,
+  meta.network = TRUE,
+  interactive = TRUE
+)
 
 }
 \seealso{

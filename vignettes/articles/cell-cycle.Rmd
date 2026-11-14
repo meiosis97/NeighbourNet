@@ -195,6 +195,28 @@ NeighbourNet::visualise.network(
 )
 ```
 
+### Explore a network interactively
+
+With `interactive = TRUE`, the same meta-network is drawn as an interactive
+widget (this needs the visNetwork package). Hover over a gene or an edge to
+see its values, click a gene (or pick it from the *Select a gene* menu) to
+highlight its partners, and scroll to zoom. TFs are diamonds filled with their
+cluster colour, targets are circles, receptors are triangles and intermediate
+signalling steps are small squares. Dashed edges are co-expression only
+(undirected, not in prior knowledge); an arrow or a bar marks an edge that
+prior knowledge records as activation or inhibition.
+
+```{r plot-meta-interactive}
+NeighbourNet::visualise.network(
+  obj,
+  i,
+  meta.network = TRUE,
+  cutoff       = cutoff,
+  radius       = c(0.4, 0.7, 0.85, 1),
+  interactive  = TRUE
+)
+```
+
 ### Visualise meta-network components in PC space
 
 We can also inspect which cells contribute to a given meta-network component in the

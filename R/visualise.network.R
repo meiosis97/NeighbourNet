@@ -104,8 +104,21 @@
 #'   the scatterpie representation. Default is \code{0.05}.
 #' @param text.size A numeric value giving the size of gene labels in the
 #'   plotted network. Default is \code{4}.
+#' @param interactive A logical. If \code{TRUE}, return an interactive
+#'   \pkg{visNetwork} widget instead of a \code{ggplot}, drawing the same
+#'   genes, edges, clusters and layout. Hover a gene or edge for its values,
+#'   click a gene (or pick it from the menu) to highlight its partners, and
+#'   scroll to zoom. In this view, \code{g2} genes are filled with their
+#'   cluster colour and other genes are neutral; as in the static plot, edges
+#'   without prior knowledge are dashed (undirected), and prior-supported edges
+#'   are solid with an arrow (activation) or a bar (inhibition);
+#'   genes with no edge above \code{cutoff} are greyed out. \code{pie.radius}
+#'   and \code{text.size} are ignored. Requires the \pkg{visNetwork},
+#'   \pkg{htmlwidgets} and \pkg{htmltools} packages. Default is \code{FALSE}.
 #'
-#' @return A \code{ggplot} object (built with \pkg{ggraph} and
+#' @return If \code{interactive = TRUE}, a \pkg{visNetwork} htmlwidget, which
+#'   displays in the RStudio viewer and in R Markdown / Quarto HTML output.
+#'   Otherwise, a \code{ggplot} object (built with \pkg{ggraph} and
 #'   \pkg{ggplot2}) representing a layered receptor–TF–target network. The plot
 #'   includes:
 #' \itemize{
@@ -173,6 +186,15 @@
 #' )
 #' print(p.meta)
 #'
+#' # The same meta-network as an interactive widget (needs visNetwork):
+#' # hover for values, click a gene to highlight its partners, scroll to zoom
+#' visualise.network(
+#'   seurat.obj,
+#'   i = 1,
+#'   meta.network = TRUE,
+#'   interactive = TRUE
+#' )
+#'
 #' @seealso \code{\link{prepare.visualise}}, \code{\link{receptor.activity}}
 #'
 #' @export
@@ -195,8 +217,59 @@ visualise.network <- function(seurat.obj,
                               n.per.component = 10,
                               radius  = NULL,
                               pie.radius = 0.05,
-                              text.size = 4){
-  # 1. Retrieve settings and model objects 
+                              text.size = 4,
+                              interactive = FALSE){
+  view <- .network.view(seurat.obj = seurat.obj,
+                        i = i,
+                        meta.network = meta.network,
+                        fix.cluster = fix.cluster,
+                        hubs = hubs,
+                        n.clu = n.clu,
+                        cutoff = cutoff,
+                        show.pathways = show.pathways,
+                        change.receptors = change.receptors,
+                        receptor.activity = receptor.activity,
+                        check.receptor.expression = check.receptor.expression,
+                        scale.ppr = scale.ppr,
+                        scale.network = scale.network,
+                        scale.signifiance = scale.signifiance,
+                        swap.layers = swap.layers,
+                        k = k,
+                        n.per.component = n.per.component,
+                        radius = radius)
+  if(isTRUE(interactive)) return(.render.interactive(view))
+  .render.static(view, pie.radius = pie.radius, text.size = text.size)
+}
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Internal: compute the network view (graph, layout, node weights, pies)
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Everything visualise.network() draws is computed here and returned as a
+# list, so that renderers (.render.static() and others) share one
+# computation. Arguments are those of visualise.network().
+.network.view <- function(seurat.obj,
+                          i,
+                          meta.network,
+                          fix.cluster,
+                          hubs,
+                          n.clu,
+                          cutoff,
+                          show.pathways,
+                          change.receptors,
+                          receptor.activity,
+                          check.receptor.expression,
+                          scale.ppr,
+                          scale.network,
+                          scale.signifiance,
+                          swap.layers,
+                          k,
+                          n.per.component,
+                          radius){
+  # `i` is reused as a loop variable below; keep the requested index.
+  i.input <- i
+  g3 <- g4 <- g30 <- g4.weight <- NULL
+
+  # 1. Retrieve settings and model objects
   setting <- Seurat::Misc(seurat.obj, "NNet.setting")
   mod <- Seurat::Misc(seurat.obj, "NNet.mod")
   visual.setting <- Seurat::Misc(seurat.obj, "NNet.visual.setting")
@@ -359,7 +432,7 @@ visualise.network <- function(seurat.obj,
       ppr <- ppr * as.numeric(expr.mask)
     }
     
-    receptor.activity <- match.arg(receptor.activity)
+    receptor.activity <- match.arg(receptor.activity, c("cprod", "dist"))
     if(receptor.activity == "cprod"){
       act <- tcrossprod(ppr, pruned.network)
     }else{
@@ -631,11 +704,7 @@ visualise.network <- function(seurat.obj,
     
   }
   
-  ################# Aes  #################
-  col <- RColorBrewer::brewer.pal("Set1", n = 9)
-  col1 <- c("white",col) %>% ggplot2::alpha(.,0.8)
-  col2 <-  c("grey",col)
-  label.col <- c("darkblue","darkblue","grey2","darkblue","darkblue")
+  ################# Vertex labels  #################
   vertex.label <- names(igraph::V(graph))
   if(show.pathways){
     vertex.label <- c(g1,g2,g3,g4)[vertex.label]
@@ -643,7 +712,40 @@ visualise.network <- function(seurat.obj,
   }else{
     vertex.label <- c(g1,g2)[vertex.label]
   }
-  
+
+  list(graph = graph,                 # igraph; vertex attrs type, cluster;
+                                      # edge attrs weight, cluster, evidence, arrow
+       layout = l,                    # vertex x/y, rownames = vertex names
+       pie.values = pie.values,       # per-vertex pie slices (N = unfilled)
+       vertex.label = vertex.label,
+       g1 = g1, g2 = g2, g3 = g3, g4 = g4, g30 = g30,
+       g1.weight = g1.weight, g2.weight = g2.weight, g4.weight = g4.weight,
+       clu.g2 = clu.g2,
+       network = network,             # g1 x g2 edge weights (scaled)
+       prob.network = prob.network,   # g1 x g2 edge significance
+       cutoff = cutoff,
+       show.pathways = show.pathways,
+       as.g2 = as.g2,
+       assay = assay,
+       meta.network = meta.network,
+       i = i.input)
+}
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Internal: draw a network view with ggraph (the static plot)
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+.render.static <- function(view, pie.radius, text.size){
+  graph <- view$graph
+  l <- view$layout
+  pie.values <- view$pie.values
+  vertex.label <- view$vertex.label
+
+  ################# Aes  #################
+  col <- RColorBrewer::brewer.pal("Set1", n = 9)
+  col1 <- c("white",col) %>% ggplot2::alpha(.,0.8)
+  col2 <-  c("grey",col)
+  label.col <- c("darkblue","darkblue","grey2","darkblue","darkblue")
+
   lty <- c("blank","dashed","solid", "solid")
   arrow.angle <- c(0,0,15,90)
   segement_data <- make_segements(graph, l)

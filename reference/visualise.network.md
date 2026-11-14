@@ -66,7 +66,8 @@ visualise.network(
   n.per.component = 10,
   radius = NULL,
   pie.radius = 0.05,
-  text.size = 4
+  text.size = 4,
+  interactive = FALSE
 )
 ```
 
@@ -191,9 +192,24 @@ visualise.network(
   A numeric value giving the size of gene labels in the plotted network.
   Default is `4`.
 
+- interactive:
+
+  A logical. If `TRUE`, return an interactive visNetwork widget instead
+  of a `ggplot`, drawing the same genes, edges, clusters and layout.
+  Hover a gene or edge for its values, click a gene (or pick it from the
+  menu) to highlight its partners, and scroll to zoom. In this view,
+  `g2` genes are filled with their cluster colour and other genes are
+  neutral; as in the static plot, edges without prior knowledge are
+  dashed (undirected), and prior-supported edges are solid with an arrow
+  (activation) or a bar (inhibition); genes with no edge above `cutoff`
+  are greyed out. `pie.radius` and `text.size` are ignored. Requires the
+  visNetwork, htmlwidgets and htmltools packages. Default is `FALSE`.
+
 ## Value
 
-A `ggplot` object (built with ggraph and ggplot2) representing a layered
+If `interactive = TRUE`, a visNetwork htmlwidget, which displays in the
+RStudio viewer and in R Markdown / Quarto HTML output. Otherwise, a
+`ggplot` object (built with ggraph and ggplot2) representing a layered
 receptor–TF–target network. The plot includes:
 
 - concentric layers for `g1` and `g2`, and optionally intermediate
@@ -278,4 +294,14 @@ p.meta <- visualise.network(
 #> Error: object 'seurat.obj' not found
 print(p.meta)
 #> Error: object 'p.meta' not found
+
+# The same meta-network as an interactive widget (needs visNetwork):
+# hover for values, click a gene to highlight its partners, scroll to zoom
+visualise.network(
+  seurat.obj,
+  i = 1,
+  meta.network = TRUE,
+  interactive = TRUE
+)
+#> Error: object 'seurat.obj' not found
 ```

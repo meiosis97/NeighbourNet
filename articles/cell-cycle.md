@@ -267,6 +267,54 @@ NeighbourNet::visualise.network(
 
 ![](cell-cycle_files/figure-html/plot-meta-1.png)
 
+### Explore a network interactively
+
+With `interactive = TRUE`, the same meta-network is drawn as an
+interactive widget (this needs the visNetwork package). Hover over a
+gene or an edge to see its values, click a gene (or pick it from the
+*Select a gene* menu) to highlight its partners, and scroll to zoom. TFs
+are diamonds filled with their cluster colour, targets are circles,
+receptors are triangles and intermediate signalling steps are small
+squares. Dashed edges are co-expression only (undirected, not in prior
+knowledge); an arrow or a bar marks an edge that prior knowledge records
+as activation or inhibition.
+
+``` r
+
+NeighbourNet::visualise.network(
+  obj,
+  i,
+  meta.network = TRUE,
+  cutoff       = cutoff,
+  radius       = c(0.4, 0.7, 0.85, 1),
+  interactive  = TRUE
+)
+```
+
+Genes![](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdib3g9IjAgMCAyMCAyMCIgc3R5bGU9InZlcnRpY2FsLWFsaWduOm1pZGRsZTsiPjxwb2x5Z29uIHBvaW50cz0iMTAsMiAxOCwxMCAxMCwxOCAyLDEwIiBmaWxsPSIjRkZGRkZGIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMS41Ij48L3BvbHlnb24+PC9zdmc+)TF
+(colour = cluster)
+![](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdib3g9IjAgMCAyMCAyMCIgc3R5bGU9InZlcnRpY2FsLWFsaWduOm1pZGRsZTsiPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjciIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIxLjUiPjwvY2lyY2xlPjwvc3ZnPg==)target
+![](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdib3g9IjAgMCAyMCAyMCIgc3R5bGU9InZlcnRpY2FsLWFsaWduOm1pZGRsZTsiPjxwb2x5Z29uIHBvaW50cz0iMTAsMiAxOCwxNyAyLDE3IiBmaWxsPSIjRkZGRkZGIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMS41Ij48L3BvbHlnb24+PC9zdmc+)receptor
+![](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdib3g9IjAgMCAyMCAyMCIgc3R5bGU9InZlcnRpY2FsLWFsaWduOm1pZGRsZTsiPjxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iI0RERERERCIgc3Ryb2tlPSIjMzMzMzMzIiBzdHJva2Utd2lkdGg9IjEuNSIgLz48L3N2Zz4=)signalling
+step
+![](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdib3g9IjAgMCAyMCAyMCIgc3R5bGU9InZlcnRpY2FsLWFsaWduOm1pZGRsZTsiPjxwb2x5Z29uIHBvaW50cz0iMTAsMiAxOCwxMCAxMCwxOCAyLDEwIiBmaWxsPSIjRTQxQTFDIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMS41Ij48L3BvbHlnb24+PC9zdmc+)TF
+cluster 1
+![](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdib3g9IjAgMCAyMCAyMCIgc3R5bGU9InZlcnRpY2FsLWFsaWduOm1pZGRsZTsiPjxwb2x5Z29uIHBvaW50cz0iMTAsMiAxOCwxMCAxMCwxOCAyLDEwIiBmaWxsPSIjMzc3RUI4IiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMS41Ij48L3BvbHlnb24+PC9zdmc+)TF
+cluster 2
+![](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdib3g9IjAgMCAyMCAyMCIgc3R5bGU9InZlcnRpY2FsLWFsaWduOm1pZGRsZTsiPjxwb2x5Z29uIHBvaW50cz0iMTAsMiAxOCwxMCAxMCwxOCAyLDEwIiBmaWxsPSIjNERBRjRBIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMS41Ij48L3BvbHlnb24+PC9zdmc+)TF
+cluster 3
+![](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdib3g9IjAgMCAyMCAyMCIgc3R5bGU9InZlcnRpY2FsLWFsaWduOm1pZGRsZTsiPjxwb2x5Z29uIHBvaW50cz0iMTAsMiAxOCwxMCAxMCwxOCAyLDEwIiBmaWxsPSIjOTg0RUEzIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMS41Ij48L3BvbHlnb24+PC9zdmc+)TF
+cluster 4
+![](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdib3g9IjAgMCAyMCAyMCIgc3R5bGU9InZlcnRpY2FsLWFsaWduOm1pZGRsZTsiPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjciIGZpbGw9IiNGMkYyRjIiIHN0cm9rZT0iI0JEQkRCRCIgc3Ryb2tlLXdpZHRoPSIxLjUiPjwvY2lyY2xlPjwvc3ZnPg==)no
+edge above cutoff
+
+Edges![](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iMjAiIHZpZXdib3g9IjAgMCA0MCAyMCIgc3R5bGU9InZlcnRpY2FsLWFsaWduOm1pZGRsZTsiPjxsaW5lIHgxPSIyIiB5MT0iMTAiIHgyPSIzNCIgeTI9IjEwIiBzdHJva2U9IiM1NTU1NTUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWRhc2hhcnJheT0iNSw0Ij48L2xpbmU+PC9zdmc+)co-expression
+only (undirected, not in prior knowledge)
+![](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iMjAiIHZpZXdib3g9IjAgMCA0MCAyMCIgc3R5bGU9InZlcnRpY2FsLWFsaWduOm1pZGRsZTsiPjxsaW5lIHgxPSIyIiB5MT0iMTAiIHgyPSIzNCIgeTI9IjEwIiBzdHJva2U9IiM1NTU1NTUiIHN0cm9rZS13aWR0aD0iMyI+PC9saW5lPjxwb2x5Z29uIHBvaW50cz0iMzgsMTAgMjksNSAyOSwxNSIgZmlsbD0iIzU1NTU1NSI+PC9wb2x5Z29uPjwvc3ZnPg==)+
+prior knowledge: activation
+![](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iMjAiIHZpZXdib3g9IjAgMCA0MCAyMCIgc3R5bGU9InZlcnRpY2FsLWFsaWduOm1pZGRsZTsiPjxsaW5lIHgxPSIyIiB5MT0iMTAiIHgyPSIzNCIgeTI9IjEwIiBzdHJva2U9IiM1NTU1NTUiIHN0cm9rZS13aWR0aD0iMyI+PC9saW5lPjxsaW5lIHgxPSIzNyIgeTE9IjMiIHgyPSIzNyIgeTI9IjE3IiBzdHJva2U9IiM1NTU1NTUiIHN0cm9rZS13aWR0aD0iMyI+PC9saW5lPjwvc3ZnPg==)+
+prior knowledge: inhibition (width = weight)
+
 ### Visualise meta-network components in PC space
 
 We can also inspect which cells contribute to a given meta-network

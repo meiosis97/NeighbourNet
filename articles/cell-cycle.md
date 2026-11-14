@@ -5,11 +5,19 @@
 library(Seurat)
 #> Loading required package: SeuratObject
 #> Loading required package: sp
+#> 'SeuratObject' was built under R 4.6.0 but the current version is
+#> 4.6.2; it is recomended that you reinstall 'SeuratObject' as the ABI
+#> for R may have changed
+#> 'SeuratObject' was built with package 'Matrix' 1.7.5 but the current
+#> version is 1.7.6; it is recomended that you reinstall 'SeuratObject' as
+#> the ABI for 'Matrix' may have changed
 #> 
 #> Attaching package: 'SeuratObject'
 #> The following objects are masked from 'package:base':
 #> 
 #>     intersect, t
+#> v6.0 adds significant improvements in speed and efficiency, particularly for large datasets.
+#> For more information, see https://satijalab.org/seurat/articles/announcements.
 library(NeighbourNet)
 library(ggplot2)
 library(igraph)
@@ -328,8 +336,8 @@ tf.cor <- cor(notch2.act, t(act$tf.act)) %>%
   sort(decreasing = TRUE)
 #> Warning in cor(notch2.act, t(act$tf.act)): the standard deviation is zero
 head(tf.cor)
-#>      E2F1      E2F2     SIN3A      E2F5      RFX1     ESRRA 
-#> 0.9801520 0.7602014 0.5186611 0.5018902 0.3693210 0.3544060
+#>      E2F1      E2F2      E2F5      RFX1     TCF12     SIN3A 
+#> 0.9870145 0.7801702 0.4791721 0.4745675 0.3979142 0.3787773
 ```
 
 We can inspect the inferred signalling path from NOTCH2 to a candidate
